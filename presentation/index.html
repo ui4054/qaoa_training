@@ -370,35 +370,44 @@
   </section>
 
   <section>
-    <h2>Desarrollo del Hamiltoniano $H_C$</h2>
+    <h2>Desarrollo del Hamiltoniano $H_C$ — Sustitución</h2>
     <p>Sustituimos el operador $\hat{y}_j = \frac{I - Z_j}{2}$ en la función de costo QUBO:</p>
-    <div class="math-block" style="font-size:0.8em;">
+    <div class="math-block" style="font-size:0.78em;">
       $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j < k} Q_{jk} \left(\frac{I - Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
     </div>
-    <p>Expandiendo el término cuadrático $\left(\frac{I - Z_j - Z_k + Z_j Z_k}{4}\right)$ y agrupando:</p>
-    <div class="math-block-gold">
-      $$H_C = \sum_{j} h_j Z_j + \sum_{j < k} J_{ij} Z_j Z_k + \text{constante}$$
-    </div>
-    <p>Donde las relaciones con la matriz QUBO son:</p>
-    <div class="math-block" style="font-size:0.82em;">
-      $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4}\sum_{k \neq j} Q_{jk} \qquad \text{y} \qquad J_{jk} = \frac{Q_{jk}}{4}$$
+    <p>Expandiendo el término cuadrático $\left(\frac{I - Z_j - Z_k + Z_j Z_k}{4}\right)$ y agrupando en base a los operadores de Pauli $Z$:</p>
+    <div class="math-block-gold" style="font-size:0.85em;">
+      $$H_C = \sum_{j} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k + C'_0 I$$
     </div>
   </section>
 
   <section>
+    <h2>Coeficientes del Hamiltoniano Ising</h2>
+    <p>Las relaciones exactas entre la matriz QUBO $Q$ y los coeficientes del Hamiltoniano $H_C$ son:</p>
+    <div class="math-block-gold" style="font-size:0.82em;">
+      $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4}\sum_{k \neq j} Q_{jk}$$
+    </div>
+    <div class="math-block" style="font-size:0.82em;">
+      $$J_{jk} = \frac{Q_{jk}}{4}$$
+    </div>
+    <p style="font-size:0.85em; color:var(--text-muted); text-align:center;">
+      * $h_j$: campos locales (qubit bias).<br>
+      * $J_{jk}$: acoplamientos entre qubits (qubit-qubit interaction).
+    </p>
+  </section>
+
+  <section>
     <h2>Cálculo del Qubit 1 ($x_1$)</h2>
-    <p>Apliquemos las fórmulas al primer qubit ($x_1$) en nuestra mochila:</p>
-    <ul>
-      <li>Término diagonal: $Q_{11} = -1304$</li>
-      <li>Términos cruzados: $Q_{12}=480$, $Q_{13}=672$, $Q_{14}=192$, $Q_{15}=576$, $Q_{16}=96$, $Q_{17}=192$, $Q_{18}=384$, $Q_{19}=768$.</li>
-      <li>Suma de cruzados: $\sum_{k \neq 1} Q_{1k} = 3360$</li>
+    <p>Apliquemos las fórmulas al primer qubit ($x_1$) de nuestra instancia de mochila:</p>
+    <ul style="font-size:0.82em; margin-bottom: 12px;">
+      <li><strong>Término diagonal:</strong> $Q_{11} = -1304$</li>
+      <li><strong>Términos cruzados:</strong> $Q_{12}=480, Q_{13}=672, Q_{14}=192, Q_{15}=576$, $Q_{16}=96, Q_{17}=192, Q_{18}=384, Q_{19}=768$ (Suma = $3360$)</li>
     </ul>
-    <p>Calculamos su campo local $h_1$ y acoplamiento $J_{12}$:</p>
-    <div class="math-block-gold" style="font-size:0.85em;">
+    <p>Calculamos su campo local $h_1$ y su acoplamiento con el Qubit 2 ($J_{12}$):</p>
+    <div class="math-block-gold" style="font-size:0.82em;">
       $$h_1 = -\frac{-1304}{2} - \frac{3360}{4} = 652 - 840 = \mathbf{-188}$$
       $$J_{12} = \frac{480}{4} = \mathbf{120}$$
     </div>
-    <p>Este procedimiento se repite para los 9 qubits del circuito.</p>
   </section>
 
   <section>
