@@ -226,30 +226,40 @@
 
   <section>
     <h2>Paso 1: Convertir a Minimización</h2>
-    <p>Los computadores cuánticos buscan el <strong>estado de mínima energía</strong>:</p>
+    <p>Los computadores cuánticos buscan el <strong>estado de mínima energía</strong> (estado base del Hamiltoniano):</p>
     <div class="math-block">
       $$\max \sum v_i x_i \;\;\longrightarrow\;\; \min \left(-\sum_{i=1}^{5} v_i x_i\right)$$
     </div>
-    <p>Para nuestra instancia:</p>
+    <p>Para nuestra instancia con Laptop de valor 5:</p>
     <div class="math-block-gold">
-      $$\min \;\; -(8x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5)$$
+      $$\min \;\; -(5x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5)$$
     </div>
   </section>
 
   <section>
     <h2>Paso 2: Penalización de Restricciones</h2>
-    <p>Incorporamos la restricción como un término de <strong>penalización cuadrática</strong>:</p>
-    <div class="math-block">
-      $$\min \;\; \underbrace{-\sum_{i} v_i x_i}_{\text{objetivo}} \;+\; \lambda \underbrace{\left(\sum_{i} w_i x_i - W\right)^2}_{\text{penalización}}$$
+    <p>En optimización cuántica, no podemos usar multiplicadores de Lagrange lineales continuos directamente (pues requerirían optimizar la variable dual $\lambda_{\text{Lagrange}}$ de forma interactiva). Usamos el <strong>método de penalización cuadrática</strong>:</p>
+    <div class="math-block" style="font-size:0.85em;">
+      $$\min \;\; H(\mathbf{x}) = \underbrace{-\sum_{i} v_i x_i}_{\text{objetivo}} \;+\; \lambda \underbrace{\left(\sum_{i} w_i x_i - W\right)^2}_{\text{penalización cuadrática}}$$
     </div>
     <ul>
-      <li>$\lambda > 0$: fuerza de penalización (debe ser suficientemente grande)</li>
-      <li>Si la restricción se <em>cumple</em>: penalización $= 0$</li>
-      <li>Si la restricción se <em>viola</em>: penalización $> 0$ (castigo)</li>
+      <li>Si la restricción se cumple ($\sum w_i x_i = W$): penalización $= 0$.</li>
+      <li>Si se viola: la penalización cuadrática $> 0$ aumenta drásticamente el costo.</li>
     </ul>
-    <div class="note">
-      Regla práctica: $\lambda > \max(v_i)$. En nuestro caso: $\lambda = 16$
+  </section>
+
+  <section>
+    <h2>Paso 2.1: ¿Cómo elegir $\lambda$? No es arbitrario</h2>
+    <p>Para garantizar que el mínimo global de la función penalizada sea el óptimo real del ILP, la penalización por violar la restricción debe superar cualquier beneficio en valor:</p>
+    <div class="info-card">
+      <p>Supongamos que violamos la restricción en el valor mínimo entero ($1$ kg): la penalización añade $\lambda \cdot 1^2 = \lambda$.</p>
+      <p>La máxima ganancia de valor que podríamos conseguir al violar la restricción metiendo un ítem extra es $\max_i v_i$.</p>
     </div>
+    <p>Para que la violación nunca sea conveniente, exigimos que la penalización domine la ganancia:</p>
+    <div class="math-block-gold" style="font-size:0.85em;">
+      $$\Delta C = -\text{Ganancia} + \text{Penalización} \ge -\max_i v_i + \lambda > 0 \implies \mathbf{\lambda > \max_i v_i}$$
+    </div>
+    <p style="text-align:center;">En nuestra instancia: $\max(5, 10, 15, 4, 12) = 15 \implies \lambda \ge 16$.</p>
   </section>
 
   <section>
