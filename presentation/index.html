@@ -355,32 +355,74 @@
 
   <section>
     <h2>Mapeo QUBO → Ising</h2>
-    <p>En un computador cuántico, las variables binarias se codifican con <strong>qubits</strong> usando operadores de Pauli $Z$:</p>
+    <p>En un computador cuántico, las variables binarias se codifican con <strong>qubits</strong> usando operadores de Pauli $Z$ (actuando sobre el estado de cada qubit):</p>
     <div class="math-block">
-      $$x_i = \frac{1 - Z_i}{2} \qquad \text{donde } Z_i \in \{-1, +1\}$$
+      $$\hat{y}_j = \frac{I - Z_j}{2} \qquad \text{donde } Z_j = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$$
     </div>
+    <p>Donde $I$ es el operador Identidad. Esto nos da los eigenvalores:</p>
     <table>
-      <thead><tr><th>$x_i$ (binaria)</th><th>$Z_i$ (Pauli)</th><th>Estado cuántico</th></tr></thead>
+      <thead><tr><th>Estado cuántico</th><th>Eigenvalor de $Z_j$</th><th>Valor de $\hat{y}_j$ (medida)</th><th>Significado físico</th></tr></thead>
       <tbody>
-        <tr><td>0 (no seleccionado)</td><td>+1</td><td>$|0\rangle$</td></tr>
-        <tr><td>1 (seleccionado)</td><td>−1</td><td>$|1\rangle$</td></tr>
+        <tr><td>$|0\rangle$</td><td>$+1$</td><td>$\frac{1 - 1}{2} = 0$</td><td>No seleccionado / Slack inactivo</td></tr>
+        <tr><td>$|1\rangle$</td><td>$-1$</td><td>$\frac{1 - (-1)}{2} = 1$</td><td>Seleccionado / Slack activo</td></tr>
       </tbody>
     </table>
   </section>
 
   <section>
-    <h2>Hamiltoniano de Costo $H_C$</h2>
-    <p>Sustituyendo $x_i = \frac{1-Z_i}{2}$ en el QUBO, obtenemos:</p>
-    <div class="math-block-gold">
-      $$H_C = \sum_{i} h_i Z_i + \sum_{i < j} J_{ij} Z_i Z_j + \text{constante}$$
+    <h2>Desarrollo del Hamiltoniano $H_C$</h2>
+    <p>Sustituimos el operador $\hat{y}_j = \frac{I - Z_j}{2}$ en la función de costo QUBO:</p>
+    <div class="math-block" style="font-size:0.8em;">
+      $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j < k} Q_{jk} \left(\frac{I - Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
     </div>
+    <p>Expandiendo el término cuadrático $\left(\frac{I - Z_j - Z_k + Z_j Z_k}{4}\right)$ y agrupando:</p>
+    <div class="math-block-gold">
+      $$H_C = \sum_{j} h_j Z_j + \sum_{j < k} J_{ij} Z_j Z_k + \text{constante}$$
+    </div>
+    <p>Donde las relaciones con la matriz QUBO son:</p>
+    <div class="math-block" style="font-size:0.82em;">
+      $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4}\sum_{k \neq j} Q_{jk} \qquad \text{y} \qquad J_{jk} = \frac{Q_{jk}}{4}$$
+    </div>
+  </section>
+
+  <section>
+    <h2>Cálculo del Qubit 1 ($x_1$)</h2>
+    <p>Apliquemos las fórmulas al primer qubit ($x_1$) en nuestra mochila:</p>
     <ul>
-      <li><strong>$h_i$</strong>: campos locales (términos lineales)</li>
-      <li><strong>$J_{ij}$</strong>: acoplamientos (interacciones entre pares de qubits)</li>
-      <li>El <strong>estado base</strong> de $H_C$ codifica la solución óptima</li>
+      <li>Término diagonal: $Q_{11} = -1304$</li>
+      <li>Términos cruzados: $Q_{12}=480$, $Q_{13}=672$, $Q_{14}=192$, $Q_{15}=576$, $Q_{16}=96$, $Q_{17}=192$, $Q_{18}=384$, $Q_{19}=768$.</li>
+      <li>Suma de cruzados: $\sum_{k \neq 1} Q_{1k} = 3360$</li>
     </ul>
-    <div class="note">
-      <strong>Qiskit</strong> realiza esta conversión automáticamente con <code>to_ising()</code>
+    <p>Calculamos su campo local $h_1$ y acoplamiento $J_{12}$:</p>
+    <div class="math-block-gold" style="font-size:0.85em;">
+      $$h_1 = -\frac{-1304}{2} - \frac{3360}{4} = 652 - 840 = \mathbf{-188}$$
+      $$J_{12} = \frac{480}{4} = \mathbf{120}$$
+    </div>
+    <p>Este procedimiento se repite para los 9 qubits del circuito.</p>
+  </section>
+
+  <section>
+    <h2>De $H_C$ al Operador Unitario $U_C(\gamma)$</h2>
+    <p>El operador de evolución de costo se formula como la exponencial del Hamiltoniano:</p>
+    <div class="math-block">
+      $$U_C(\gamma) = e^{-i \gamma H_C} = \prod_{j} e^{-i \gamma h_j Z_j} \prod_{j < k} e^{-i \gamma J_{jk} Z_j Z_k}$$
+    </div>
+    <p>Esto se descompone en compuertas cuánticas elementales de rotación:</p>
+    <div class="two-col">
+      <div class="info-card">
+        <h3>Términos Lineales: $e^{-i \gamma h_j Z_j}$</h3>
+        <p>Se implementa directamente con una compuerta de rotación en el eje Z:</p>
+        <div style="text-align:center; font-weight:600; color:var(--accent-blue); margin-top:10px;">
+          $R_z(2\gamma h_j)$
+        </div>
+      </div>
+      <div class="info-card gold">
+        <h3>Términos Cuadráticos: $e^{-i \gamma J_{jk} Z_j Z_k}$</h3>
+        <p>Requiere entrelazamiento usando dos compuertas CNOT y una rotación Z:</p>
+        <div style="text-align:center; font-weight:600; color:var(--accent-gold); margin-top:10px;">
+          $\text{CNOT}_{j,k} \to R_z(2\gamma J_{jk})_k \to \text{CNOT}_{j,k}$
+        </div>
+      </div>
     </div>
   </section>
 
