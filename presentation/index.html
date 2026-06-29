@@ -361,7 +361,7 @@
 
   <section>
     <h2>Paso 8: Coeficientes Diagonales $Q_{jj}$</h2>
-    <p>Para cada variable: $Q_{jj} = \underbrace{-v_j}_{\text{objetivo}} + \lambda \cdot c_j(c_j - 2W)$</p>
+    <p>Para cada variable: $Q_{jj} = \underbrace{-v_j}_{\text{objetivo}} + \lambda \cdot c_j(c_j - 2W)$ <small style="color:var(--text-muted);">(con $\lambda = 16$ según la deducción del Paso 2.1)</small></p>
     <table style="font-size:0.72em;">
       <thead><tr><th>Variable</th><th>$-v_j$</th><th>$c_j$</th><th>$c_j(c_j-30)$</th><th>$\times\lambda=16$</th><th>$Q_{jj}$</th></tr></thead>
       <tbody>
@@ -376,12 +376,12 @@
         <tr><td>$s_3$</td><td>0</td><td>8</td><td>8(−22) = −176</td><td>−2816</td><td><strong>−2816</strong></td></tr>
       </tbody>
     </table>
-    <p style="text-align:center;"><strong>Constante:</strong> $\lambda W^2 = 16 \times 225 = 3600$</p>
+    <p style="text-align:center;"><strong>Constante del QUBO:</strong> $\lambda W^2 = 16 \times 225 = \mathbf{3600}$ &nbsp;<small style="color:var(--text-muted);">(con $\lambda = 16$ y $W = 15$)</small></p>
   </section>
 
   <section>
     <h2>Paso 9: Coeficientes Cuadráticos $Q_{jk}$</h2>
-    <p>Para cada par $j < k$: $\;Q_{jk} = 2\lambda \cdot c_j \cdot c_k = 32 \cdot c_j \cdot c_k$</p>
+    <p>Para cada par $j < k$: $\;Q_{jk} = 2\lambda \cdot c_j \cdot c_k = 32 \cdot c_j \cdot c_k$ &nbsp;<small style="color:var(--text-muted);">(donde $2\lambda = 2 \times 16 = 32$)</small></p>
     <div class="two-col">
       <div>
         <h3>Ítems × Ítems</h3>
