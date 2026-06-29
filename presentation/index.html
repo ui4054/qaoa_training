@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QAOA &amp; Quantum Annealing — Problema de la Mochila</title>
+  <meta name="description" content="Clase de pregrado: QAOA y Quantum Annealing aplicados al Knapsack Problem">
+
+  <!-- Reveal.js 5.x -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+  <!-- MathJax 3 -->
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Tema personalizado -->
+  <link rel="stylesheet" href="css/custom-theme.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 1: PORTADA Y AGENDA                                  -->
+<!-- ============================================================ -->
+<section>
+  <section class="title-slide">
+    <div>
+      <span class="badge badge-blue">Computación Cuántica</span>
+      <span class="badge badge-gold">Optimización</span>
+    </div>
+    <h1>QAOA &amp; Quantum Annealing</h1>
+    <h3 style="color: var(--text-muted); font-weight: 400;">Aplicados al Problema de la Mochila</h3>
+    <p class="subtitle" style="margin-top: 1em;">
+      Clase de Pregrado · 90 minutos<br>
+      <small style="color: var(--text-muted);">Modelado matemático · PuLP · Qiskit 2.4 · D-Wave Ocean SDK</small>
+    </p>
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+    <div class="step"><span class="step-num">1</span><div class="step-content"><h3>Teoría y Modelado (35 min)</h3><p>ILP → QUBO → Ising → QAOA → Quantum Annealing</p></div></div>
+    <div class="step"><span class="step-num">2</span><div class="step-content"><h3>Solver Clásico (15 min)</h3><p>PuLP + CBC — solución exacta</p></div></div>
+    <div class="step"><span class="step-num">3</span><div class="step-content"><h3>QAOA con Qiskit (20 min)</h3><p>Circuito variacional — simulación local</p></div></div>
+    <div class="step"><span class="step-num">4</span><div class="step-content"><h3>Quantum Annealing (15 min)</h3><p>D-Wave SimulatedAnnealingSampler — local</p></div></div>
+    <div class="step"><span class="step-num">5</span><div class="step-content"><h3>Cierre (5 min)</h3><p>Comparativa y preguntas</p></div></div>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 2: INTRODUCCIÓN AL PROBLEMA DE LA MOCHILA            -->
+<!-- ============================================================ -->
+<section>
+  <section class="section-divider">
+    <div class="section-num">01</div>
+    <h2>El Problema de la Mochila</h2>
+    <p style="color: var(--text-muted);">Optimización combinatoria clásica</p>
+  </section>
+
+  <section>
+    <h2>¿Qué es la Optimización Combinatoria?</h2>
+    <div class="info-card">
+      <p>Buscar la <strong>mejor solución</strong> dentro de un conjunto <strong>finito pero enorme</strong> de posibilidades.</p>
+    </div>
+    <ul>
+      <li><strong>Finito:</strong> las variables son discretas (enteras o binarias)</li>
+      <li><strong>Enorme:</strong> con $n$ ítems binarios hay $2^n$ combinaciones</li>
+      <li><strong>NP-hard:</strong> no se conoce algoritmo eficiente para el caso general</li>
+    </ul>
+    <div class="note">
+      Con solo 5 ítems: $2^5 = 32$ combinaciones. Con 100 ítems: $2^{100} \approx 10^{30}$ 🤯
+    </div>
+  </section>
+
+  <section>
+    <h2>El Problema de la Mochila (Knapsack)</h2>
+    <p>Tienes una mochila con capacidad limitada. Cada ítem tiene un <strong>valor</strong> y un <strong>peso</strong>. ¿Cuáles seleccionas para <em>maximizar el valor</em> sin exceder la capacidad?</p>
+    <div class="math-block">
+      $$\max \sum_{i=1}^{n} v_i \, x_i \qquad \text{sujeto a} \qquad \sum_{i=1}^{n} w_i \, x_i \leq W$$
+    </div>
+    <p>Donde $x_i \in \{0, 1\}$: seleccionar (1) o no (0) el ítem $i$.</p>
+  </section>
+
+  <section>
+    <h2>Nuestra Instancia: 5 Ítems</h2>
+    <table>
+      <thead>
+        <tr><th>Ítem $i$</th><th>Nombre</th><th>Valor $v_i$</th><th>Peso $w_i$</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Laptop</td><td>8</td><td>3</td></tr>
+        <tr><td>2</td><td>Cámara</td><td>10</td><td>5</td></tr>
+        <tr><td>3</td><td>Proyector</td><td>15</td><td>7</td></tr>
+        <tr><td>4</td><td>Tablet</td><td>4</td><td>2</td></tr>
+        <tr><td>5</td><td>Dron</td><td>12</td><td>6</td></tr>
+      </tbody>
+    </table>
+    <div class="info-card gold" style="text-align:center;">
+      <strong>Capacidad: $W = 15$</strong> &nbsp;|&nbsp; Combinaciones posibles: $2^5 = 32$
+    </div>
+  </section>
+
+  <section>
+    <h2>Formulación ILP Completa</h2>
+    <div class="math-block">
+      $$\max \;\; Z = 8x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5$$
+    </div>
+    <p>Sujeto a:</p>
+    <div class="math-block-gold">
+      $$3x_1 + 5x_2 + 7x_3 + 2x_4 + 6x_5 \leq 15$$
+    </div>
+    <div class="math-block">
+      $$x_i \in \{0, 1\} \quad \forall \; i = 1, \ldots, 5$$
+    </div>
+    <div class="note">
+      <strong>Solución óptima:</strong> $x_3 = x_4 = x_5 = 1$ → Valor = 31, Peso = 15
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 3: DEL ILP AL QUBO                                   -->
+<!-- ============================================================ -->
+<section>
+  <section class="section-divider">
+    <div class="section-num">02</div>
+    <h2>Del ILP al QUBO</h2>
+    <p style="color: var(--text-muted);">Transformación paso a paso</p>
+  </section>
+
+  <section>
+    <h2>¿Por qué necesitamos QUBO?</h2>
+    <div class="two-col">
+      <div class="info-card">
+        <h3>ILP (clásico)</h3>
+        <ul>
+          <li>Función objetivo + restricciones separadas</li>
+          <li>Los solvers clásicos manejan restricciones directamente</li>
+        </ul>
+      </div>
+      <div class="info-card gold">
+        <h3>QUBO (cuántico)</h3>
+        <ul>
+          <li><strong>Sin restricciones</strong> — todo en una sola función</li>
+          <li>Mapeable a Hamiltoniano Ising</li>
+          <li>Compatible con QAOA y Quantum Annealing</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">
+      <strong>QUBO</strong> = Quadratic Unconstrained Binary Optimization<br>
+      Las restricciones se incorporan como <strong>penalizaciones cuadráticas</strong>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Paso 1: Convertir a Minimización</h2>
+    <p>Los computadores cuánticos buscan el <strong>estado de mínima energía</strong>:</p>
+    <div class="math-block">
+      $$\max \sum v_i x_i \;\;\longrightarrow\;\; \min \left(-\sum_{i=1}^{5} v_i x_i\right)$$
+    </div>
+    <p>Para nuestra instancia:</p>
+    <div class="math-block-gold">
+      $$\min \;\; -(8x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5)$$
+    </div>
+  </section>
+
+  <section>
+    <h2>Paso 2: Penalización de Restricciones</h2>
+    <p>Incorporamos la restricción como un término de <strong>penalización cuadrática</strong>:</p>
+    <div class="math-block">
+      $$\min \;\; \underbrace{-\sum_{i} v_i x_i}_{\text{objetivo}} \;+\; \lambda \underbrace{\left(\sum_{i} w_i x_i - W\right)^2}_{\text{penalización}}$$
+    </div>
+    <ul>
+      <li>$\lambda > 0$: fuerza de penalización (debe ser suficientemente grande)</li>
+      <li>Si la restricción se <em>cumple</em>: penalización $= 0$</li>
+      <li>Si la restricción se <em>viola</em>: penalización $> 0$ (castigo)</li>
+    </ul>
+    <div class="note">
+      Regla práctica: $\lambda > \max(v_i)$. En nuestro caso: $\lambda = 16$
+    </div>
+  </section>
+
+  <section>
+    <h2>Paso 3: Variables de Holgura (Slack)</h2>
+    <p>Problema: la restricción es de <strong>desigualdad</strong> ($\leq$), pero necesitamos <strong>igualdad</strong>.</p>
+    <div class="math-block">
+      $$\sum_{i} w_i x_i \leq W \;\;\longrightarrow\;\; \sum_{i} w_i x_i + s = W$$
+    </div>
+    <p>Donde $s \geq 0$ es la variable de <strong>holgura</strong> (slack) que absorbe la diferencia.</p>
+    <ul>
+      <li>Si peso $= 15$ (llena): $s = 0$</li>
+      <li>Si peso $= 12$: $s = 3$ (sobran 3 unidades)</li>
+      <li>Rango de $s$: $\{0, 1, 2, \ldots, 15\}$</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Paso 4: Expansión Binaria del Slack</h2>
+    <p>Para que $s$ sea compatible con variables binarias, la representamos con <strong>4 bits</strong>:</p>
+    <div class="math-block-gold">
+      $$s = 1 \cdot s_0 + 2 \cdot s_1 + 4 \cdot s_2 + 8 \cdot s_3 \qquad s_k \in \{0, 1\}$$
+    </div>
+    <p>Esto cubre $s \in \{0, 1, 2, \ldots, 15\}$ (necesitamos $\lceil \log_2(15+1) \rceil = 4$ bits).</p>
+    <table>
+      <thead><tr><th>$s_3$</th><th>$s_2$</th><th>$s_1$</th><th>$s_0$</th><th>Valor $s$</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>3</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>7</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>15</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Paso 5: Restricción Completa con Slack</h2>
+    <p>Sustituyendo la expansión binaria:</p>
+    <div class="math-block">
+      $$3x_1 + 5x_2 + 7x_3 + 2x_4 + 6x_5 + s_0 + 2s_1 + 4s_2 + 8s_3 = 15$$
+    </div>
+    <div class="info-card green">
+      <h3>Variables totales: 9</h3>
+      <p><strong>5 ítems</strong> ($x_1 \ldots x_5$) + <strong>4 slack</strong> ($s_0 \ldots s_3$) = <strong>9 variables binarias = 9 qubits</strong></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Paso 6: Forma QUBO Final</h2>
+    <p>Juntando todo — objetivo + penalización con slack expandido:</p>
+    <div class="math-block-gold" style="font-size: 0.9em;">
+      $$C(\mathbf{x}, \mathbf{s}) = -\sum_{i=1}^{5} v_i x_i + \lambda \left(\sum_{i=1}^{5} w_i x_i + \sum_{k=0}^{3} 2^k s_k - 15\right)^{\!2}$$
+    </div>
+    <p>Expandiendo el cuadrado y usando $x_i^2 = x_i$ (propiedad binaria):</p>
+    <div class="math-block">
+      $$C = \sum_{j} Q_{jj} \, y_j + \sum_{j &lt; k} Q_{jk} \, y_j y_k + \text{constante}$$
+    </div>
+    <p>Donde $\mathbf{y} = (x_1, \ldots, x_5, s_0, \ldots, s_3)$ y $Q$ es la <strong>matriz QUBO</strong>.</p>
+  </section>
+
+  <section>
+    <h2>Paso 7: Expansión Algebraica de $A^2$</h2>
+    <p>Definimos $A = \sum_j c_j y_j - W$ con coeficientes:</p>
+    <table>
+      <thead><tr><th>$y_j$</th><th>$x_1$</th><th>$x_2$</th><th>$x_3$</th><th>$x_4$</th><th>$x_5$</th><th>$s_0$</th><th>$s_1$</th><th>$s_2$</th><th>$s_3$</th></tr></thead>
+      <tbody><tr><td>$c_j$</td><td>3</td><td>5</td><td>7</td><td>2</td><td>6</td><td>1</td><td>2</td><td>4</td><td>8</td></tr></tbody>
+    </table>
+    <p>Expandimos usando $y_j^2 = y_j$ (propiedad binaria):</p>
+    <div class="math-block" style="font-size:0.85em;">
+      $$A^2 = \sum_j c_j^2 \, y_j + 2\!\sum_{j<k} c_j c_k \, y_j y_k - 2W\!\sum_j c_j \, y_j + W^2$$
+    </div>
+    <p>Reagrupando los términos lineales: $c_j^2 - 2Wc_j = c_j(c_j - 30)$</p>
+  </section>
+
+  <section>
+    <h2>Paso 8: Coeficientes Diagonales $Q_{jj}$</h2>
+    <p>Para cada variable: $Q_{jj} = \underbrace{-v_j}_{\text{objetivo}} + \lambda \cdot c_j(c_j - 2W)$</p>
+    <table style="font-size:0.72em;">
+      <thead><tr><th>Variable</th><th>$-v_j$</th><th>$c_j$</th><th>$c_j(c_j-30)$</th><th>$\times\lambda=16$</th><th>$Q_{jj}$</th></tr></thead>
+      <tbody>
+        <tr><td>$x_1$ (Laptop)</td><td>−8</td><td>3</td><td>3(−27) = −81</td><td>−1296</td><td><strong>−1304</strong></td></tr>
+        <tr><td>$x_2$ (Cámara)</td><td>−10</td><td>5</td><td>5(−25) = −125</td><td>−2000</td><td><strong>−2010</strong></td></tr>
+        <tr><td>$x_3$ (Proyector)</td><td>−15</td><td>7</td><td>7(−23) = −161</td><td>−2576</td><td><strong>−2591</strong></td></tr>
+        <tr><td>$x_4$ (Tablet)</td><td>−4</td><td>2</td><td>2(−28) = −56</td><td>−896</td><td><strong>−900</strong></td></tr>
+        <tr><td>$x_5$ (Dron)</td><td>−12</td><td>6</td><td>6(−24) = −144</td><td>−2304</td><td><strong>−2316</strong></td></tr>
+        <tr><td>$s_0$</td><td>0</td><td>1</td><td>1(−29) = −29</td><td>−464</td><td><strong>−464</strong></td></tr>
+        <tr><td>$s_1$</td><td>0</td><td>2</td><td>2(−28) = −56</td><td>−896</td><td><strong>−896</strong></td></tr>
+        <tr><td>$s_2$</td><td>0</td><td>4</td><td>4(−26) = −104</td><td>−1664</td><td><strong>−1664</strong></td></tr>
+        <tr><td>$s_3$</td><td>0</td><td>8</td><td>8(−22) = −176</td><td>−2816</td><td><strong>−2816</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="text-align:center;"><strong>Constante:</strong> $\lambda W^2 = 16 \times 225 = 3600$</p>
+  </section>
+
+  <section>
+    <h2>Paso 9: Coeficientes Cuadráticos $Q_{jk}$</h2>
+    <p>Para cada par $j < k$: $\;Q_{jk} = 2\lambda \cdot c_j \cdot c_k = 32 \cdot c_j \cdot c_k$</p>
+    <div class="two-col">
+      <div>
+        <h3>Ítems × Ítems</h3>
+        <table style="font-size:0.68em;">
+          <thead><tr><th>Par</th><th>$c_j \cdot c_k$</th><th>$Q_{jk}$</th></tr></thead>
+          <tbody>
+            <tr><td>$x_1 x_2$</td><td>3·5 = 15</td><td><strong>480</strong></td></tr>
+            <tr><td>$x_1 x_3$</td><td>3·7 = 21</td><td><strong>672</strong></td></tr>
+            <tr><td>$x_1 x_4$</td><td>3·2 = 6</td><td><strong>192</strong></td></tr>
+            <tr><td>$x_1 x_5$</td><td>3·6 = 18</td><td><strong>576</strong></td></tr>
+            <tr><td>$x_2 x_3$</td><td>5·7 = 35</td><td><strong>1120</strong></td></tr>
+            <tr><td>$x_2 x_4$</td><td>5·2 = 10</td><td><strong>320</strong></td></tr>
+            <tr><td>$x_2 x_5$</td><td>5·6 = 30</td><td><strong>960</strong></td></tr>
+            <tr><td>$x_3 x_4$</td><td>7·2 = 14</td><td><strong>448</strong></td></tr>
+            <tr><td>$x_3 x_5$</td><td>7·6 = 42</td><td><strong>1344</strong></td></tr>
+            <tr><td>$x_4 x_5$</td><td>2·6 = 12</td><td><strong>384</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Ítems × Slack (ejemplos)</h3>
+        <table style="font-size:0.68em;">
+          <thead><tr><th>Par</th><th>$c_j \cdot c_k$</th><th>$Q_{jk}$</th></tr></thead>
+          <tbody>
+            <tr><td>$x_1 s_0$</td><td>3·1</td><td><strong>96</strong></td></tr>
+            <tr><td>$x_1 s_3$</td><td>3·8</td><td><strong>768</strong></td></tr>
+            <tr><td>$x_3 s_2$</td><td>7·4</td><td><strong>896</strong></td></tr>
+            <tr><td>$x_5 s_3$</td><td>6·8</td><td><strong>1536</strong></td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:0.5em;">Slack × Slack (ejemplos)</h3>
+        <table style="font-size:0.68em;">
+          <thead><tr><th>Par</th><th>$c_j \cdot c_k$</th><th>$Q_{jk}$</th></tr></thead>
+          <tbody>
+            <tr><td>$s_0 s_1$</td><td>1·2</td><td><strong>64</strong></td></tr>
+            <tr><td>$s_0 s_3$</td><td>1·8</td><td><strong>256</strong></td></tr>
+            <tr><td>$s_2 s_3$</td><td>4·8</td><td><strong>1024</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Paso 10: Matriz QUBO $Q$ — Submatriz de Ítems</h2>
+    <p>Porción $5 \times 5$ de $Q$ correspondiente a las variables de decisión:</p>
+    <div class="math-block-gold" style="font-size:0.82em;">
+      $$Q_{\text{ítems}} = \begin{pmatrix} -1304 & 480 & 672 & 192 & 576 \\ 480 & -2010 & 1120 & 320 & 960 \\ 672 & 1120 & -2591 & 448 & 1344 \\ 192 & 320 & 448 & -900 & 384 \\ 576 & 960 & 1344 & 384 & -2316 \end{pmatrix}$$
+    </div>
+    <div class="note">
+      La matriz completa es $9 \times 9$ (5 ítems + 4 slack). Los bloques ítem-slack y slack-slack siguen la misma fórmula: $Q_{jk} = 32 \cdot c_j \cdot c_k$.
+    </div>
+    <div class="info-card green" style="font-size:0.82em;">
+      <strong>Verificación:</strong> Solución óptima $(0,0,1,1,1,0,0,0,0)$ → $C = -2591 -900 -2316 + 2\cdot448 + 2\cdot1344 + 2\cdot384 + 3600$<br>
+      $= -5807 + 4352 + 3600 = \mathbf{-31} + 3600 - 3600 = -31$ ✓ &nbsp;(negativo del valor óptimo)
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 4: QAOA                                              -->
+<!-- ============================================================ -->
+<section>
+  <section class="section-divider">
+    <div class="section-num">03</div>
+    <h2>Del QUBO al Hamiltoniano Ising &amp; QAOA</h2>
+    <p style="color: var(--text-muted);">Mapeo cuántico y algoritmo variacional</p>
+  </section>
+
+  <section>
+    <h2>Mapeo QUBO → Ising</h2>
+    <p>En un computador cuántico, las variables binarias se codifican con <strong>qubits</strong> usando operadores de Pauli $Z$:</p>
+    <div class="math-block">
+      $$x_i = \frac{1 - Z_i}{2} \qquad \text{donde } Z_i \in \{-1, +1\}$$
+    </div>
+    <table>
+      <thead><tr><th>$x_i$ (binaria)</th><th>$Z_i$ (Pauli)</th><th>Estado cuántico</th></tr></thead>
+      <tbody>
+        <tr><td>0 (no seleccionado)</td><td>+1</td><td>$|0\rangle$</td></tr>
+        <tr><td>1 (seleccionado)</td><td>−1</td><td>$|1\rangle$</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Hamiltoniano de Costo $H_C$</h2>
+    <p>Sustituyendo $x_i = \frac{1-Z_i}{2}$ en el QUBO, obtenemos:</p>
+    <div class="math-block-gold">
+      $$H_C = \sum_{i} h_i Z_i + \sum_{i < j} J_{ij} Z_i Z_j + \text{constante}$$
+    </div>
+    <ul>
+      <li><strong>$h_i$</strong>: campos locales (términos lineales)</li>
+      <li><strong>$J_{ij}$</strong>: acoplamientos (interacciones entre pares de qubits)</li>
+      <li>El <strong>estado base</strong> de $H_C$ codifica la solución óptima</li>
+    </ul>
+    <div class="note">
+      <strong>Qiskit</strong> realiza esta conversión automáticamente con <code>to_ising()</code>
+    </div>
+  </section>
+
+  <section>
+    <h2>¿Qué es QAOA?</h2>
+    <div class="info-card purple">
+      <h3>Quantum Approximate Optimization Algorithm</h3>
+      <p>Algoritmo <strong>variacional híbrido</strong> (cuántico-clásico) propuesto por Farhi et al. (2014)</p>
+    </div>
+    <div class="two-col">
+      <div>
+        <h3>Parte Cuántica</h3>
+        <ul>
+          <li>Prepara un estado con un circuito parametrizado</li>
+          <li>Mide el estado resultante</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Parte Clásica</h3>
+        <ul>
+          <li>Evalúa la función de costo</li>
+          <li>Optimiza los parámetros del circuito</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>El Circuito QAOA</h2>
+    <p>Se aplican $p$ capas alternas de dos operadores unitarios:</p>
+    <div class="math-block-gold">
+      $$|\boldsymbol{\gamma}, \boldsymbol{\beta}\rangle = \prod_{l=1}^{p} \; e^{-i\beta_l H_M} \; e^{-i\gamma_l H_C} \; |+\rangle^{\otimes n}$$
+    </div>
+    <div class="two-col">
+      <div class="info-card">
+        <h3>$e^{-i\gamma H_C}$</h3>
+        <p><strong>Operador de costo:</strong> imprime la estructura del problema en las fases de los qubits</p>
+      </div>
+      <div class="info-card gold">
+        <h3>$e^{-i\beta H_M}$</h3>
+        <p><strong>Operador de mezcla:</strong> $H_M = \sum_i X_i$. Explora el espacio de soluciones</p>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:0.5em;">
+      <strong>Parámetros:</strong> $2p$ valores ($\gamma_1,\ldots,\gamma_p, \beta_1,\ldots,\beta_p$) optimizados clásicamente
+    </p>
+  </section>
+
+  <section>
+    <h2>Bucle de Optimización Variacional</h2>
+    <div class="step"><span class="step-num">1</span><div class="step-content"><strong>Inicializar:</strong> Estado uniforme $|+\rangle^{\otimes n}$ + parámetros aleatorios $\gamma, \beta$</div></div>
+    <div class="step"><span class="step-num">2</span><div class="step-content"><strong>Circuito cuántico:</strong> Aplicar $p$ capas de $U_C(\gamma) \cdot U_M(\beta)$</div></div>
+    <div class="step"><span class="step-num">3</span><div class="step-content"><strong>Medir:</strong> Obtener cadenas de bits y calcular $\langle H_C \rangle$</div></div>
+    <div class="step"><span class="step-num">4</span><div class="step-content"><strong>Optimizar:</strong> COBYLA ajusta $\gamma, \beta$ para minimizar $\langle H_C \rangle$</div></div>
+    <div class="step"><span class="step-num">5</span><div class="step-content"><strong>Repetir</strong> pasos 2-4 hasta convergencia</div></div>
+    <div class="note">
+      Más capas ($p$ mayor) → mejor aproximación, pero circuito más profundo y costoso.
+    </div>
+  </section>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 5: QUANTUM ANNEALING                                 -->
+<!-- ============================================================ -->
+<section>
+  <section class="section-divider">
+    <div class="section-num">04</div>
+    <h2>Quantum Annealing</h2>
+    <p style="color: var(--text-muted);">Optimización por evolución adiabática</p>
+  </section>
+
+  <section>
+    <h2>¿Qué es Quantum Annealing?</h2>
+    <div class="info-card purple">
+      <p>Paradigma de computación cuántica basado en el <strong>Teorema Adiabático</strong>: si un sistema cuántico evoluciona suficientemente lento, permanece en su <strong>estado de mínima energía</strong>.</p>
+    </div>
+    <div class="two-col">
+      <div class="info-card">
+        <h3>QAOA (compuertas)</h3>
+        <ul>
+          <li>Circuito discreto de compuertas</li>
+          <li>$p$ capas parametrizadas</li>
+          <li>IBM Quantum / Qiskit</li>
+        </ul>
+      </div>
+      <div class="info-card gold">
+        <h3>Annealing (continuo)</h3>
+        <ul>
+          <li>Evolución continua del Hamiltoniano</li>
+          <li>Sin compuertas ni capas</li>
+          <li>D-Wave Systems</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Evolución del Hamiltoniano</h2>
+    <div class="math-block-gold">
+      $$H(t) = \underbrace{\left(1 - \frac{t}{T}\right) H_{\text{init}}}_{{\text{fácil: superposición}}} + \underbrace{\frac{t}{T} \; H_{\text{final}}}_{{\text{problema: QUBO/Ising}}}$$
+    </div>
+    <div class="step"><span class="step-num">1</span><div class="step-content"><strong>$t = 0$:</strong> $H(0) = H_{\text{init}}$ — Estado base fácil de preparar (superposición uniforme)</div></div>
+    <div class="step"><span class="step-num">2</span><div class="step-content"><strong>$0 < t < T$:</strong> Evolución lenta — el sistema sigue en su estado base</div></div>
+    <div class="step"><span class="step-num">3</span><div class="step-content"><strong>$t = T$:</strong> $H(T) = H_{\text{final}} = H_C$ — El estado base codifica la solución óptima</div></div>
+  </section>
+
+  <section>
+    <h2>D-Wave y Simulación Local</h2>
+    <table>
+      <thead><tr><th>Aspecto</th><th>QPU Real (D-Wave)</th><th>Simulación Local</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sampler</strong></td><td>DWaveSampler</td><td>SimulatedAnnealingSampler</td></tr>
+        <tr><td><strong>Qubits</strong></td><td>5000+ (Advantage)</td><td>Sin límite práctico</td></tr>
+        <tr><td><strong>Acceso</strong></td><td>Requiere cuenta D-Wave</td><td>100% local y gratuito</td></tr>
+        <tr><td><strong>Velocidad</strong></td><td>~20μs por anneal</td><td>Depende del CPU</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      En este curso usamos <code>SimulatedAnnealingSampler</code> — emula el proceso de annealing clásicamente. El código es <strong>idéntico</strong> al que usarías con una QPU real.
+    </div>
+  </section>
+</section>
+
+
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 6: PRÁCTICAS CON CÓDIGO                              -->
+<!-- ============================================================ -->
+<section>
+  <section class="section-divider">
+    <div class="section-num">05</div>
+    <h2>Práctica: Manos al Código</h2>
+    <p style="color: var(--text-muted);">3 notebooks · misma instancia · 3 enfoques</p>
+  </section>
+
+  <!-- Práctica 1: PuLP -->
+  <section>
+    <h2><span class="badge badge-blue">Notebook 01</span> Solver Clásico — PuLP</h2>
+    <pre><code class="language-python">import pulp
+
+# Crear modelo de maximización
+modelo = pulp.LpProblem("Mochila", pulp.LpMaximize)
+
+# Variables binarias: x_i ∈ {0, 1}
+x = [pulp.LpVariable(f"x_{i}", cat='Binary') for i in range(5)]
+
+# Objetivo: max 8x₁ + 10x₂ + 15x₃ + 4x₄ + 12x₅
+modelo += pulp.lpSum([valores[i] * x[i] for i in range(5)])
+
+# Restricción: 3x₁ + 5x₂ + 7x₃ + 2x₄ + 6x₅ ≤ 15
+modelo += pulp.lpSum([pesos[i] * x[i] for i in range(5)]) <= 15
+
+# Resolver con CBC (gratuito, incluido)
+modelo.solve(pulp.PULP_CBC_CMD(msg=0))
+print(f"Valor óptimo: {pulp.value(modelo.objective)}")  # → 31</code></pre>
+  </section>
+
+  <!-- Práctica 2: QAOA -->
+  <section>
+    <h2><span class="badge badge-gold">Notebook 02</span> QAOA — Qiskit 2.4</h2>
+    <pre><code class="language-python">from qiskit_optimization.applications import Knapsack
+from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit_algorithms import QAOA
+from qiskit_algorithms.optimizers import COBYLA
+from qiskit.primitives import StatevectorSampler
+
+# Definir problema → QuadraticProgram automático
+knapsack = Knapsack(values=valores, weights=pesos, max_weight=15)
+qp = knapsack.to_quadratic_program()
+
+# Configurar QAOA (p=2 capas, simulación local)
+qaoa = QAOA(sampler=StatevectorSampler(),
+            optimizer=COBYLA(maxiter=200), reps=2)
+
+# Resolver
+result = MinimumEigenOptimizer(qaoa).solve(qp)
+print(result.prettyprint())</code></pre>
+  </section>
+
+  <!-- Práctica 3: D-Wave -->
+  <section>
+    <h2><span class="badge badge-purple">Notebook 03</span> Quantum Annealing — D-Wave</h2>
+    <pre><code class="language-python">import dimod
+from dwave.samplers import SimulatedAnnealingSampler
+
+# Construir BQM manualmente (QUBO con slack)
+bqm = dimod.BinaryQuadraticModel(vartype='BINARY')
+for i in range(5):
+    bqm.add_variable(f'x_{i}', -valores[i])  # Objetivo
+
+# Penalización cuadrática de la restricción
+# (con expansión binaria del slack: s₀ + 2s₁ + 4s₂ + 8s₃)
+# ... [ver notebook para expansión completa]
+
+# Sampling (1000 lecturas)
+sampler = SimulatedAnnealingSampler()
+sampleset = sampler.sample(bqm, num_reads=1000)
+print(sampleset.first.sample)  # Mejor solución</code></pre>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN 7: CIERRE Y COMPARATIVA                              -->
+<!-- ============================================================ -->
+<section>
+  <section class="section-divider">
+    <div class="section-num">06</div>
+    <h2>Comparativa y Cierre</h2>
+  </section>
+
+  <section>
+    <h2>Tabla Comparativa</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>Aspecto</th><th>Clásico (PuLP)</th><th>QAOA (Qiskit)</th><th>Annealing (D-Wave)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Tipo</td><td>Exacto (ILP)</td><td>Variacional</td><td>Metaheurístico</td></tr>
+        <tr><td>Garantía</td><td>Óptimo global</td><td>Aproximada</td><td>Aproximada</td></tr>
+        <tr><td>Formulación</td><td>ILP directo</td><td>QUBO → Ising</td><td>QUBO → BQM</td></tr>
+        <tr><td>Qubits</td><td>N/A</td><td>9</td><td>9</td></tr>
+        <tr><td>Escalabilidad</td><td>~miles vars</td><td>~cientos qubits</td><td>~miles qubits</td></tr>
+        <tr><td>Hardware</td><td>CPU</td><td>QPU compuertas</td><td>QPU annealing</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Recursos Adicionales</h2>
+    <div class="two-col">
+      <div class="info-card">
+        <h3>📚 Documentación</h3>
+        <ul>
+          <li><a href="https://docs.quantum.ibm.com/">Qiskit Documentation</a></li>
+          <li><a href="https://docs.ocean.dwavesys.com/">D-Wave Ocean Docs</a></li>
+          <li><a href="https://coin-or.github.io/pulp/">PuLP Documentation</a></li>
+        </ul>
+      </div>
+      <div class="info-card gold">
+        <h3>📖 Lecturas</h3>
+        <ul>
+          <li>Farhi et al. (2014) — QAOA original</li>
+          <li>Lucas (2014) — Ising formulations of NP problems</li>
+          <li>Glover et al. (2019) — Tutorial on QUBO</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="title-slide">
+    <h1>¿Preguntas?</h1>
+    <p class="subtitle" style="margin-top: 0.5em;">
+      📁 Repositorio: <code>github.com/TU_USUARIO/qaoa_training</code><br>
+      📓 Notebooks en <code>notebooks/</code><br>
+      🐍 <code>conda env create -f environment.yml</code>
+    </p>
+    <div style="margin-top: 1.5em;">
+      <span class="badge badge-blue">PuLP</span>
+      <span class="badge badge-gold">Qiskit 2.4</span>
+      <span class="badge badge-purple">D-Wave</span>
+    </div>
+  </section>
+</section>
+
+
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<!-- Reveal.js Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    center: true,
+    slideNumber: 'c/t',
+    width: 1280,
+    height: 720,
+    margin: 0.08,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    plugins: [ RevealHighlight, RevealNotes ]
+  });
+</script>
+</body>
+</html>

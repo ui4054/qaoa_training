@@ -1,0 +1,17 @@
+name: qaoa_knapsack
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - jupyterlab>=4.0
+  - matplotlib>=3.8
+  - numpy>=1.26
+  - pip
+  - pip:
+      - qiskit>=2.4,<3.0
+      - qiskit-algorithms>=0.3
+      - qiskit-optimization>=0.6
+      - dwave-ocean-sdk>=7.0
+      - pulp>=2.8
+      - pylatexenc>=2.10

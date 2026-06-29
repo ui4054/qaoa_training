@@ -1,0 +1,387 @@
+/* ============================================
+   Tema Académico Claro - QAOA Training
+   ============================================ */
+
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* --- Variables Globales --- */
+:root {
+  --bg-primary: #FAFBFC;
+  --bg-secondary: #FFFFFF;
+  --bg-code: #F0F4F8;
+  --text-primary: #1B2A4A;
+  --text-secondary: #4A5568;
+  --text-muted: #718096;
+  --accent-blue: #1E3A8A;
+  --accent-blue-light: #3B82F6;
+  --accent-gold: #D97706;
+  --accent-green: #059669;
+  --accent-purple: #7C3AED;
+  --accent-red: #DC2626;
+  --border-light: #E2E8F0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+/* --- Reveal Base Override --- */
+.reveal {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  padding: 20px 30px;
+  box-sizing: border-box;
+}
+
+.reveal .slides > section {
+  top: 0 !important;
+}
+
+/* --- Títulos --- */
+.reveal h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 0.4em;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.reveal h2 {
+  font-size: 1.6em;
+  font-weight: 600;
+  color: var(--accent-blue);
+  margin-bottom: 0.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 3px solid var(--accent-gold);
+  display: inline-block;
+}
+
+.reveal h3 {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.4em;
+}
+
+/* --- Texto --- */
+.reveal p {
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 0.8em;
+}
+
+.reveal li {
+  line-height: 1.6;
+  margin-bottom: 0.4em;
+  color: var(--text-secondary);
+}
+
+.reveal ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.reveal ul li::before {
+  content: "▸ ";
+  color: var(--accent-blue-light);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.reveal strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.reveal em {
+  color: var(--accent-gold);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* --- Bloques de Código --- */
+.reveal pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 18px;
+  margin: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.56em;
+}
+
+.reveal pre code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0;
+  max-height: 520px;
+}
+
+.reveal code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+  background: var(--bg-code);
+  color: var(--accent-blue);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* --- Ecuaciones LaTeX --- */
+.reveal .MathJax,
+.reveal .katex {
+  font-size: 1.05em;
+}
+
+.reveal .math-block {
+  background: linear-gradient(135deg, #EEF2FF, #F0F4FF);
+  border-left: 4px solid var(--accent-blue);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin: 12px 0;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.reveal .math-block-gold {
+  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+  border-left: 4px solid var(--accent-gold);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin: 12px 0;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+/* --- Tablas --- */
+.reveal table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 16px 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.78em;
+}
+
+.reveal table th {
+  background: var(--accent-blue);
+  color: white;
+  padding: 12px 18px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.reveal table td {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.reveal table tr:nth-child(even) td {
+  background: #F7FAFC;
+}
+
+.reveal table tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Tarjetas Info --- */
+.info-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-md);
+  border-top: 4px solid var(--accent-blue-light);
+  margin: 10px 0;
+}
+
+.info-card.gold {
+  border-top-color: var(--accent-gold);
+}
+
+.info-card.green {
+  border-top-color: var(--accent-green);
+}
+
+.info-card.purple {
+  border-top-color: var(--accent-purple);
+}
+
+/* --- Badges / Etiquetas --- */
+.badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge-blue {
+  background: #DBEAFE;
+  color: var(--accent-blue);
+}
+
+.badge-gold {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badge-green {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.badge-purple {
+  background: #EDE9FE;
+  color: #5B21B6;
+}
+
+/* --- Slide Título --- */
+.title-slide {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-slide h1 {
+  font-size: 2.4em;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.2em;
+}
+
+.title-slide .subtitle {
+  font-size: 1.1em;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* --- Grid Layout --- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  overflow: visible;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* --- Step Indicator --- */
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.7em;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.step-content {
+  flex: 1;
+}
+
+/* --- Animaciones --- */
+.reveal .slides section .fragment.fade-in-then-semi-out {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* --- Progress Bar --- */
+.reveal .progress {
+  height: 4px;
+  background: var(--accent-blue-light);
+}
+
+/* --- Slide Number --- */
+.reveal .slide-number {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: transparent;
+}
+
+/* --- Section Divider Slides --- */
+.section-divider {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-divider h2 {
+  font-size: 2em;
+  border-bottom: none;
+  color: var(--accent-blue);
+}
+
+.section-divider .section-num {
+  font-size: 3em;
+  font-weight: 700;
+  color: var(--accent-blue-light);
+  opacity: 0.3;
+  margin-bottom: -10px;
+}
+
+/* --- Nota Importante --- */
+.note {
+  background: #FFFBEB;
+  border-left: 4px solid var(--accent-gold);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 0.82em;
+  color: #92400E;
+  margin: 8px 0;
+}
+
+/* --- Comparativa --- */
+.comparison-table td:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1200px) {
+  .reveal { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,22 @@
+{
+  "nombre": "Mochila - Ejemplo Didáctico (5 ítems)",
+  "descripcion": "Instancia pequeña para demostración pedagógica. Solución óptima: ítems 3,4,5 con valor=31, peso=15.",
+  "items": [
+    {"id": 1, "nombre": "Laptop",    "valor": 8,  "peso": 3},
+    {"id": 2, "nombre": "Cámara",    "valor": 10, "peso": 5},
+    {"id": 3, "nombre": "Proyector", "valor": 15, "peso": 7},
+    {"id": 4, "nombre": "Tablet",    "valor": 4,  "peso": 2},
+    {"id": 5, "nombre": "Dron",      "valor": 12, "peso": 6}
+  ],
+  "capacidad": 15,
+  "solucion_optima": {
+    "items_seleccionados": [3, 4, 5],
+    "valor_total": 31,
+    "peso_total": 15
+  },
+  "notas": {
+    "num_slack_bits": 4,
+    "total_qubits": 9,
+    "slack_rango": "0 a 15 (expansión binaria: s0 + 2*s1 + 4*s2 + 8*s3)"
+  }
+}
