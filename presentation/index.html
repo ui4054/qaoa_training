@@ -189,36 +189,45 @@
   </section>
 
   <section>
-    <h2>Paso 3: Variables de Holgura (Slack)</h2>
-    <p>Problema: la restricción es de <strong>desigualdad</strong> ($\leq$), pero necesitamos <strong>igualdad</strong>.</p>
+    <h2>El Reto de las Desigualdades en QUBO</h2>
+    <p>¿Por qué no podemos penalizar una desigualdad $\sum w_i x_i \leq W$ directamente con el cuadrado?</p>
     <div class="math-block">
-      $$\sum_{i} w_i x_i \leq W \;\;\longrightarrow\;\; \sum_{i} w_i x_i + s = W$$
+      $$\text{Si penalizamos: } \lambda \left(\sum_{i=1}^{n} w_i x_i - W\right)^{\!2}$$
     </div>
-    <p>Donde $s \geq 0$ es la variable de <strong>holgura</strong> (slack) que absorbe la diferencia.</p>
-    <ul>
-      <li>Si peso $= 15$ (llena): $s = 0$</li>
-      <li>Si peso $= 12$: $s = 3$ (sobran 3 unidades)</li>
-      <li>Rango de $s$: $\{0, 1, 2, \ldots, 15\}$</li>
-    </ul>
+    <div class="info-card red">
+      <h3>El Problema: Penalización de Soluciones Válidas</h3>
+      <p>Supongamos que una combinación válida pesa <strong>12 kg</strong> (con capacidad $W = 15$).<br>
+      La penalización sería $\lambda (12 - 15)^2 = 9\lambda > 0$.<br>
+      ¡El modelo estaría castigando una solución perfectamente válida por no llenar la mochila!</p>
+    </div>
   </section>
 
   <section>
-    <h2>Paso 4: Expansión Binaria del Slack</h2>
-    <p>Para que $s$ sea compatible con variables binarias, la representamos con <strong>4 bits</strong>:</p>
+    <h2>Paso 3: Conversión a Igualdad con Variable de Holgura (Slack)</h2>
+    <p>Para solucionar esto, introducimos una variable entera no negativa $s \geq 0$ llamada <strong>holgura (slack)</strong> que "absorbe" la capacidad no utilizada:</p>
     <div class="math-block-gold">
-      $$s = 1 \cdot s_0 + 2 \cdot s_1 + 4 \cdot s_2 + 8 \cdot s_3 \qquad s_k \in \{0, 1\}$$
+      $$\sum_{i=1}^{n} w_i x_i \leq W \;\;\longrightarrow\;\; \sum_{i=1}^{n} w_i x_i + s = W$$
     </div>
-    <p>Esto cubre $s \in \{0, 1, 2, \ldots, 15\}$ (necesitamos $\lceil \log_2(15+1) \rceil = 4$ bits).</p>
-    <table>
-      <thead><tr><th>$s_3$</th><th>$s_2$</th><th>$s_1$</th><th>$s_0$</th><th>Valor $s$</th></tr></thead>
-      <tbody>
-        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-        <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
-        <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>3</td></tr>
-        <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>7</td></tr>
-        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>15</td></tr>
-      </tbody>
-    </table>
+    <p>Ahora, si el peso de los objetos es 12 kg, $s$ puede tomar el valor 3. Así:</p>
+    <div class="math-block" style="font-size:0.85em;">
+      $$\text{Penalización: } \lambda \left(\sum_{i=1}^{n} w_i x_i + s - W\right)^{\!2} \;\xrightarrow{\text{peso}=12, \, s=3}\; \lambda (12 + 3 - 15)^2 = \mathbf{0}$$
+    </div>
+    <p>Las soluciones válidas no sufren penalización alguna.</p>
+  </section>
+
+  <section>
+    <h2>Paso 4: Rango del Slack y Codificación Binaria</h2>
+    <p>La variable de holgura $s$ debe poder tomar cualquier valor entero desde vacía hasta llena:</p>
+    <ul>
+      <li>Mochila vacía ($\sum w_i x_i = 0$): $s_{\max} = W = 15$</li>
+      <li>Mochila llena ($\sum w_i x_i = 15$): $s_{\min} = 0$</li>
+      <li>Rango entero de $s$: $\{0, 1, 2, \ldots, 15\}$</li>
+    </ul>
+    <p>Para representarla en QUBO, usamos su <strong>expansión binaria</strong> de $M$ bits:</p>
+    <div class="math-block-gold" style="font-size:0.85em;">
+      $$s = \sum_{k=0}^{M-1} 2^k s_k = s_0 + 2s_1 + 4s_2 + 8s_3 \qquad s_k \in \{0, 1\}$$
+    </div>
+    <p>Donde $M = \lceil \log_2(W+1) \rceil = \lceil \log_2(16) \rceil = \mathbf{4}$ variables binarias (qubits) adicionales.</p>
   </section>
 
   <section>
