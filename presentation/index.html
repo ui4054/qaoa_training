@@ -255,7 +255,7 @@
     </table>
     <p>Expandimos usando $y_j^2 = y_j$ (propiedad binaria):</p>
     <div class="math-block" style="font-size:0.85em;">
-      $$A^2 = \sum_j c_j^2 \, y_j + 2\!\sum_{j<k} c_j c_k \, y_j y_k - 2W\!\sum_j c_j \, y_j + W^2$$
+      $$A^2 = \sum_j c_j^2 \, y_j + 2\!\sum_{j \lt k} c_j c_k \, y_j y_k - 2W\!\sum_j c_j \, y_j + W^2$$
     </div>
     <p>Reagrupando los términos lineales: $c_j^2 - 2Wc_j = c_j(c_j - 30)$</p>
   </section>
@@ -373,11 +373,11 @@
     <h2>Desarrollo del Hamiltoniano $H_C$ — Sustitución</h2>
     <p>Sustituimos el operador $\hat{y}_j = \frac{I - Z_j}{2}$ en la función de costo QUBO:</p>
     <div class="math-block" style="font-size:0.78em;">
-      $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j < k} Q_{jk} \left(\frac{I - Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
+      $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j \lt k} Q_{jk} \left(\frac{I - Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
     </div>
     <p>Expandiendo el término cuadrático $\left(\frac{I - Z_j - Z_k + Z_j Z_k}{4}\right)$ y agrupando en base a los operadores de Pauli $Z$:</p>
     <div class="math-block-gold" style="font-size:0.85em;">
-      $$H_C = \sum_{j} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k + C'_0 I$$
+      $$H_C = \sum_{j} h_j Z_j + \sum_{j \lt k} J_{jk} Z_j Z_k + C'_0 I$$
     </div>
   </section>
 
