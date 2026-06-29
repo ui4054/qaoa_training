@@ -2,7 +2,7 @@
   "nombre": "Mochila - Ejemplo Didáctico (5 ítems)",
   "descripcion": "Instancia pequeña para demostración pedagógica. Solución óptima: ítems 3,4,5 con valor=31, peso=15.",
   "items": [
-    {"id": 1, "nombre": "Laptop",    "valor": 8,  "peso": 3},
+    {"id": 1, "nombre": "Laptop",    "valor": 5,  "peso": 3},
     {"id": 2, "nombre": "Cámara",    "valor": 10, "peso": 5},
     {"id": 3, "nombre": "Proyector", "valor": 15, "peso": 7},
     {"id": 4, "nombre": "Tablet",    "valor": 4,  "peso": 2},

@@ -95,7 +95,7 @@
         <tr><th>Ítem $i$</th><th>Nombre</th><th>Valor $v_i$</th><th>Peso $w_i$</th></tr>
       </thead>
       <tbody>
-        <tr><td>1</td><td>Laptop</td><td>8</td><td>3</td></tr>
+        <tr><td>1</td><td>Laptop</td><td>5</td><td>3</td></tr>
         <tr><td>2</td><td>Cámara</td><td>10</td><td>5</td></tr>
         <tr><td>3</td><td>Proyector</td><td>15</td><td>7</td></tr>
         <tr><td>4</td><td>Tablet</td><td>4</td><td>2</td></tr>
@@ -109,10 +109,11 @@
 
   <section>
     <h2>Formulación ILP Completa</h2>
+    <p>El problema matemático en formato algebraico tradicional:</p>
     <div class="math-block">
-      $$\max \;\; Z = 8x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5$$
+      $$\max \;\; Z = 5x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5$$
     </div>
-    <p>Sujeto a:</p>
+    <p>Sujeto a la restricción de capacidad:</p>
     <div class="math-block-gold">
       $$3x_1 + 5x_2 + 7x_3 + 2x_4 + 6x_5 \leq 15$$
     </div>
@@ -120,8 +121,71 @@
       $$x_i \in \{0, 1\} \quad \forall \; i = 1, \ldots, 5$$
     </div>
     <div class="note">
-      <strong>Solución óptima:</strong> $x_3 = x_4 = x_5 = 1$ → Valor = 31, Peso = 15
+      Aquí $x_i$ representa si seleccionamos el ítem $i$ (1) o no (0).
     </div>
+  </section>
+
+  <section>
+    <h2>Formulación ILP Matricial</h2>
+    <p>En optimización a gran escala, expresamos el modelo de forma compacta usando vectores y matrices:</p>
+    <div class="math-block" style="font-size: 0.9em;">
+      $$\max \;\; \mathbf{c}^T \mathbf{x} \qquad \text{sujeto a} \qquad \mathbf{A}\mathbf{x} \leq \mathbf{b}, \quad \mathbf{x} \in \{0, 1\}^n$$
+    </div>
+    <p>Donde los parámetros de nuestra instancia se agrupan como:</p>
+    <div class="math-block-gold" style="font-size: 0.82em;">
+      $$\mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \end{bmatrix}, \quad \mathbf{c} = \begin{bmatrix} 5 \\ 10 \\ 15 \\ 4 \\ 12 \end{bmatrix}, \quad \mathbf{A} = \begin{bmatrix} 3 & 5 & 7 & 2 & 6 \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} 15 \end{bmatrix}$$
+    </div>
+  </section>
+
+  <section>
+    <h2>El Espacio de Búsqueda</h2>
+    <p>Con $5$ variables binarias, existen $2^5 = 32$ combinaciones posibles. Recorramos algunas opciones:</p>
+    <table style="font-size: 0.65em;">
+      <thead>
+        <tr>
+          <th>Opción</th>
+          <th>Vector $\mathbf{x}^T$</th>
+          <th>Ítems Seleccionados</th>
+          <th>Peso $\mathbf{A}\mathbf{x}$</th>
+          <th>Valor $\mathbf{c}^T\mathbf{x}$</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>$[0, 0, 0, 0, 0]$</td>
+          <td>Ninguno (Mochila Vacía)</td>
+          <td>0 kg</td>
+          <td>0</td>
+          <td><span class="badge badge-blue">Factible</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>$[1, 1, 0, 1, 0]$</td>
+          <td>Laptop, Cámara, Tablet</td>
+          <td>$3 + 5 + 2 = 10$ kg</td>
+          <td>$5 + 10 + 4 = 19$</td>
+          <td><span class="badge badge-blue">Factible</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>$[0, 1, 1, 0, 1]$</td>
+          <td>Cámara, Proyector, Dron</td>
+          <td>$5 + 7 + 6 = 18$ kg</td>
+          <td>$10 + 15 + 12 = 37$</td>
+          <td><span class="badge badge-red">Excede Capacidad</span></td>
+        </tr>
+        <tr class="gold" style="background: rgba(212, 175, 55, 0.1); font-weight: bold;">
+          <td>4 (Óptimo)</td>
+          <td>$[0, 0, 1, 1, 1]$</td>
+          <td>Proyector, Tablet, Dron</td>
+          <td>$7 + 2 + 6 = 15$ kg</td>
+          <td>$15 + 4 + 12 = 31$</td>
+          <td><span class="badge badge-gold">Óptimo</span></td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 </section>
 
@@ -275,7 +339,7 @@
     <table style="font-size:0.72em;">
       <thead><tr><th>Variable</th><th>$-v_j$</th><th>$c_j$</th><th>$c_j(c_j-30)$</th><th>$\times\lambda=16$</th><th>$Q_{jj}$</th></tr></thead>
       <tbody>
-        <tr><td>$x_1$ (Laptop)</td><td>−8</td><td>3</td><td>3(−27) = −81</td><td>−1296</td><td><strong>−1304</strong></td></tr>
+        <tr><td>$x_1$ (Laptop)</td><td>−5</td><td>3</td><td>3(−27) = −81</td><td>−1296</td><td><strong>−1301</strong></td></tr>
         <tr><td>$x_2$ (Cámara)</td><td>−10</td><td>5</td><td>5(−25) = −125</td><td>−2000</td><td><strong>−2010</strong></td></tr>
         <tr><td>$x_3$ (Proyector)</td><td>−15</td><td>7</td><td>7(−23) = −161</td><td>−2576</td><td><strong>−2591</strong></td></tr>
         <tr><td>$x_4$ (Tablet)</td><td>−4</td><td>2</td><td>2(−28) = −56</td><td>−896</td><td><strong>−900</strong></td></tr>
@@ -339,7 +403,7 @@
     <h2>Paso 10: Matriz QUBO $Q$ — Submatriz de Ítems</h2>
     <p>Porción $5 \times 5$ de $Q$ correspondiente a las variables de decisión:</p>
     <div class="math-block-gold" style="font-size:0.82em;">
-      $$Q_{\text{ítems}} = \begin{pmatrix} -1304 & 480 & 672 & 192 & 576 \\ 480 & -2010 & 1120 & 320 & 960 \\ 672 & 1120 & -2591 & 448 & 1344 \\ 192 & 320 & 448 & -900 & 384 \\ 576 & 960 & 1344 & 384 & -2316 \end{pmatrix}$$
+      $$Q_{\text{ítems}} = \begin{pmatrix} -1301 & 480 & 672 & 192 & 576 \\ 480 & -2010 & 1120 & 320 & 960 \\ 672 & 1120 & -2591 & 448 & 1344 \\ 192 & 320 & 448 & -900 & 384 \\ 576 & 960 & 1344 & 384 & -2316 \end{pmatrix}$$
     </div>
     <div class="note">
       La matriz completa es $9 \times 9$ (5 ítems + 4 slack). Los bloques ítem-slack y slack-slack siguen la misma fórmula: $Q_{jk} = 32 \cdot c_j \cdot c_k$.
@@ -409,12 +473,12 @@
     <h2>Cálculo del Qubit 1 ($x_1$)</h2>
     <p>Apliquemos las fórmulas al primer qubit ($x_1$) de nuestra instancia de mochila:</p>
     <ul style="font-size:0.82em; margin-bottom: 12px;">
-      <li><strong>Término diagonal:</strong> $Q_{11} = -1304$</li>
+      <li><strong>Término diagonal:</strong> $Q_{11} = -1301$</li>
       <li><strong>Términos cruzados:</strong> $Q_{12}=480, Q_{13}=672, Q_{14}=192, Q_{15}=576$, $Q_{16}=96, Q_{17}=192, Q_{18}=384, Q_{19}=768$ (Suma = $3360$)</li>
     </ul>
     <p>Calculamos su campo local $h_1$ y su acoplamiento con el Qubit 2 ($J_{12}$):</p>
     <div class="math-block-gold" style="font-size:0.82em;">
-      $$h_1 = -\frac{-1304}{2} - \frac{3360}{4} = 652 - 840 = \mathbf{-188}$$
+      $$h_1 = -\frac{-1301}{2} - \frac{3360}{4} = 650.5 - 840 = \mathbf{-189.5}$$
       $$J_{12} = \frac{480}{4} = \mathbf{120}$$
     </div>
   </section>
