@@ -1070,6 +1070,41 @@
         </section>
 
         <section style="font-size: 0.8em;">
+          <h2>Construcción de $h$ y $J$ (Paso a Paso)</h2>
+          <p style="margin-bottom: 5px;">Los coeficientes del Hamiltoniano se construyen a partir del valor $v_j$ y peso $c_j$ de cada variable usando:</p>
+          <div class="math-block-gold" style="font-size:0.75em; padding: 6px; margin: 5px 0;">
+            $$h_j = \frac{v_j}{2} - 64 c_j \qquad J_{jk} = 8 c_j c_k$$
+          </div>
+          <div class="two-col" style="font-size: 0.68em; gap: 15px; margin-top: 10px;">
+            <div class="info-card" style="padding: 10px;">
+              <h4 style="color: var(--accent-blue); margin-top: 0; margin-bottom: 5px;">Cálculo del Vector de Sesgos $h$:</h4>
+              <ul style="margin: 0; padding-left: 15px;">
+                <li>$h_1 = \frac{5}{2} - 64(3) = \mathbf{-189.5}$ (Laptop)</li>
+                <li>$h_2 = \frac{10}{2} - 64(5) = \mathbf{-315.0}$ (Cámara)</li>
+                <li>$h_3 = \frac{15}{2} - 64(7) = \mathbf{-440.5}$ (Proyector)</li>
+                <li>$h_4 = \frac{4}{2} - 64(2) = \mathbf{-126.0}$ (Tablet)</li>
+                <li>$h_5 = \frac{12}{2} - 64(6) = \mathbf{-378.0}$ (Dron)</li>
+                <li>$h_6 = \frac{0}{2} - 64(1) = \mathbf{-64.0}$ (Slack 0)</li>
+                <li>$h_7 = \frac{0}{2} - 64(2) = \mathbf{-128.0}$ (Slack 1)</li>
+                <li>$h_8 = \mathbf{-256.0}$, $h_9 = \mathbf{-512.0}$ (Slacks 2 y 3)</li>
+              </ul>
+            </div>
+            <div class="info-card gold" style="padding: 10px;">
+              <h4 style="color: var(--accent-gold); margin-top: 0; margin-bottom: 5px;">Cálculo de la Matriz $J$:</h4>
+              <ul style="margin: 0; padding-left: 15px;">
+                <li>$J_{12} = 8 \times 3 \times 5 = \mathbf{120}$</li>
+                <li>$J_{13} = 8 \times 3 \times 7 = \mathbf{168}$</li>
+                <li>$J_{23} = 8 \times 5 \times 7 = \mathbf{280}$</li>
+                <li>$J_{45} = 8 \times 2 \times 6 = \mathbf{96}$</li>
+                <li>$J_{67} = 8 \times 1 \times 2 = \mathbf{16}$</li>
+                <li>$J_{89} = 8 \times 4 \times 8 = \mathbf{256}$</li>
+                <li>(Interacción simétrica: $J_{kj} = J_{jk}$, y diagonal $J_{jj} = 0$)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
           <h2>Matrices $h$ y $J$ para Hardware Real</h2>
           <p style="margin-bottom: 5px;">Las computadoras Ising (fotónicas y analógicas) requieren el vector de sesgos $h$ y la matriz de acoplamiento simétrica $J$ ($9\times9$):</p>
           <div class="two-col" style="font-size: 0.58em; gap: 10px; align-items: center;">
