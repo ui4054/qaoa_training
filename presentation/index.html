@@ -1053,6 +1053,22 @@
           </div>
         </section>
 
+        <section style="font-size: 0.82em;">
+          <h2>Annealing en Nuestra Mochila (9 Qubits)</h2>
+          <p style="margin-bottom: 5px;">Para resolver nuestra instancia con 5 ítems y 4 qubits de slack, evolucionamos el sistema de 9 qubits:</p>
+          <div class="math-block" style="font-size:0.7em; padding: 6px; margin: 4px 0;">
+            $$H(t) = -A(t) \sum_{j=1}^{9} X_j + B(t) \left( \sum_{j=1}^{9} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k \right)$$
+          </div>
+          <p style="margin: 4px 0 2px 0;">Donde $A(t) \to 0$ y $B(t) \to 1$ son las envolventes temporales y los coeficientes son los del problema:</p>
+          <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
+            <ul style="margin: 0; padding-left: 20px;">
+              <li><strong>Inicio ($t = 0$):</strong> Predomina el campo transversal $-\sum_j X_j$. Todos los qubits comienzan en la superposición perfecta $|+\rangle^{\otimes 9}$.</li>
+              <li><strong>Transición ($0 < t < T$):</strong> Los efectos de fluctuación cuántica permiten al sistema túneles a través de barreras de energía entre las combinaciones de la mochila.</li>
+              <li><strong>Final ($t = T$):</strong> El sistema decae al estado base de $H_C$. La medición de los 9 qubits nos da el óptimo: $|001110000\rangle$ (Proyector + Tablet + Dron).</li>
+            </ul>
+          </div>
+        </section>
+
         <section>
           <h2>D-Wave y Simulación Local</h2>
           <table>
