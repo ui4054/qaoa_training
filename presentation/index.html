@@ -1258,68 +1258,134 @@
         </section>
 
         <!-- Práctica 1: PuLP -->
-        <section>
-          <h2><span class="badge badge-blue">Notebook 01</span> Solver Clásico — PuLP</h2>
-          <pre><code class="language-python">import pulp
+        <section style="font-size: 0.7em;">
+          <h2><span class="badge badge-blue">Notebook 01</span> Solver Clásico (PuLP)</h2>
+          <p style="margin-bottom: 10px;">Sintaxis esencial para modelar problemas lineales y variables binarias:</p>
+          <div class="two-col" style="gap: 15px; align-items: start;">
+            <div>
+              <pre style="margin:0;"><code class="language-python">import pulp
 
-# Crear modelo de maximización
+# 1. Crear el contenedor
 modelo = pulp.LpProblem("Mochila", pulp.LpMaximize)
 
-# Variables binarias: x_i ∈ {0, 1}
+# 2. Definir variables binarias (0 o 1)
 x = [pulp.LpVariable(f"x_{i}", cat='Binary') for i in range(5)]
 
-# Objetivo: max 8x₁ + 10x₂ + 15x₃ + 4x₄ + 12x₅
+# 3. Inyectar Función objetivo
 modelo += pulp.lpSum([valores[i] * x[i] for i in range(5)])
 
-# Restricción: 3x₁ + 5x₂ + 7x₃ + 2x₄ + 6x₅ ≤ 15
+# 4. Inyectar Restricción (peso ≤ W)
 modelo += pulp.lpSum([pesos[i] * x[i] for i in range(5)]) <= 15
 
-# Resolver con CBC (gratuito, incluido)
-modelo.solve(pulp.PULP_CBC_CMD(msg=0))
-print(f"Valor óptimo: {pulp.value(modelo.objective)}")  # → 31</code></pre>
+# 5. Ejecutar Solver local
+modelo.solve(pulp.PULP_CBC_CMD(msg=0))</code></pre>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="info-card" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-blue);">pulp.LpProblem(name, sense)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Inicializa el modelo. <code>sense</code> indica el objetivo matemático, usando <code>pulp.LpMaximize</code> o <code>pulp.LpMinimize</code>.</p>
+              </div>
+              <div class="info-card" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-blue);">pulp.LpVariable(name, cat)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Declara las incógnitas. <code>cat='Binary'</code> restringe los valores a enteros (0,1), un paso clave en optimización combinatoria pura.</p>
+              </div>
+              <div class="info-card" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-blue);">pulp.lpSum(vector)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Realiza sumatorias de forma eficiente. Se asigna al <code>modelo +=</code> para inyectar tanto la función de costo (sin signo) como las restricciones lógicas (con desigualdad).</p>
+              </div>
+              <div class="info-card" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-blue);">modelo.solve(solver)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Dispara el cálculo algorítmico exacto. <code>PULP_CBC_CMD</code> usa el backend CBC (Branch & Cut). <code>msg=0</code> oculta los logs de la terminal de ejecución.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- Práctica 2: QAOA -->
-        <section>
-          <h2><span class="badge badge-gold">Notebook 02</span> QAOA — Qiskit 2.4</h2>
-          <pre><code class="language-python">from qiskit_optimization.applications import Knapsack
+        <section style="font-size: 0.7em;">
+          <h2><span class="badge badge-gold">Notebook 02</span> QAOA (Qiskit 2.4)</h2>
+          <p style="margin-bottom: 10px;">Funciones de IBM para compilar el Knapsack QUBO y ejecutar simulaciones de compuertas:</p>
+          <div class="two-col" style="gap: 15px; align-items: start;">
+            <div>
+              <pre style="margin:0;"><code class="language-python">from qiskit_optimization.applications import Knapsack
 from qiskit_optimization.algorithms import MinimumEigenOptimizer
 from qiskit_algorithms import QAOA
-from qiskit_algorithms.optimizers import COBYLA
 from qiskit.primitives import StatevectorSampler
+from qiskit_algorithms.optimizers import COBYLA
 
-# Definir problema → QuadraticProgram automático
-knapsack = Knapsack(values=valores, weights=pesos, max_weight=15)
+# 1. Empaquetar variables en Programa Cuadrático
+knapsack = Knapsack(values=v, weights=w, max_weight=W)
 qp = knapsack.to_quadratic_program()
 
-# Configurar QAOA (p=2 capas, simulación local)
-qaoa = QAOA(sampler=StatevectorSampler(),
-            optimizer=COBYLA(maxiter=200), reps=2)
+# 2. Configurar el Algoritmo Cuántico (QAOA)
+qaoa = QAOA(
+    sampler=StatevectorSampler(),
+    optimizer=COBYLA(maxiter=200),
+    reps=2
+)
 
-# Resolver
-result = MinimumEigenOptimizer(qaoa).solve(qp)
-print(result.prettyprint())</code></pre>
+# 3. Resolver
+result = MinimumEigenOptimizer(qaoa).solve(qp)</code></pre>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="info-card gold" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-gold);">Knapsack(...) y to_quadratic_program()</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Objeto predefinido de Qiskit-Optimization. Genera matemáticamente las penalizaciones cuadráticas para que los alumnos no calculen a mano el salto algebraico hacia la matriz de Ising.</p>
+              </div>
+              <div class="info-card gold" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-gold);">QAOA(sampler, optimizer, reps)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Constructor del circuito cuántico variacional. <code>reps</code> = $p$ (capas hamiltonianas). <code>sampler</code> emula el vector de estado para lecturas perfectas, y <code>optimizer</code> define el algoritmo clásico (COBYLA) encargado de refinar iterativamente $\beta$ y $\gamma$.</p>
+              </div>
+              <div class="info-card gold" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-gold);">MinimumEigenOptimizer(algorithm).solve()</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Capa de orquestación que inyecta la matemática polinomial generada (`qp`) sobre las matrices operacionales de `qaoa`, iterando hasta la convergencia final.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- Práctica 3: D-Wave -->
-        <section>
-          <h2><span class="badge badge-purple">Notebook 03</span> Quantum Annealing — D-Wave</h2>
-          <pre><code class="language-python">import dimod
+        <section style="font-size: 0.7em;">
+          <h2><span class="badge badge-purple">Notebook 03</span> Annealing (D-Wave)</h2>
+          <p style="margin-bottom: 10px;">La sintaxis fundamental de Ocean SDK para grafos ponderados de campo magnético físico:</p>
+          <div class="two-col" style="gap: 15px; align-items: start;">
+            <div>
+              <pre style="margin:0;"><code class="language-python">import dimod
 from dwave.samplers import SimulatedAnnealingSampler
 
-# Construir BQM manualmente (QUBO con slack)
+# 1. Crear matriz de Annealing vacía
 bqm = dimod.BinaryQuadraticModel(vartype='BINARY')
+
+# 2. Agregar Campos Magnéticos Locales (h_j)
 for i in range(5):
-    bqm.add_variable(f'x_{i}', -valores[i])  # Objetivo
+    bqm.add_variable(f'x_{i}', sesgo_lineal_calculado)
 
-# Penalización cuadrática de la restricción
-# (con expansión binaria del slack: s₀ + 2s₁ + 4s₂ + 8s₃)
-# ... [ver notebook para expansión completa]
+# 3. Agregar Acoplamientos Físicos Cuadráticos (J_jk)
+bqm.add_interaction('x_0', 'x_1', tensor_cuadratico)
 
-# Sampling (1000 lecturas)
+# 4. Preparar entorno de muestreo (1000 iteraciones)
 sampler = SimulatedAnnealingSampler()
-sampleset = sampler.sample(bqm, num_reads=1000)
-print(sampleset.first.sample)  # Mejor solución</code></pre>
+sampleset = sampler.sample(bqm, num_reads=1000)</code></pre>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="info-card purple" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-purple);">dimod.BinaryQuadraticModel(vartype)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">El objeto principal del compilador matricial. <code>vartype='BINARY'</code> especifica $x \in \{0,1\}$ (QUBO puro). Con <code>'SPIN'</code> asumiría $z \in \{-1,1\}$ (Hamiltoniano natural Ising).</p>
+              </div>
+              <div class="info-card purple" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-purple);">add_variable(name, bias)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Instancia un qubit en el grafo. <code>bias</code> es el peso lineal local (sesgo magnético) que castiga o premia energéticamente la activación aislada del estado.</p>
+              </div>
+              <div class="info-card purple" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-purple);">add_interaction(u, v, bias)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Crea la conexión tensorial entre dos qubits (cableado entrelazado). Determina la compensación de costo si ambos qubits interactúan simultáneamente.</p>
+              </div>
+              <div class="info-card purple" style="padding: 10px; margin: 0;">
+                <strong style="color: var(--accent-purple);">sampler.sample(bqm, num_reads)</strong>
+                <p style="margin: 2px 0; font-size: 0.9em;">Lanza la relajación adiabática sobre el Hamiltoniano modelado. <code>num_reads</code> exige mil trayectorias de temple térmico para encontrar una distribución de probabilidad en pozos globales.</p>
+              </div>
+            </div>
+          </div>
         </section>
       </section>
 
