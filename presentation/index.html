@@ -994,6 +994,38 @@
             Más capas ($p$ mayor) → mejor aproximación, pero circuito más profundo y costoso.
           </div>
         </section>
+
+        <section style="font-size: 0.76em;">
+          <h2>Circuito QAOA Concreto de Nuestra Mochila</h2>
+          <p style="margin-bottom: 5px; font-size: 0.95em;">Estructura cuántica para una capa ($p=1$) con los 9 qubits del sistema:</p>
+          <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 15px; align-items: stretch; margin-top: 5px;">
+            <!-- Explicación de las Compuertas -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="info-card" style="padding: 6px; margin: 0; font-size: 0.88em;">
+                <strong style="color: var(--accent-blue);">1. Superposición ($|+\rangle^{\otimes 9}$):</strong>
+                <p style="margin: 2px 0;">Se aplica una compuerta <strong>Hadamard ($H$)</strong> a cada uno de los 9 qubits, creando un estado inicial equiprobable de las $2^9 = 512$ combinaciones posibles.</p>
+              </div>
+              <div class="info-card gold" style="padding: 6px; margin: 0; font-size: 0.88em;">
+                <strong style="color: var(--accent-gold);">2. Operador de Costo ($U_C(\gamma)$):</strong>
+                <ul style="margin: 0; padding-left: 15px;">
+                  <li>Rotaciones individuales: $R_z(2\gamma h_j)$ con los campos locales $h_j$ calculados (ej: $R_z(-379\gamma)$ en el qubit 1).</li>
+                  <li>Entrelazamiento: Compuertas CNOT y rotaciones $R_z(2\gamma J_{jk})$ para cada acoplamiento (ej: $J_{12} = 120$).</li>
+                </ul>
+              </div>
+              <div class="info-card purple" style="padding: 6px; margin: 0; font-size: 0.88em;">
+                <strong style="color: var(--accent-purple);">3. Operador Mezclador ($U_M(\beta)$):</strong>
+                <p style="margin: 2px 0;">Se aplica una compuerta de rotación en el eje X: <strong>$R_x(2\beta)$</strong> a cada uno de los 9 qubits para permitir la interferencia cuántica.</p>
+              </div>
+            </div>
+            <!-- Diagrama del Circuito -->
+            <div class="info-card" style="padding: 10px; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid var(--accent-blue); background: rgba(30, 41, 59, 0.4);">
+              <img src="./qaoa_circuit_mochila.png" style="width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);" />
+              <p style="font-size: 0.72em; margin-top: 5px; color: var(--text-muted); text-align: center; line-height: 1.15;">
+                <strong>Circuito QAOA completo:</strong> Preparación en paralelo, fase de costo con interacciones $J_{jk}$ y mezclador transverso.
+              </p>
+            </div>
+          </div>
+        </section>
       </section>
 
 
