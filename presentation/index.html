@@ -767,17 +767,39 @@
           </table>
         </section>
 
-        <section>
-          <h2>Desarrollo del Hamiltoniano $H_C$ — Sustitución</h2>
-          <p>Sustituimos el operador $\hat{y}_j = \frac{I - Z_j}{2}$ en la función de costo QUBO:</p>
-          <div class="math-block" style="font-size:0.78em;">
-            $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j \lt k} Q_{jk} \left(\frac{I -
-            Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
+        <section style="font-size: 0.85em;">
+          <h2>Desarrollo del Hamiltoniano: Sustitución</h2>
+          <p style="margin-bottom: 5px;">Sustituimos la variable binaria por el operador de spin $\hat{y}_j = \frac{I - Z_j}{2}$ en el costo QUBO $C(\mathbf{y})$:</p>
+          <div class="math-block" style="font-size:0.75em; padding: 8px;">
+            $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j \lt k} Q_{jk} \left(\frac{I - Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
           </div>
-          <p>Expandiendo el término cuadrático $\left(\frac{I - Z_j - Z_k + Z_j Z_k}{4}\right)$ y agrupando en base a
-            los operadores de Pauli $Z$:</p>
-          <div class="math-block-gold" style="font-size:0.85em;">
-            $$H_C = \sum_{j} h_j Z_j + \sum_{j \lt k} J_{jk} Z_j Z_k + C'_0 I$$
+          <p style="margin: 5px 0;">Distribuyendo la multiplicación término a término a mano:</p>
+          <div class="math-block-gold" style="font-size:0.72em; padding: 8px;">
+            $$\begin{aligned}
+              \text{Término Lineal:} \quad & Q_{jj} y_j \;\longrightarrow\; \frac{Q_{jj}}{2} I - \frac{Q_{jj}}{2} Z_j \\
+              \text{Término Cuadrático:} \quad & Q_{jk} y_j y_k \;\longrightarrow\; \frac{Q_{jk}}{4} \left( I - Z_j - Z_k + Z_j Z_k \right) \\
+              &= \frac{Q_{jk}}{4} I - \frac{Q_{jk}}{4} Z_j - \frac{Q_{jk}}{4} Z_k + \frac{Q_{jk}}{4} Z_j Z_k
+            \end{aligned}$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.82em;">
+          <h2>Desarrollo del Hamiltoniano: Agrupación</h2>
+          <p style="margin-bottom: 5px;">Sumamos todos los términos lineales, cuadráticos y de identidad:</p>
+          <div class="math-block" style="font-size:0.72em; padding: 6px;">
+            $$H_C = \sum_j \left( \frac{Q_{jj}}{2} I - \frac{Q_{jj}}{2} Z_j \right) + \sum_{j \lt k} \left( \frac{Q_{jk}}{4} I - \frac{Q_{jk}}{4} Z_j - \frac{Q_{jk}}{4} Z_k + \frac{Q_{jk}}{4} Z_j Z_k \right) + C_{\text{offset}} I$$
+          </div>
+          <p style="margin: 3px 0;">Reuniendo los coeficientes que acompañan a cada operador de Pauli $Z_j$, $Z_j Z_k$ e Identidad $I$:</p>
+          <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
+            <ul style="margin: 0; padding-left: 20px;">
+              <li><strong>Campos locales $Z_j$:</strong> Se junta su diagonal $-\frac{Q_{jj}}{2}$ y todas sus interacciones $-\frac{Q_{jk}}{4}$ (para todo $k \neq j$):
+                $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4} \sum_{k \neq j} Q_{jk}$$
+              </li>
+              <li><strong>Acoplamientos cuadráticos $Z_j Z_k$:</strong> Provienen únicamente de los términos cruzados:
+                $$J_{jk} = \frac{Q_{jk}}{4}$$
+              </li>
+              <li><strong>Constante de offset $I$:</strong> $C'_0 = C_{\text{offset}} + \sum_j \frac{Q_{jj}}{2} + \sum_{j \lt k} \frac{Q_{jk}}{4}$</li>
+            </ul>
           </div>
         </section>
 
