@@ -1033,38 +1033,44 @@
           </div>
         </section>
 
-        <section>
-          <h2>Evolución del Hamiltoniano</h2>
-          <div class="math-block-gold">
-            $$H(t) = \underbrace{\left(1 - \frac{t}{T}\right) H_{\text{init}}}_{{\text{fácil: superposición}}} +
-            \underbrace{\frac{t}{T} \; H_{\text{final}}}_{{\text{problema: QUBO/Ising}}}$$
+        <section style="font-size: 0.8em;">
+          <h2>Evolución del Hamiltoniano (El Cronómetro del Annealing)</h2>
+          <div class="math-block-gold" style="font-size: 0.78em; padding: 6px; margin-bottom: 5px;">
+            $$H(t) = \left(1 - \frac{t}{T}\right) H_{\text{init}} + \frac{t}{T} \; H_{\text{final}}$$
           </div>
-          <div class="step"><span class="step-num">1</span>
-            <div class="step-content"><strong>$t = 0$:</strong> $H(0) = H_{\text{init}}$ — Estado base fácil de preparar
-              (superposición uniforme)</div>
-          </div>
-          <div class="step"><span class="step-num">2</span>
-            <div class="step-content"><strong>$0 < t < T$:</strong> Evolución lenta — el sistema sigue en su estado base
+          <p style="margin: 3px 0; font-size: 0.95em;">Desglose de variables para entender el proceso físico:</p>
+          <div class="two-col" style="font-size:0.7em; gap: 12px;">
+            <div class="info-card" style="padding: 10px;">
+              <h4 style="color:var(--accent-blue); margin-top:0; margin-bottom:5px;">El Tiempo y el Cronómetro</h4>
+              <ul style="margin: 0; padding-left: 15px;">
+                <li><strong>$t$ (Tiempo instantáneo):</strong> El tiempo real transcurrido desde que inició el pulso físico de annealing. Va aumentando continuamente.</li>
+                <li><strong>$T$ (Tiempo total / Recocido):</strong> Duración total del experimento cuántico. En procesadores D-Wave actuales, $T \approx 20$ microsegundos ($\mu s$).</li>
+                <li><strong>$s = \frac{t}{T}$ (Tiempo normalizado):</strong> Fracción del camino recorrida. Varía continuamente de $s=0$ (inicio) a $s=1$ (final del pulso).</li>
+              </ul>
             </div>
-          </div>
-          <div class="step"><span class="step-num">3</span>
-            <div class="step-content"><strong>$t = T$:</strong> $H(T) = H_{\text{final}} = H_C$ — El estado base
-              codifica la solución óptima</div>
+            <div class="info-card gold" style="padding: 10px;">
+              <h4 style="color:var(--accent-gold); margin-top:0; margin-bottom:5px;">Las Tres Etapas del Proceso</h4>
+              <ul style="margin: 0; padding-left: 15px;">
+                <li><strong>Inicio ($t = 0$):</strong> El término $\left(1 - \frac{0}{T}\right) = 1$ activa totalmente $H_{\text{init}}$ (campo magnético). Todos los qubits inician en superposición aleatoria.</li>
+                <li><strong>Transición ($0 < t < T$):</strong> A mitad del proceso (ej. $t = 10\,\mu s$), coexisten ambos Hamiltonianos. La energía cuántica disminuye gradualmente mientras el problema empieza a imponerse.</li>
+                <li><strong>Final ($t = T$):</strong> Al completarse el tiempo, la fracción $\frac{T}{T} = 1$ activa totalmente $H_{\text{final}} = H_C$. Los qubits colapsan en el estado óptimo.</li>
+              </ul>
+            </div>
           </div>
         </section>
 
         <section style="font-size: 0.82em;">
           <h2>Annealing en Nuestra Mochila (9 Qubits)</h2>
-          <p style="margin-bottom: 5px;">Para resolver nuestra instancia con 5 ítems y 4 qubits de slack, evolucionamos el sistema de 9 qubits:</p>
-          <div class="math-block" style="font-size:0.7em; padding: 6px; margin: 4px 0;">
-            $$H(t) = -A(t) \sum_{j=1}^{9} X_j + B(t) \left( \sum_{j=1}^{9} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k \right)$$
+          <p style="margin-bottom: 4px;">Para resolver nuestra mochila con 5 ítems y 4 slack variables, programamos esta evolución de 9 qubits:</p>
+          <div class="math-block" style="font-size:0.7em; padding: 5px; margin: 3px 0;">
+            $$H(t) = \underbrace{-A(t) \sum_{j=1}^{9} X_j}_{\text{Campo Transversal } (t \to T \implies 0)} + \underbrace{B(t) \left( \sum_{j=1}^{9} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k \right)}_{\text{Hamiltoniano del Problema } H_C \; (t \to T \implies \text{Máximo})}$$
           </div>
-          <p style="margin: 4px 0 2px 0;">Donde $A(t) \to 0$ y $B(t) \to 1$ son las envolventes temporales y los coeficientes son los del problema:</p>
+          <p style="margin: 3px 0; font-size: 0.95em;">Desglose de las componentes físicas de la QPU D-Wave:</p>
           <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
-            <ul style="margin: 0; padding-left: 20px;">
-              <li><strong>Inicio ($t = 0$):</strong> Predomina el campo transversal $-\sum_j X_j$. Todos los qubits comienzan en la superposición perfecta $|+\rangle^{\otimes 9}$.</li>
-              <li><strong>Transición ($0 < t < T$):</strong> Los efectos de fluctuación cuántica permiten al sistema túneles a través de barreras de energía entre las combinaciones de la mochila.</li>
-              <li><strong>Final ($t = T$):</strong> El sistema decae al estado base de $H_C$. La medición de los 9 qubits nos da el óptimo: $|001110000\rangle$ (Proyector + Tablet + Dron).</li>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.9em;">
+              <li><strong>$A(t)$ y $B(t)$ (Funciones de Envolvente):</strong> Son las curvas de energía provistas por el hardware físico. Al inicio ($t=0$), $A(0)$ es máximo y $B(0)=0$. Al final ($t=T$), $A(T)=0$ y $B(T)$ llega a su máximo valor de energía.</li>
+              <li><strong>$\sum X_j$ (Operador Mezclador):</strong> Actúa sobre cada uno de los 9 qubits del circuito. Obliga a que cada qubit comience en una superposición perfecta entre $|0\rangle$ y $|1\rangle$.</li>
+              <li><strong>Término $H_C$ (Ising de Mochila):</strong> Utiliza los sesgos locales $h_j$ y acoplamientos $J_{jk}$ exactos que calculamos. Los qubits exploran las configuraciones válidas mediante túnel cuántico.</li>
             </ul>
           </div>
         </section>
