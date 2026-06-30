@@ -1076,6 +1076,33 @@
         </section>
 
         <section style="font-size: 0.8em;">
+          <h2>¿Qué representan $h$ y $J$ en el Mundo Real?</h2>
+          <p style="margin-bottom: 5px;">Las computadoras cuánticas y fotónicas no entienden de "mochilas" ni de "pesos". Solo entienden de física:</p>
+          <div class="two-col" style="font-size:0.7em; gap: 15px; margin-top: 10px;">
+            <div class="info-card" style="padding: 10px;">
+              <h3 style="color: var(--accent-blue); font-size:1.2em; margin-top:0; margin-bottom:5px;">El Vector de Sesgos ($h_j$)</h3>
+              <p style="margin: 3px 0 8px 0;"><strong>Campo magnético local:</strong> Es una fuerza aplicada individualmente a cada qubit $j$.</p>
+              <ul style="margin: 0; padding-left: 15px;">
+                <li><strong>Si $h_j$ es muy negativo</strong> (ej. $-189.5$): Favorece físicamente que el qubit se alinee en la dirección que representa "Item Seleccionado" ($Z_j = -1$ o $|1\rangle$).</li>
+                <li><strong>Si $h_j$ es menos negativo</strong> (ej. $-64.0$): Ejerce menos fuerza para alinearlo.</li>
+                <li><strong>Origen:</strong> Proviene de la ganancia por llevar el ítem ($v_j$) y de la penalización por su peso ($c_j$).</li>
+              </ul>
+            </div>
+            <div class="info-card gold" style="padding: 10px;">
+              <h3 style="color: var(--accent-gold); font-size:1.2em; margin-top:0; margin-bottom:5px;">Los Acoplamientos ($J_{jk}$)</h3>
+              <p style="margin: 3px 0 8px 0;"><strong>Fuerza de interacción qubit-qubit:</strong> Es la tensión física que conecta al qubit $j$ con el qubit $k$.</p>
+              <ul style="margin: 0; padding-left: 15px;">
+                <li><strong>Si $J_{jk} > 0$</strong>: Es una fuerza que penaliza al sistema si ambos qubits están en el mismo estado representativo. En nuestro caso, penaliza que llevemos ítems muy pesados simultáneamente.</li>
+                <li><strong>Origen:</strong> Proviene exclusivamente del término cruzado de la penalización de peso ($8 c_j c_k$). En el hardware, se programa físicamente activando un "acoplador" superconductor o interferómetro óptico.</li>
+              </ul>
+            </div>
+          </div>
+          <p style="margin-top: 5px; font-size: 0.75em; text-align: center; color: var(--accent-purple);">
+            <strong>¿Por qué los calculamos?</strong> Porque programar una QPU consiste en sintonizar estas fuerzas físicas ($h$ y $J$). Al encender el Annealing, el procesador busca naturalmente el equilibrio de menor energía de estas fuerzas, que corresponde exactamente al óptimo de la mochila.
+          </p>
+        </section>
+
+        <section style="font-size: 0.8em;">
           <h2>Construcción de $h$ y $J$ (Paso a Paso)</h2>
           <p style="margin-bottom: 5px;">Los coeficientes del Hamiltoniano se construyen a partir del valor $v_j$ y peso $c_j$ de cada variable usando:</p>
           <div class="math-block-gold" style="font-size:0.75em; padding: 6px; margin: 5px 0;">
