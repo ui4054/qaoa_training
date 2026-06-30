@@ -453,27 +453,23 @@
           </div>
         </section>
 
-        <section>
+        <section style="font-size: 0.85em;">
           <h2>Paso 7.1: Agrupación de Términos Lineales</h2>
-          <p>Sustituyendo $X^2$ en la ecuación original y reuniendo todos los coeficientes de las variables lineales
-            individuales ($y_j$):</p>
-          <div class="math-block" style="font-size:0.8em;">
-            $$A^2 = \underbrace{\sum_j c_j^2 y_j}_{\text{de } X^2} + 2\sum_{j \lt k} c_j c_k y_j y_k -
-            \underbrace{2W\sum_j c_j y_j}_{\text{de } -2WX} + W^2$$
-            $$A^2 = \sum_j \left(c_j^2 - 2Wc_j\right)y_j + 2\sum_{j \lt k} c_j c_k y_j y_k + W^2$$
+          <p style="margin-bottom: 5px;">Sustituyendo $X^2$ en la ecuación de $A^2$ y agrupando los coeficientes de cada $y_j$:</p>
+          <div class="math-block" style="font-size:0.75em; padding: 6px; margin: 4px 0;">
+            $$\begin{aligned}
+              A^2 &= \underbrace{\sum_j c_j^2 y_j}_{\text{de } X^2} + 2\sum_{j \lt k} c_j c_k y_j y_k - \underbrace{2W\sum_j c_j y_j}_{\text{de } -2WX} + W^2 \\
+              &= \sum_j \underbrace{c_j(c_j - 2W)}_{\text{por comprensión}} y_j + 2\sum_{j \lt k} c_j c_k y_j y_k + W^2
+            \end{aligned}$$
           </div>
-          <p>Por comprensión, definimos la fórmula general del coeficiente lineal para cualquier variable $y_j$:</p>
-          <div class="math-block-gold" style="font-size:0.85em;">
-            $$f(c_j) = c_j^2 - 2Wc_j = c_j(c_j - 2W) \;\; \xrightarrow{W=15} \;\; c_j(c_j - 30)$$
-          </div>
-          <p>Desarrollamos algebraicamente para algunas variables de nuestra mochila:</p>
-          <div class="two-col" style="font-size: 0.68em;">
-            <div class="info-card">
-              <h4>Laptop ($x_1$): $c_1 = 3$</h4>
+          <p style="margin: 5px 0 3px 0;">Desarrollando algebraicamente con $W = 15 \implies c_j(c_j - 30)$ para nuestra instancia:</p>
+          <div class="two-col" style="font-size: 0.72em; gap: 15px;">
+            <div class="info-card" style="padding: 10px; margin: 0;">
+              <h4 style="margin: 0 0 5px 0; font-size: 1em;">Laptop ($x_1$): $c_1 = 3$</h4>
               $$3 \cdot (3 - 30) = 3 \cdot (-27) = \mathbf{-81}$$
             </div>
-            <div class="info-card gold">
-              <h4>Cámara ($x_2$): $c_2 = 5$</h4>
+            <div class="info-card gold" style="padding: 10px; margin: 0;">
+              <h4 style="margin: 0 0 5px 0; font-size: 1em;">Cámara ($x_2$): $c_2 = 5$</h4>
               $$5 \cdot (5 - 30) = 5 \cdot (-25) = \mathbf{-125}$$
             </div>
           </div>
