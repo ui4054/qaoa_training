@@ -803,34 +803,98 @@
           </div>
         </section>
 
-        <section>
+        <section style="font-size: 0.85em;">
           <h2>Coeficientes del Hamiltoniano Ising</h2>
-          <p>Las relaciones exactas entre la matriz QUBO $Q$ y los coeficientes del Hamiltoniano $H_C$ son:</p>
+          <p>Las relaciones de mapeo estándar entre la matriz QUBO $Q$ y los coeficientes del Hamiltoniano $H_C$ son:</p>
           <div class="math-block-gold" style="font-size:0.82em;">
-            $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4}\sum_{k \neq j} Q_{jk}$$
-          </div>
-          <div class="math-block" style="font-size:0.82em;">
-            $$J_{jk} = \frac{Q_{jk}}{4}$$
+            $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4}\sum_{k \neq j} Q_{jk} \qquad J_{jk} = \frac{Q_{jk}}{4}$$
           </div>
           <p style="font-size:0.85em; color:var(--text-muted); text-align:center;">
-            * $h_j$: campos locales (qubit bias).<br>
-            * $J_{jk}$: acoplamientos entre qubits (qubit-qubit interaction).
+            * $h_j$: campos locales (qubit bias). Realizan rotaciones individuales $R_z(2\gamma h_j)$.<br>
+            * $J_{jk}$: acoplamientos (qubit-qubit interaction). Implementan entrelazamiento $ZZ$.
           </p>
         </section>
 
-        <section>
-          <h2>Cálculo del Qubit 1 ($x_1$)</h2>
-          <p>Apliquemos las fórmulas al primer qubit ($x_1$) de nuestra instancia de mochila:</p>
-          <ul style="font-size:0.82em; margin-bottom: 12px;">
-            <li><strong>Término diagonal:</strong> $Q_{11} = -1301$</li>
-            <li><strong>Términos cruzados:</strong> $Q_{12}=480, Q_{13}=672, Q_{14}=192, Q_{15}=576$, $Q_{16}=96,
-              Q_{17}=192, Q_{18}=384, Q_{19}=768$ (Suma = $3360$)</li>
-          </ul>
-          <p>Calculamos su campo local $h_1$ y su acoplamiento con el Qubit 2 ($J_{12}$):</p>
-          <div class="math-block-gold" style="font-size:0.82em;">
-            $$h_1 = -\frac{-1301}{2} - \frac{3360}{4} = 650.5 - 840 = \mathbf{-189.5}$$
-            $$J_{12} = \frac{480}{4} = \mathbf{120}$$
+        <section style="font-size: 0.82em;">
+          <h2>Sustitución Directa del Caso Concreto</h2>
+          <p>Para entender el Hamiltoniano sin pasar por la matriz QUBO, podemos sustituir $\hat{y}_j = \frac{I - Z_j}{2}$ directamente en el costo clásico de nuestra instancia:</p>
+          <div class="math-block" style="font-size:0.68em; padding: 5px;">
+            $$H_{\text{objetivo}} = -5\left(\frac{I - Z_1}{2}\right) - 10\left(\frac{I - Z_2}{2}\right) - 15\left(\frac{I - Z_3}{2}\right) - 4\left(\frac{I - Z_4}{2}\right) - 12\left(\frac{I - Z_5}{2}\right)$$
+            $$H_{\text{restricción}} = 16 \left( 3\left(\frac{I - Z_1}{2}\right) + 5\left(\frac{I - Z_2}{2}\right) + \cdots + 8\left(\frac{I - Z_{s_3}}{2}\right) - 15I \right)^2$$
           </div>
+          <p>Agrupando y distribuyendo los términos lineales y cuadráticos a mano:</p>
+          <div class="math-block-gold" style="font-size:0.72em; padding: 5px;">
+            $$H_C = \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j \text{ (campos locales)}} Z_j + \sum_{j \lt k} \underbrace{8 c_j c_k}_{J_{jk} \text{ (acoplamientos)}} Z_j Z_k + C'_0 I$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Álgebra del Caso Concreto (Paso a Paso)</h2>
+          <p style="margin-bottom: 2px;">Evaluamos el binomio de restricción $\lambda(X - W)^2$ con $\lambda = 16, W = 15$ y $\sum c_j = 38$:</p>
+          <div class="math-block" style="font-size:0.68em; padding: 4px; margin: 3px 0;">
+            $$\begin{aligned}
+              X - W &= \sum_j c_j \left(\frac{I - Z_j}{2}\right) - 15I = \left(\frac{38}{2} - 15\right)I - \sum_j \frac{c_j}{2}Z_j = 4I - \sum_j \frac{c_j}{2}Z_j \\
+              (X - W)^2 &= \left(4I - \sum_j \frac{c_j}{2}Z_j\right)^2 = 16I - 4\sum_j c_j Z_j + \frac{1}{4}\left(\sum_j c_j^2 I + 2\sum_{j < k} c_j c_k Z_j Z_k\right)
+            \end{aligned}$$
+          </div>
+          <p style="margin: 3px 0 1px 0;">Multiplicamos por $\lambda = 16$ y sumamos el objetivo $H_{\text{objetivo}} = \sum \frac{v_j}{2}Z_j - 23I$:</p>
+          <div class="math-block-gold" style="font-size:0.7em; padding: 4px; margin: 3px 0;">
+            $$\begin{aligned}
+              H_C &= H_{\text{objetivo}} + 16(X-W)^2 \\
+              &= \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j} Z_j + \sum_{j < k} \underbrace{8 c_j c_k}_{J_{jk}} Z_j Z_k + C'_0 I
+            \end{aligned}$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>Verificación del Qubit 1 ($x_1$) y Qubit 2 ($x_2$)</h2>
+          <p>Verifiquemos que la sustitución directa y las fórmulas de la matriz QUBO son coherentes:</p>
+          <div class="two-col" style="font-size:0.75em; gap: 15px;">
+            <div class="info-card" style="padding:10px;">
+              <h4>Vía Directa (Álgebra)</h4>
+              <p>Para $x_1$ ($v_1=5, c_1=3$):</p>
+              $$h_1 = \frac{5}{2} - 64(3) = 2.5 - 192 = \mathbf{-189.5}$$
+              <p>Para $J_{12}$ ($c_1=3, c_2=5$):</p>
+              $$J_{12} = 8(3)(5) = \mathbf{120}$$
+            </div>
+            <div class="info-card gold" style="padding:10px;">
+              <h4>Vía QUBO ($Q$)</h4>
+              <p>Con $Q_{11}=-1301$, $\sum_{k \neq 1} Q_{1k}=3360$:</p>
+              $$h_1 = -\frac{-1301}{2} - \frac{3360}{4} = \mathbf{-189.5}$$
+              <p>Con $Q_{12}=480$:</p>
+              $$J_{12} = \frac{480}{4} = \mathbf{120}$$
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.85em;">
+          <h2>El Hamiltoniano de la Mochila</h2>
+          <p style="margin-bottom: 5px;">El Hamiltoniano final $H_C$ que se programa en Qiskit o D-Wave para nuestra instancia:</p>
+          <table style="font-size: 0.65em; margin-bottom: 5px;">
+            <thead>
+              <tr>
+                <th>Qubit $j$</th>
+                <th>Variable $y_j$</th>
+                <th>Valor $v_j$</th>
+                <th>Peso $c_j$</th>
+                <th>Campo Local $h_j = \frac{v_j}{2} - 64c_j$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Laptop ($x_1$)</td><td>5</td><td>3</td><td>$\mathbf{-189.5}$</td></tr>
+              <tr><td>2</td><td>Cámara ($x_2$)</td><td>10</td><td>5</td><td>$\mathbf{-315.0}$</td></tr>
+              <tr><td>3</td><td>Proyector ($x_3$)</td><td>15</td><td>7</td><td>$\mathbf{-440.5}$</td></tr>
+              <tr><td>4</td><td>Tablet ($x_4$)</td><td>4</td><td>2</td><td>$\mathbf{-126.0}$</td></tr>
+              <tr><td>5</td><td>Dron ($x_5$)</td><td>12</td><td>6</td><td>$\mathbf{-378.0}$</td></tr>
+              <tr><td>6</td><td>Slack 0 ($s_0$)</td><td>0</td><td>1</td><td>$\mathbf{-64.0}$</td></tr>
+              <tr><td>7</td><td>Slack 1 ($s_1$)</td><td>0</td><td>2</td><td>$\mathbf{-128.0}$</td></tr>
+              <tr><td>8</td><td>Slack 2 ($s_2$)</td><td>0</td><td>4</td><td>$\mathbf{-256.0}$</td></tr>
+              <tr><td>9</td><td>Slack 3 ($s_3$)</td><td>0</td><td>8</td><td>$\mathbf{-512.0}$</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:0.75em; text-align:center; color:var(--accent-gold); margin-top:5px; margin-bottom:0;">
+            Acoplamientos: $J_{jk} = 8 \cdot c_j \cdot c_k$ &nbsp;(ej. $J_{12} = 120$, $J_{35} = 336$, $J_{89} = 256$, etc.)
+          </p>
         </section>
 
         <section>
