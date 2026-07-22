@@ -18,9 +18,10 @@ conda env create -f environment.yml
 conda activate qaoa_knapsack
 ```
 
-### 3. Abrir las presentaciones
-Abrir cualquiera de los archivos HTML en `presentation/` con un navegador moderno:
-- `presentation/index.html` — Mochila: ILP → QUBO → QAOA → Annealing
+### 3. Abrir la Landing Page o las presentaciones
+Abrir cualquiera de los siguientes archivos HTML en un navegador moderno:
+- `index.html` — Landing Page interactiva, hub de presentaciones y descarga de notebooks
+- `presentation/qaoa.html` — Mochila: ILP → QUBO → QAOA → Annealing
 - `presentation/quantum_phase_estimation.html` — Quantum Phase Estimation
 - `presentation/shor_presentation.html` — Algoritmo de Shor
 
@@ -35,6 +36,7 @@ jupyter lab notebooks/
 
 ```
 qaoa_training/
+├── index.html                               # Landing Page web y centro de descargas
 ├── environment.yml                          # Ambiente conda unificado
 ├── README.md
 ├── .gitignore
@@ -51,7 +53,7 @@ qaoa_training/
 │   └── 06_mini_qaoa.ipynb                   # QAOA mínimo didáctico (2 qubits)
 │
 └── presentation/
-    ├── index.html                           # Presentación principal (Mochila)
+    ├── qaoa.html                            # Presentación principal (Mochila & QAOA)
     ├── quantum_phase_estimation.html        # Presentación QPE
     ├── shor_presentation.html               # Presentación Shor
     ├── css/
@@ -112,20 +114,22 @@ qaoa_training/
 
 ---
 
-## 🌐 GitHub Pages (Presentaciones Online)
+## 🌐 GitHub Pages (Landing Page & Presentaciones Online)
 
-Para publicar las presentaciones en GitHub Pages:
+Para publicar el portal web y las presentaciones en GitHub Pages:
 
 1. Subir el repositorio a GitHub
 2. Ir a **Settings → Pages**
 3. En **Source**, seleccionar `main` branch, carpeta `/ (root)`
-4. Las presentaciones estarán en:
-   - `https://ui4054.github.io/qaoa_training/presentation/`
-   - `https://ui4054.github.io/qaoa_training/presentation/quantum_phase_estimation.html`
-   - `https://ui4054.github.io/qaoa_training/presentation/shor_presentation.html`
+4. El portal estará disponible en:
+   - **Landing Page**: `https://ui4054.github.io/qaoa_training/`
+   - **Presentación QAOA & Mochila**: `https://ui4054.github.io/qaoa_training/presentation/qaoa.html`
+   - **Presentación QPE**: `https://ui4054.github.io/qaoa_training/presentation/quantum_phase_estimation.html`
+   - **Presentación Shor**: `https://ui4054.github.io/qaoa_training/presentation/shor_presentation.html`
 
 ---
 
 ## 📝 Licencia
 
 Material educativo de uso libre. Atribución apreciada.
+
