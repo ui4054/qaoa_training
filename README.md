@@ -1,7 +1,7 @@
-# 🎓 QAOA & Quantum Annealing para el Problema de la Mochila
+# 🎓 Computación Cuántica Aplicada — Material Didáctico
 
-Material didáctico para clase de pregrado (90 minutos).  
-Cubre teoría matemática, solver clásico, QAOA con Qiskit 2.4, y Quantum Annealing con D-Wave.
+Material didáctico para clases de pregrado sobre **algoritmos cuánticos aplicados a optimización combinatoria e introducción a la criptografía cuántica**.  
+Cubre desde el Problema de la Mochila (solver clásico, QAOA, Quantum Annealing) hasta Quantum Phase Estimation y el Algoritmo de Shor.
 
 ---
 
@@ -19,8 +19,11 @@ conda env create -f environment.yml
 conda activate qaoa_knapsack
 ```
 
-### 3. Abrir la presentación
-Abrir `presentation/index.html` en cualquier navegador moderno.
+### 3. Abrir las presentaciones
+Abrir cualquiera de los archivos HTML en `presentation/` con un navegador moderno:
+- `presentation/index.html` — Mochila: ILP → QUBO → QAOA → Annealing
+- `presentation/quantum_phase_estimation.html` — Quantum Phase Estimation
+- `presentation/shor_presentation.html` — Algoritmo de Shor
 
 ### 4. Ejecutar los notebooks
 ```bash
@@ -33,24 +36,34 @@ jupyter lab notebooks/
 
 ```
 qaoa_training/
-├── environment.yml                    # Ambiente conda unificado
-├── README.md                          # Este archivo
+├── environment.yml                          # Ambiente conda unificado
+├── README.md
 ├── .gitignore
+│
 ├── data/
-│   └── knapsack_instance.json         # Instancia del problema (5 ítems)
-├── presentation/
-│   ├── index.html                     # Diapositivas Reveal.js
-│   └── css/
-│       └── custom-theme.css           # Tema visual académico
-└── notebooks/
-    ├── 01_solver_clasico.ipynb        # PuLP + CBC
-    ├── 02_qaoa_qiskit.ipynb           # Qiskit 2.4 + QAOA
-    └── 03_quantum_annealing_dwave.ipynb # D-Wave Simulated Annealing
+│   └── knapsack_instance.json               # Instancia del problema (5 ítems)
+│
+├── notebooks/
+│   ├── 01_solver_clasico.ipynb              # Solver clásico con PuLP + CBC
+│   ├── 02_qaoa_qiskit.ipynb                 # QAOA con Qiskit 2.4
+│   ├── 03_quantum_annealing_dwave.ipynb     # Quantum Annealing con D-Wave Ocean
+│   ├── 04_quantum_phase_estimation.ipynb    # Quantum Phase Estimation (QPE)
+│   └── 05_shor_algorithm.ipynb              # Algoritmo de Shor
+│
+└── presentation/
+    ├── index.html                           # Presentación principal (Mochila)
+    ├── quantum_phase_estimation.html        # Presentación QPE
+    ├── shor_presentation.html               # Presentación Shor
+    ├── css/
+    │   └── custom-theme.css                 # Tema visual académico
+    └── images/                              # Diagramas de circuitos QPE
 ```
 
 ---
 
-## 📋 Contenido de la Clase
+## 📋 Contenido Temático
+
+###  1 — Problema de la Mochila (~90 min)
 
 | Bloque | Duración | Tema |
 |--------|----------|------|
@@ -59,6 +72,19 @@ qaoa_training/
 | Práctica 2 | 20 min | QAOA con Qiskit 2.4 (simulación local) |
 | Práctica 3 | 15 min | Quantum Annealing con D-Wave (simulación local) |
 | Cierre | 5 min | Comparativa y preguntas |
+
+
+### 2 — Quantum Phase Estimation
+
+- Fundamentos teóricos de QPE
+- Circuitos con 1, 2 y 3 qubits de precisión
+- Implementación paso a paso con Qiskit
+
+### 3 — Algoritmo de Shor
+
+- Reducción de factorización a búsqueda de período
+- QPE como subrutina central
+- Implementación didáctica con Qiskit
 
 ---
 
@@ -69,16 +95,33 @@ qaoa_training/
 - **Navegador** moderno (Chrome, Firefox, Edge)
 - No se requiere acceso a hardware cuántico real
 
+### Dependencias principales
+
+| Paquete | Versión | Uso |
+|---------|---------|-----|
+| `qiskit` | ≥ 2.4 | Circuitos cuánticos, QAOA, QPE, Shor |
+| `qiskit-algorithms` | ≥ 0.3 | Algoritmos variacionales |
+| `qiskit-optimization` | ≥ 0.6 | Formulación QUBO |
+| `dwave-ocean-sdk` | ≥ 7.0 | Quantum / Simulated Annealing |
+| `pulp` | ≥ 2.8 | Solver ILP clásico |
+| `matplotlib` | ≥ 3.8 | Visualizaciones |
+| `numpy` | ≥ 1.26 | Cómputo numérico |
+| `pylatexenc` | ≥ 2.10 | Renderizado LaTeX en circuitos |
+| `jupyterlab` | ≥ 4.0 | Entorno de notebooks |
+
 ---
 
-## 🌐 GitHub Pages (Presentación Online)
+## 🌐 GitHub Pages (Presentaciones Online)
 
-Para publicar la presentación en GitHub Pages:
+Para publicar las presentaciones en GitHub Pages:
 
 1. Subir el repositorio a GitHub
 2. Ir a **Settings → Pages**
 3. En **Source**, seleccionar `main` branch, carpeta `/ (root)`
-4. La presentación estará en: `https://TU_USUARIO.github.io/qaoa_training/presentation/`
+4. Las presentaciones estarán en:
+   - `https://ui4054.github.io/qaoa_training/presentation/`
+   - `https://ui4054.github.io/qaoa_training/presentation/quantum_phase_estimation.html`
+   - `https://ui4054.github.io/qaoa_training/presentation/shor_presentation.html`
 
 ---
 
