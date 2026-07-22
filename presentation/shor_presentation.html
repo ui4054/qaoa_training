@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algoritmo de Shor - Análisis y Construcción</title>
+  <meta name="description" content="Análisis Matemático e Implementación en Qiskit">
+
+  <!-- Reveal.js 5.x -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+  <!-- MathJax 3 -->
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Tema personalizado -->
+  <link rel="stylesheet" href="css/custom-theme.css">
+  <style>
+    .reveal table {
+      margin: auto;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.82em;
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+    .reveal table th, .reveal table td {
+      padding: 0.5em 1em;
+      text-align: center;
+    }
+    .reveal table th {
+      background-color: var(--accent-blue) !important;
+      color: #FFFFFF !important;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-light);
+    }
+    .reveal table td {
+      border-bottom: 1px solid var(--border-light);
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
+    .reveal table tr:last-child td {
+      border-bottom: none;
+    }
+    .reveal table tr:nth-child(even) td {
+      background-color: #F8FAFC;
+    }
+    .block-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 1.5em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================================ -->
+      <!-- PORTADA                                                      -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="title-slide">
+          <div>
+            <span class="badge badge-blue">Teoría y Código</span>
+            <span class="badge badge-purple">Algoritmo de Shor</span>
+          </div>
+          <h1 style="font-size: 2.2em;">Algoritmo de Shor</h1>
+          <h3 style="color: var(--text-muted); font-weight: 400; font-size: 1.2em;">
+            Análisis Matemático e Implementación en Qiskit
+          </h3>
+          <p class="subtitle" style="margin-top: 1.5em; font-size: 0.9em;">
+            Fundamentos y Transición a Circuitos Cuánticos
+          </p>
+        </section>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 1: REDUCCIÓN DEL PROBLEMA                            -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="section-divider">
+          <div class="section-num">01</div>
+          <h2>Fase 1: Reducción del Problema</h2>
+          <p style="color: var(--text-muted);">Factorización y Búsqueda de Período</p>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Factorización y Búsqueda de Período</h2>
+          <p>El problema de factorizar un entero $N$ se reduce algorítmicamente al problema de encontrar el período de una función modular.</p>
+          <div class="info-card">
+            Sea $N$ el número a factorizar y $a$ un entero <strong>elegido completamente al azar</strong> ($1 < a < N$) tal que $\text{mcd}(a, N) = 1$.
+          </div>
+          <p>Definimos la función:</p>
+          <div class="math-block">
+            $$f(x) = a^x \pmod N$$
+          </div>
+          <p>El objetivo es hallar el menor entero $r > 0$ tal que:</p>
+          <div class="math-block-gold">
+            $$a^r \equiv 1 \pmod N$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.68em;">
+          <h2>El Algoritmo de Euclides: Divisiones Sucesivas</h2>
+          <p>Permite calcular el MCD de dos números. La regla es simple: <strong>en cada paso, el divisor pasa a ser el nuevo dividendo y el residuo pasa a ser el nuevo divisor</strong>. Se repite hasta que el residuo sea 0. El último divisor usado es el MCD.</p>
+
+          <div class="two-col" style="margin-top: 10px;">
+            <div>
+              <h3 style="font-size: 1em; border: none; margin-bottom: 5px;">Regla General</h3>
+              <div class="math-block" style="padding: 10px; margin-bottom: 10px;">
+                $$\underbrace{A}_{\text{Dividendo}} = \underbrace{q}_{\text{Cociente}} \times \underbrace{B}_{\text{Divisor}} + \underbrace{R}_{\text{Residuo}}$$
+              </div>
+              <div class="info-card" style="padding: 10px; margin: 0; border-top-color: var(--accent-purple);">
+                <p style="font-size: 0.9em; margin: 0;"><strong>Transición entre pasos:</strong></p>
+                <ul style="font-size: 0.85em; margin: 5px 0 0 0;">
+                  <li>El <span style="color: #7C3AED; font-weight: bold;">Divisor ($B$)</span> de este paso &rarr; se convierte en el <span style="color: #2563EB; font-weight: bold;">Dividendo ($A$)</span> del siguiente.</li>
+                  <li>El <span style="color: #D97706; font-weight: bold;">Residuo ($R$)</span> de este paso &rarr; se convierte en el <span style="color: #7C3AED; font-weight: bold;">Divisor ($B$)</span> del siguiente.</li>
+                  <li>Cuando <span style="color: #D97706; font-weight: bold;">$R = 0$</span>, el MCD es el <span style="color: #7C3AED; font-weight: bold;">Divisor ($B$)</span> de esa última fila.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h3 style="font-size: 1em; border: none; margin-bottom: 5px;">Ejemplo Detallado: $\text{mcd}(252, 105)$</h3>
+              <table style="width: 100%; font-size: 0.88em;">
+                <thead>
+                  <tr>
+                    <th>Paso</th>
+                    <th style="color: #2563EB;">Dividendo</th>
+                    <th style="color: #7C3AED;">Divisor</th>
+                    <th>Operación</th>
+                    <th style="color: #718096;">Cociente</th>
+                    <th style="color: #D97706;">Residuo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1</strong></td>
+                    <td style="color: #2563EB; font-weight: bold;">252</td>
+                    <td style="color: #7C3AED; font-weight: bold;">105</td>
+                    <td style="font-size: 0.85em;">252 &div; 105</td>
+                    <td style="color: #718096;">2</td>
+                    <td style="color: #D97706; font-weight: bold;">42</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2</strong></td>
+                    <td style="color: #2563EB; font-weight: bold;">105 <span style="font-size: 0.7em; color: #7C3AED;">&larr;Divisor</span></td>
+                    <td style="color: #7C3AED; font-weight: bold;">42 <span style="font-size: 0.7em; color: #D97706;">&larr;Residuo</span></td>
+                    <td style="font-size: 0.85em;">105 &div; 42</td>
+                    <td style="color: #718096;">2</td>
+                    <td style="color: #D97706; font-weight: bold;">21</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3</strong></td>
+                    <td style="color: #2563EB; font-weight: bold;">42 <span style="font-size: 0.7em; color: #7C3AED;">&larr;Divisor</span></td>
+                    <td style="color: #7C3AED; font-weight: bold;">21 <span style="font-size: 0.7em; color: #D97706;">&larr;Residuo</span></td>
+                    <td style="font-size: 0.85em;">42 &div; 21</td>
+                    <td style="color: #718096;">2</td>
+                    <td style="color: var(--accent-green); font-weight: bold;">0 &check;</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="note" style="margin-top: 8px; text-align: center; font-size: 0.9em;">
+                Residuo = 0 en el paso 3. El <strong>Divisor de esa fila</strong> es <strong style="color: #7C3AED;">21</strong>.<br>
+                &rArr; $\text{mcd}(252, 105) = \mathbf{21}$
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.76em;">
+          <h2>¿Qué significa $\text{mcd}(a, N) = 1$?</h2>
+          <p style="margin-bottom: 0.5em;">El Máximo Común Divisor (MCD) determina la relación inicial entre la base elegida $a$ y el número a factorizar $N$:</p>
+          
+          <div class="two-col">
+            <div class="info-card gold" style="margin: 0; padding: 15px;">
+              <h4 style="color: var(--accent-gold); margin-top: 0;">Caso A: $\text{mcd}(a, N) > 1$</h4>
+              <p style="font-size: 0.9em; margin-bottom: 10px;"><strong>No son coprimos:</strong> Comparten divisores primos comunes.</p>
+              <ul style="font-size: 0.85em; padding-left: 0;">
+                <li style="margin-bottom: 5px;">El valor de $\text{mcd}(a, N)$ es directamente un factor no trivial de $N$.</li>
+                <li style="margin-bottom: 5px;"><strong>Ejemplo:</strong> Si $N=15$ y $a=10$:
+                  <div class="note" style="margin: 5px 0; font-size: 0.85em; font-family: monospace; text-align: left; padding: 5px;">
+                    Euclides:<br>
+                    <span style="color: #2563EB; font-weight: bold;">15</span> = <span style="color: #718096;">1</span> &times; <span style="color: #7C3AED; font-weight: bold;">10</span> + <span style="color: #D97706; font-weight: bold;">5</span><br>
+                    <span style="color: #2563EB; font-weight: bold;">10</span> = <span style="color: #718096;">2</span> &times; <span style="color: #7C3AED; font-weight: bold;">5</span> + <span style="color: #D97706; font-weight: bold;">0</span><br>
+                    &rArr; $\text{mcd}(10, 15) = \mathbf{5}$ (factor)
+                  </div>
+                </li>
+                <li><span class="badge badge-gold">Fin Clásico</span> Terminamos sin usar computación cuántica.</li>
+              </ul>
+            </div>
+            
+            <div class="info-card purple" style="margin: 0; padding: 15px;">
+              <h4 style="color: var(--accent-purple); margin-top: 0;">Caso B: $\text{mcd}(a, N) = 1$</h4>
+              <p style="font-size: 0.9em; margin-bottom: 10px;"><strong>Sí son coprimos:</strong> No comparten ningún factor más allá del 1.</p>
+              <ul style="font-size: 0.85em; padding-left: 0;">
+                <li style="margin-bottom: 5px;">No es posible encontrar factores directamente por aritmética clásica.</li>
+                <li style="margin-bottom: 5px;"><strong>Ejemplo:</strong> Si $N=15$ y $a=7$:
+                  <div class="note" style="margin: 5px 0; font-size: 0.85em; font-family: monospace; text-align: left; padding: 5px;">
+                    Euclides:<br>
+                    <span style="color: #2563EB; font-weight: bold;">15</span> = <span style="color: #718096;">2</span> &times; <span style="color: #7C3AED; font-weight: bold;">7</span> + <span style="color: #D97706; font-weight: bold;">1</span><br>
+                    <span style="color: #2563EB; font-weight: bold;">7</span> = <span style="color: #718096;">7</span> &times; <span style="color: #7C3AED; font-weight: bold;">1</span> + <span style="color: #D97706; font-weight: bold;">0</span><br>
+                    &rArr; $\text{mcd}(7, 15) = \mathbf{1}$ (coprimo)
+                  </div>
+                </li>
+                <li><span class="badge badge-purple">Camino Cuántico</span> Iniciamos QPE para hallar el período $r$ de $7^x \pmod{15}$.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.68em;">
+          <h2>Análisis Numérico: $N=15, a=7$</h2>
+          <p>Evaluación secuencial de $f(x) = 7^x \pmod{15}$. Pero, <strong>¿qué significa $\pmod{15}$?</strong></p>
+          
+          <div class="info-card" style="padding: 10px; margin-bottom: 10px;">
+            <p style="margin: 0; font-size: 0.95em;"><strong>La operación módulo ($\text{mod}$)</strong> es el <strong>residuo</strong> de la división entera. Para obtener $7^x \pmod{15}$, dividimos $7^x$ entre 15 y nos quedamos solo con el residuo:</p>
+            <div class="math-block" style="padding: 6px; margin: 5px 0; font-size: 0.95em;">
+              $$7^x \div 15 = \underbrace{\text{cociente}}_{\text{se descarta}} \quad \text{residuo} \quad \underbrace{R}_{\text{este es el resultado mod}}$$
+            </div>
+            <p style="margin: 0; font-size: 0.85em; color: var(--text-muted);">En Python: <code>7**x % 15</code> &nbsp;|&nbsp; El símbolo <code>%</code> es el operador módulo.</p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>$x$</th>
+                <th>$7^x$</th>
+                <th>División entera por 15</th>
+                <th>Residuo = $7^x \pmod{15}$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>$7^0 = 1$</td>
+                <td>$1 \div 15 = 0$ con residuo</td>
+                <td style="color: var(--accent-gold); font-weight: bold;">1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>$7^1 = 7$</td>
+                <td>$7 \div 15 = 0$ con residuo</td>
+                <td>7</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>$7^2 = 49$</td>
+                <td>$49 \div 15 = \mathbf{3}$ con residuo ($49 - 3 \times 15 = 49 - 45$)</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>$7^3 = 343$</td>
+                <td>$343 \div 15 = \mathbf{22}$ con residuo ($343 - 22 \times 15 = 343 - 330$)</td>
+                <td>13</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>$7^4 = 2401$</td>
+                <td>$2401 \div 15 = \mathbf{160}$ con residuo ($2401 - 160 \times 15 = 2401 - 2400$)</td>
+                <td style="color: var(--accent-gold); font-weight: bold;">1 &larr; ¡Se repite!</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>$7^5 = 16807$</td>
+                <td>$16807 \div 15 = \mathbf{1120}$ con residuo ($16807 - 1120 \times 15 = 16807 - 16800$)</td>
+                <td>7</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note" style="margin-top: 8px;">
+            El residuo vuelve a ser <strong style="color: var(--accent-gold);">1</strong> cuando $x = 4$. La secuencia se repite: $1, 7, 4, 13, \mathbf{1}, 7, 4, 13, \dots$ El período es $r = 4$.
+          </div>
+        </section>
+
+        <section style="font-size: 0.68em;">
+          <h2>¿De dónde sale la fórmula de factorización?</h2>
+          <p>Tenemos el período $r$ hallado por QPE. Ahora debemos convertirlo en factores de $N$. Veamos la cadena lógica paso a paso:</p>
+          
+          <div class="info-card" style="padding: 12px; margin-bottom: 10px;">
+            <div class="step" style="margin-bottom: 8px;">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <strong>Partimos de la definición de período:</strong> El período $r$ cumple que $a^r \equiv 1 \pmod{N}$.<br>
+                <span style="font-size: 0.9em; color: var(--text-muted);">Para nuestro ejemplo: 7⁴ = 2401, y 2401 ÷ 15 = 160 con residuo 1. Entonces 7⁴ ≡ 1 mod 15 &check;</span>
+              </div>
+            </div>
+            <div class="step" style="margin-bottom: 8px;">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <strong>¿Es $r$ par?</strong> Si $r$ es impar, no podemos dividirlo por 2 y el intento falla. Si es par, podemos reescribir la ecuación:<br>
+                <div class="math-block" style="padding: 8px; margin: 5px 0;">$$a^r \equiv 1 \pmod{N} \quad \Longrightarrow \quad \left(a^{r/2}\right)^2 \equiv 1 \pmod{N}$$</div>
+                <span style="font-size: 0.9em; color: var(--text-muted);">Nuestro r = 4 es par. Entonces: (7²)² = 49² = 2401 ≡ 1 mod 15 &check;</span>
+              </div>
+            </div>
+            <div class="step" style="margin-bottom: 8px;">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <strong>Restamos 1 a ambos lados</strong> y factorizamos como <em>diferencia de cuadrados</em>:<br>
+                <div class="math-block-gold" style="padding: 8px; margin: 5px 0;">$$\left(a^{r/2}\right)^2 - 1 \equiv 0 \pmod{N} \quad \Longrightarrow \quad \underbrace{\left(a^{r/2} - 1\right)}_{\text{Factor A}} \cdot \underbrace{\left(a^{r/2} + 1\right)}_{\text{Factor B}} \equiv 0 \pmod{N}$$</div>
+                <span style="font-size: 0.9em; color: var(--text-muted);">(49 - 1)(49 + 1) = 48 × 50 = 2400, y 2400 ÷ 15 = 160 exacto. Entonces 15 divide a 48 × 50 &check;</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <strong>Como $N$ divide al producto $(a^{r/2} - 1)(a^{r/2} + 1)$</strong>, los factores primos de $N$ se reparten entre ambos términos. Calculamos $\text{mcd}$ con cada uno para extraerlos.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.68em;">
+          <h2>¿Qué significa $a^{r/2} \not\equiv -1 \pmod{N}$?</h2>
+          <p>El símbolo $\not\equiv$ significa "<strong>no es congruente</strong>" (no deja el mismo residuo). La condición nos protege de obtener factores triviales:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-red);">
+              <h4 style="color: var(--accent-red); margin-top: 0;">Si $a^{r/2} \equiv -1 \pmod{N}$ (raíz trivial)</h4>
+              <p style="font-size: 0.9em;">Significa que $a^{r/2} + 1$ es divisible por $N$ completamente:</p>
+              <ul style="font-size: 0.85em;">
+                <li>$\text{mcd}(a^{r/2} + 1, N) = N$ (trivial, es el propio $N$)</li>
+                <li>$\text{mcd}(a^{r/2} - 1, N) = 1$ (trivial, no aporta nada)</li>
+              </ul>
+              <p style="font-size: 0.9em;"><strong>Ejemplo:</strong> $a=14, r=2$.<br>
+              $14^1 = 14$. ¿Cuánto es $14 \pmod{15}$? Es $14$, que equivale a $-1 \pmod{15}$<br>(porque $14 + 1 = 15 \equiv 0$).</p>
+              <p style="font-size: 0.9em; color: var(--accent-red);"><strong>Factores obtenidos: 1 y 15. ¡Inútiles!</strong></p>
+            </div>
+            
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="color: var(--accent-green); margin-top: 0;">Si $a^{r/2} \not\equiv -1 \pmod{N}$ (raíz NO trivial) &check;</h4>
+              <p style="font-size: 0.9em;">Significa que $N$ <strong>no</strong> divide completamente a ninguno de los dos términos por separado, así que sus factores primos se reparten:</p>
+              <ul style="font-size: 0.85em;">
+                <li>$\text{mcd}(a^{r/2} - 1, N)$ captura <strong>algunos</strong> factores de $N$</li>
+                <li>$\text{mcd}(a^{r/2} + 1, N)$ captura <strong>los demás</strong></li>
+              </ul>
+              <p style="font-size: 0.9em;"><strong>Ejemplo:</strong> $a=7, r=4$.<br>
+              $7^2 = 49$. ¿Cuánto es $49 \pmod{15}$? Es $4$.<br>
+              ¿Es $4 \equiv -1 \pmod{15}$? No, porque $-1 \pmod{15} = 14$, y $4 \neq 14$.</p>
+              <p style="font-size: 0.9em; color: var(--accent-green);"><strong>Factores obtenidos: 3 y 5. ¡Útiles!</strong></p>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.72em;">
+          <h2>Cálculo Final de Factores: $a=7, N=15, r=4$</h2>
+          <p>Verificada la condición ($7^2 = 49 \equiv 4 \not\equiv -1 \pmod{15}$), extraemos los factores usando Euclides:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue-light);">
+              <h4 style="margin: 0 0 5px 0; font-size: 0.95em; color: var(--accent-blue-light);">Factor $p = \text{mcd}(a^{r/2} - 1, N) = \text{mcd}(48, 15)$</h4>
+              <p style="font-size: 0.85em; margin-bottom: 5px;">$a^{r/2} - 1 = 7^2 - 1 = 49 - 1 = 48$</p>
+              <table style="width: 100%; font-size: 0.85em;">
+                <thead><tr><th style="color: #2563EB; padding: 3px 5px;">$A$</th><th style="color: #7C3AED; padding: 3px 5px;">$B$</th><th style="color: #718096; padding: 3px 5px;">$q$</th><th style="color: #D97706; padding: 3px 5px;">$R$</th></tr></thead>
+                <tbody>
+                  <tr><td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">48</td><td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">15</td><td style="color: #718096; padding: 3px 5px;">3</td><td style="color: #D97706; font-weight: bold; padding: 3px 5px;">3</td></tr>
+                  <tr><td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">15 <span style="font-size:0.7em;color:#7C3AED;">&larr;</span></td><td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">3 <span style="font-size:0.7em;color:#D97706;">&larr;</span></td><td style="color: #718096; padding: 3px 5px;">5</td><td style="color: var(--accent-green); font-weight: bold; padding: 3px 5px;">0 &check;</td></tr>
+                </tbody>
+              </table>
+              <div class="note" style="margin-top: 5px; text-align: center; font-size: 0.9em;">&rArr; $p = \mathbf{3}$</div>
+            </div>
+            
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="margin: 0 0 5px 0; font-size: 0.95em; color: var(--accent-green);">Factor $q = \text{mcd}(a^{r/2} + 1, N) = \text{mcd}(50, 15)$</h4>
+              <p style="font-size: 0.85em; margin-bottom: 5px;">$a^{r/2} + 1 = 7^2 + 1 = 49 + 1 = 50$</p>
+              <table style="width: 100%; font-size: 0.85em;">
+                <thead><tr><th style="color: #2563EB; padding: 3px 5px;">$A$</th><th style="color: #7C3AED; padding: 3px 5px;">$B$</th><th style="color: #718096; padding: 3px 5px;">$q$</th><th style="color: #D97706; padding: 3px 5px;">$R$</th></tr></thead>
+                <tbody>
+                  <tr><td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">50</td><td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">15</td><td style="color: #718096; padding: 3px 5px;">3</td><td style="color: #D97706; font-weight: bold; padding: 3px 5px;">5</td></tr>
+                  <tr><td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">15 <span style="font-size:0.7em;color:#7C3AED;">&larr;</span></td><td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">5 <span style="font-size:0.7em;color:#D97706;">&larr;</span></td><td style="color: #718096; padding: 3px 5px;">3</td><td style="color: var(--accent-green); font-weight: bold; padding: 3px 5px;">0 &check;</td></tr>
+                </tbody>
+              </table>
+              <div class="note" style="margin-top: 5px; text-align: center; font-size: 0.9em;">&rArr; $q = \mathbf{5}$</div>
+            </div>
+          </div>
+          <div class="math-block-gold" style="margin-top: 15px; text-align: center; font-size: 1.1em;">
+            $$N = p \times q \quad \Longrightarrow \quad 15 = 3 \times 5 \quad \checkmark$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.58em;">
+          <h2>Análisis en Paralelo: 3 Elecciones de $a$ al azar para $N = 15$</h2>
+          
+          <div class="three-col">
+            <!-- ELECCIÓN 1: a=5 -->
+            <div class="info-card gold" style="margin: 0; padding: 10px;">
+              <h4 style="color: var(--accent-gold); margin-top: 0; font-size: 1.1em; margin-bottom: 5px;">Elección 1: $a = 5$</h4>
+              <p style="margin-bottom: 5px;"><strong>Paso 1: Euclides para mcd(5, 15)</strong></p>
+              <table style="width: 100%; font-size: 0.85em; margin-bottom: 8px;">
+                <thead>
+                  <tr>
+                    <th style="color: #2563EB; padding: 3px 5px;">$A$</th>
+                    <th style="color: #7C3AED; padding: 3px 5px;">$B$</th>
+                    <th style="color: #718096; padding: 3px 5px;">$q$</th>
+                    <th style="color: #D97706; padding: 3px 5px;">$R$</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">15</td>
+                    <td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">5</td>
+                    <td style="color: #718096; padding: 3px 5px;">3</td>
+                    <td style="color: var(--accent-green); font-weight: bold; padding: 3px 5px;">0 &check;</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.9em; margin-bottom: 3px;">$R = 0$ en 1 paso. Divisor = <strong style="color: #7C3AED;">5</strong>.</p>
+              <p style="font-size: 0.9em;">&rArr; mcd(5, 15) = <strong>5</strong> &gt; 1. El <strong>5</strong> es factor de 15 directamente.</p>
+              <div class="note" style="padding: 4px 8px; margin: 5px 0; font-size: 0.9em; text-align: center;"><strong>15 = 5 × 3 &check;</strong></div>
+              <span class="badge badge-gold" style="font-size: 0.75em;">Fin Clásico Directo</span>
+            </div>
+            
+            <!-- ELECCIÓN 2: a=8 -->
+            <div class="info-card green" style="margin: 0; padding: 10px;">
+              <h4 style="color: var(--accent-green); margin-top: 0; font-size: 1.1em; margin-bottom: 5px;">Elección 2: $a = 8$</h4>
+              <p style="margin-bottom: 5px;"><strong>Paso 1: Euclides para mcd(8, 15)</strong></p>
+              <table style="width: 100%; font-size: 0.85em; margin-bottom: 5px;">
+                <thead>
+                  <tr>
+                    <th style="color: #2563EB; padding: 3px 5px;">$A$</th>
+                    <th style="color: #7C3AED; padding: 3px 5px;">$B$</th>
+                    <th style="color: #718096; padding: 3px 5px;">$q$</th>
+                    <th style="color: #D97706; padding: 3px 5px;">$R$</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">15</td>
+                    <td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">8</td>
+                    <td style="color: #718096; padding: 3px 5px;">1</td>
+                    <td style="color: #D97706; font-weight: bold; padding: 3px 5px;">7</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">8 <span style="font-size:0.7em;color:#7C3AED;">&larr;</span></td>
+                    <td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">7 <span style="font-size:0.7em;color:#D97706;">&larr;</span></td>
+                    <td style="color: #718096; padding: 3px 5px;">1</td>
+                    <td style="color: #D97706; font-weight: bold; padding: 3px 5px;">1</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">7 <span style="font-size:0.7em;color:#7C3AED;">&larr;</span></td>
+                    <td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">1 <span style="font-size:0.7em;color:#D97706;">&larr;</span></td>
+                    <td style="color: #718096; padding: 3px 5px;">7</td>
+                    <td style="color: var(--accent-green); font-weight: bold; padding: 3px 5px;">0 &check;</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.9em; margin-bottom: 3px;">&rArr; mcd(8, 15) = <strong>1</strong> (coprimos). <span class="badge badge-purple" style="font-size: 0.8em;">QPE</span></p>
+              <p style="font-size: 0.9em; margin-bottom: 3px;"><strong>Paso 2:</strong> Período r = 4 (par). Raíz: 8² = 64 ≡ 4 ≢ -1 &check;</p>
+              <p style="font-size: 0.9em; margin-bottom: 3px;"><strong>Paso 3:</strong> Extraer factores con Euclides:</p>
+              <table style="width: 100%; font-size: 0.82em; margin-bottom: 5px;">
+                <thead>
+                  <tr><th style="padding: 2px 4px;">MCD de</th><th style="color: #2563EB; padding: 2px 4px;">$A$</th><th style="color: #7C3AED; padding: 2px 4px;">$B$</th><th style="color: #718096; padding: 2px 4px;">$q$</th><th style="color: #D97706; padding: 2px 4px;">$R$</th><th style="padding: 2px 4px;">Factor</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding: 2px 4px;">mcd(4-1, 15)</td><td style="color: #2563EB; padding: 2px 4px;">15</td><td style="color: #7C3AED; padding: 2px 4px;">3</td><td style="color: #718096; padding: 2px 4px;">5</td><td style="color: var(--accent-green); padding: 2px 4px;">0 &check;</td><td style="padding: 2px 4px;"><strong style="color: var(--accent-green);">3</strong></td></tr>
+                  <tr><td style="padding: 2px 4px;">mcd(4+1, 15)</td><td style="color: #2563EB; padding: 2px 4px;">15</td><td style="color: #7C3AED; padding: 2px 4px;">5</td><td style="color: #718096; padding: 2px 4px;">3</td><td style="color: var(--accent-green); padding: 2px 4px;">0 &check;</td><td style="padding: 2px 4px;"><strong style="color: var(--accent-green);">5</strong></td></tr>
+                </tbody>
+              </table>
+              <span class="badge badge-green" style="font-size: 0.75em;">Éxito Cuántico: 15 = 3 × 5</span>
+            </div>
+            
+            <!-- ELECCIÓN 3: a=14 -->
+            <div class="info-card purple" style="margin: 0; padding: 10px;">
+              <h4 style="color: var(--accent-purple); margin-top: 0; font-size: 1.1em; margin-bottom: 5px;">Elección 3: $a = 14$</h4>
+              <p style="margin-bottom: 5px;"><strong>Paso 1: Euclides para mcd(14, 15)</strong></p>
+              <table style="width: 100%; font-size: 0.85em; margin-bottom: 5px;">
+                <thead>
+                  <tr>
+                    <th style="color: #2563EB; padding: 3px 5px;">$A$</th>
+                    <th style="color: #7C3AED; padding: 3px 5px;">$B$</th>
+                    <th style="color: #718096; padding: 3px 5px;">$q$</th>
+                    <th style="color: #D97706; padding: 3px 5px;">$R$</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">15</td>
+                    <td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">14</td>
+                    <td style="color: #718096; padding: 3px 5px;">1</td>
+                    <td style="color: #D97706; font-weight: bold; padding: 3px 5px;">1</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #2563EB; font-weight: bold; padding: 3px 5px;">14 <span style="font-size:0.7em;color:#7C3AED;">&larr;</span></td>
+                    <td style="color: #7C3AED; font-weight: bold; padding: 3px 5px;">1 <span style="font-size:0.7em;color:#D97706;">&larr;</span></td>
+                    <td style="color: #718096; padding: 3px 5px;">14</td>
+                    <td style="color: var(--accent-green); font-weight: bold; padding: 3px 5px;">0 &check;</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.9em; margin-bottom: 3px;">&rArr; mcd(14, 15) = <strong>1</strong> (coprimos). <span class="badge badge-purple" style="font-size: 0.8em;">QPE</span></p>
+              <p style="font-size: 0.9em; margin-bottom: 3px;"><strong>Paso 2:</strong> Período r = 2 (par). Raíz: 14¹ = 14 ≡ <strong>-1</strong> mod 15.</p>
+              <p style="font-size: 0.9em; margin-bottom: 3px;"><strong>Paso 3:</strong> Euclides con raíz trivial:</p>
+              <table style="width: 100%; font-size: 0.82em; margin-bottom: 5px;">
+                <thead>
+                  <tr><th style="padding: 2px 4px;">MCD de</th><th style="color: #2563EB; padding: 2px 4px;">$A$</th><th style="color: #7C3AED; padding: 2px 4px;">$B$</th><th style="color: #718096; padding: 2px 4px;">$q$</th><th style="color: #D97706; padding: 2px 4px;">$R$</th><th style="padding: 2px 4px;">Resultado</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td rowspan="3" style="padding: 2px 4px; vertical-align: middle;">mcd(14-1, 15)</td><td style="color: #2563EB; padding: 2px 4px;">15</td><td style="color: #7C3AED; padding: 2px 4px;">13</td><td style="color: #718096; padding: 2px 4px;">1</td><td style="color: #D97706; padding: 2px 4px;">2</td><td rowspan="3" style="padding: 2px 4px; vertical-align: middle;"><strong style="color: var(--accent-red);">1</strong></td></tr>
+                  <tr><td style="color: #2563EB; padding: 2px 4px;">13</td><td style="color: #7C3AED; padding: 2px 4px;">2</td><td style="color: #718096; padding: 2px 4px;">6</td><td style="color: #D97706; padding: 2px 4px;">1</td></tr>
+                  <tr><td style="color: #2563EB; padding: 2px 4px;">2</td><td style="color: #7C3AED; padding: 2px 4px;">1</td><td style="color: #718096; padding: 2px 4px;">2</td><td style="color: var(--accent-green); padding: 2px 4px;">0 &check;</td></tr>
+                  <tr><td style="padding: 2px 4px;">mcd(14+1, 15)</td><td style="color: #2563EB; padding: 2px 4px;">15</td><td style="color: #7C3AED; padding: 2px 4px;">15</td><td style="color: #718096; padding: 2px 4px;">1</td><td style="color: var(--accent-green); padding: 2px 4px;">0 &check;</td><td style="padding: 2px 4px;"><strong style="color: var(--accent-red);">15</strong></td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.9em;">Factores: 1 y 15 (triviales). <strong style="color: var(--accent-red);">Falla.</strong></p>
+              <span class="badge badge-purple" style="font-size: 0.75em;">Raíz Trivial &rarr; Reiniciar</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 2: ARQUITECTURA CUÁNTICA                             -->
+      <!-- ============================================================ -->
+      <section>
+        <!-- 2.1: Separador de Sección -->
+        <section class="section-divider">
+          <div class="section-num">02</div>
+          <h2>Fase 2: Arquitectura Cuántica</h2>
+          <p style="color: var(--text-muted);">Estructura y Aritmética del Circuito de Shor</p>
+        </section>
+
+        <!-- 2.2: Diagrama General del Circuito -->
+        <section style="font-size: 0.72em;">
+          <h2>Estructura del Circuito General</h2>
+          <p style="margin-bottom: 15px;">El circuito de Shor se divide en dos registros cuánticos bien diferenciados que interactúan mediante compuertas controladas:</p>
+          
+          <div class="block-diagram" style="margin-bottom: 20px;">
+            <div class="block" style="border: 2px solid var(--accent-blue); border-radius: 8px; padding: 12px; background: rgba(37, 99, 235, 0.05); min-width: 190px;">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0;">Registro de Conteo (Fase)</h4>
+              <p style="font-size: 0.85em; margin: 0;"><strong>$t$ qubits</strong></p>
+              <p style="font-size: 0.8em; margin: 3px 0 0 0; color: var(--text-muted);">Inicia en $|0\rangle^{\otimes t} \xrightarrow{H^{\otimes t}}$ Superposición</p>
+            </div>
+            <div class="arrow" style="font-size: 1.5em; color: var(--text-muted);">⛅</div>
+            <div class="block" style="border: 2px solid var(--accent-gold); border-radius: 8px; padding: 12px; background: rgba(217, 119, 6, 0.05); min-width: 200px;">
+              <h4 style="color: var(--accent-gold); margin: 0 0 5px 0;">Exponenciación Controlada</h4>
+              <p style="font-size: 0.85em; margin: 0;"><strong>$C-U^{2^j}$</strong></p>
+              <p style="font-size: 0.8em; margin: 3px 0 0 0; color: var(--text-muted);">Aplica: $|x\rangle|y\rangle \to |x\rangle|y \cdot a^x \pmod N\rangle$</p>
+            </div>
+            <div class="arrow" style="font-size: 1.5em; color: var(--text-muted);">⛅</div>
+            <div class="block" style="border: 2px solid var(--accent-purple); border-radius: 8px; padding: 12px; background: rgba(124, 58, 237, 0.05); min-width: 190px;">
+              <h4 style="color: var(--accent-purple); margin: 0 0 5px 0;">Transformada QFT†</h4>
+              <p style="font-size: 0.85em; margin: 0;"><strong>QFT Inversa</strong></p>
+              <p style="font-size: 0.8em; margin: 3px 0 0 0; color: var(--text-muted);">Filtra frecuencias de fase para extraer $\theta \approx s/r$</p>
+            </div>
+          </div>
+
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 10px; border-top-color: var(--accent-blue);">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0; font-size: 1em;">Qubits de Conteo ($t$)</h4>
+              <p style="margin: 0; font-size: 0.9em;">Controlan las compuertas unitarias. Su tamaño define la <strong>precisión</strong> de la fase medida. Para garantizar que podamos extraer $r$ usando fracciones continuas, se requiere:<br>
+              <span class="badge badge-blue" style="margin-top: 5px;">t ≈ 2n qubits</span> (donde n = ⌈log₂ N⌉)</p>
+            </div>
+            <div class="info-card" style="margin: 0; padding: 10px; border-top-color: var(--accent-gold);">
+              <h4 style="color: var(--accent-gold); margin: 0 0 5px 0; font-size: 1em;">Qubits de Estado ($n$)</h4>
+              <p style="margin: 0; font-size: 0.9em;">Almacenan los valores de la función modular. Requieren espacio suficiente para representar números hasta $N-1$:<br>
+              <span class="badge badge-gold" style="margin-top: 5px;">n = ⌈log₂ N⌉ qubits</span> (2ⁿ > N)</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2.3: Formulación Matemática de la Evolución del Estado -->
+        <section style="font-size: 0.65em;">
+          <h2>Formulación y Evolución Matemática</h2>
+          <p>El circuito procesa los estados cuánticos a través de los siguientes pasos formales:</p>
+          
+          <div class="info-card" style="padding: 10px; margin-bottom: 8px;">
+            <div class="step" style="margin-bottom: 6px;">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <strong>Estado Inicial:</strong> Preparamos el registro de conteo en $|0\rangle$ y el de estado en $|1\rangle$ (representando $a^0$):
+                <div class="math-block" style="padding: 4px; margin: 3px 0;">$$|\psi_0\rangle = |0\rangle^{\otimes t} \otimes |1\rangle$$</div>
+              </div>
+            </div>
+            <div class="step" style="margin-bottom: 6px;">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <strong>Hadamard en Conteo:</strong> Creamos una superposición uniforme de todos los números $x$ desde $0$ hasta $2^t-1$:
+                <div class="math-block" style="padding: 4px; margin: 3px 0;">$$|\psi_1\rangle = \frac{1}{\sqrt{2^t}} \sum_{x=0}^{2^t-1} |x\rangle \otimes |1\rangle$$</div>
+              </div>
+            </div>
+            <div class="step" style="margin-bottom: 6px;">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <strong>Exponenciación Modular Controlada ($C-U^x$):</strong> Para cada estado $|x\rangle$, multiplicamos el segundo registro por $a^x \pmod N$:
+                <div class="math-block-gold" style="padding: 4px; margin: 3px 0;">$$|\psi_2\rangle = \frac{1}{\sqrt{2^t}} \sum_{x=0}^{2^t-1} |x\rangle \otimes |a^x \pmod N\rangle$$</div>
+                <span style="font-size: 0.9em; color: var(--text-muted);">Esta compuerta unitaria entrelaza la base binaria del exponente con su resultado modular.</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <strong>QFT Inversa y Medición:</strong> Al aplicar $\text{QFT}^\dagger$ al primer registro, la superposición de periodos interfiere constructivamente en los múltiplos de la frecuencia fundamental $1/r$. Al medir, obtenemos un entero $m$ tal que $m/2^t \approx s/r$.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2.4: Multiplicador modular en N=15 (Manual/Optimizado) -->
+        <section style="font-size: 0.65em;">
+          <h2>El Multiplicador Modular: Caso Pequeño ($N=15$)</h2>
+          <p>Para números didácticos como $N=15$, diseñar la aritmética completa en hardware cuántico es ineficiente. Por eso, se utiliza <strong>compilación manual basada en permutación de estados</strong>.</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue-light);">
+              <h4 style="color: var(--accent-blue-light); margin: 0 0 5px 0;">Mapeo de Estados para $a=7$</h4>
+              <p>Como solo existen 4 resultados posibles $\{1, 7, 4, 13\}$ para $7^x \pmod{15}$, la compuerta $U$ se reduce a una <strong>permutación cíclica</strong> de estos 4 estados:</p>
+              <table style="width: 100%; font-size: 0.85em; text-align: center;">
+                <thead>
+                  <tr>
+                    <th>Entrada $|y\rangle$</th>
+                    <th>Binario</th>
+                    <th>Operación</th>
+                    <th>Salida $|7y \pmod{15}\rangle$</th>
+                    <th>Binario</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>|1⟩</td><td><code>0001</code></td><td>$1 \times 7 = 7$</td><td><strong>|7⟩</strong></td><td><code>0111</code></td></tr>
+                  <tr><td>|7⟩</td><td><code>0111</code></td><td>$7 \times 7 = 49 \equiv 4$</td><td><strong>|4⟩</strong></td><td><code>0100</code></td></tr>
+                  <tr><td>|4⟩</td><td><code>0100</code></td><td>$4 \times 7 = 28 \equiv 13$</td><td><strong>|13⟩</strong></td><td><code>1101</code></td></tr>
+                  <tr><td>|13⟩</td><td><code>1101</code></td><td>$13 \times 7 = 91 \equiv 1$</td><td><strong>|1⟩</strong></td><td><code>0001</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="color: var(--accent-green); margin: 0 0 5px 0;">Implementación con Compuertas SWAP y X</h4>
+              <p>Podemos lograr esta permutación binaria exacta usando únicamente compuertas básicas, <strong>sin qubits auxiliares</strong> (ancillas):</p>
+              <div style="background: #1E293B; color: #F8FAFC; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 0.82em; margin-bottom: 8px; line-height: 1.25; overflow-x: auto; text-align: left; white-space: pre !important; display: block !important; word-wrap: normal !important; margin-top: 0;">q0: ───────────X──[X]──  (LSB)
+                │
+q1: ───────X───X──[X]──
+            │
+q2: ──X────X──────[X]──
+       │
+q3: ──X───────────[X]──  (MSB)</div>
+              <p style="font-size: 0.9em;">Esta simplificación <em>ad-hoc</em> de compuertas (3 SWAPs + 4 NOTs) es posible porque conocemos el comportamiento de antemano. No escala para números mayores.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2.4a: Traza detallada de la Permutación modular (Nuevo) -->
+        <section style="font-size: 0.65em;">
+          <h2>Traza Detallada de la Permutación Modular ($N=15$)</h2>
+          <p style="margin-bottom: 10px;">Para entender cómo 3 SWAPs y 4 NOTs realizan la permutación cíclica de los estados, sigamos la evolución paso a paso para cada una de las 4 entradas posibles:</p>
+          
+          <table style="width: 100%; font-size: 0.82em; text-align: center; margin-bottom: 10px;">
+            <thead>
+              <tr style="background: rgba(255,255,255,0.05);">
+                <th>Estado Inicial $|y_3 y_2 y_1 y_0\rangle$</th>
+                <th>Paso 1: <br><code>swap(2,3)</code></th>
+                <th>Paso 2: <br><code>swap(1,2)</code></th>
+                <th>Paso 3: <br><code>swap(0,1)</code></th>
+                <th style="color: var(--accent-gold);">Paso 4: <br><code>X(todas)</code></th>
+                <th style="color: var(--accent-green); font-weight: bold;">Salida Final</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: bold;">|1⟩ = <code>0001</code></td>
+                <td><code>0001</code></td>
+                <td><code>0001</code></td>
+                <td><code>0010</code></td>
+                <td style="color: var(--accent-gold);"><code>1101</code></td>
+                <td style="color: var(--accent-green); font-weight: bold;">|13⟩</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">|13⟩ = <code>1101</code></td>
+                <td><code>1101</code></td>
+                <td><code>1011</code></td>
+                <td><code>1011</code></td>
+                <td style="color: var(--accent-gold);"><code>0100</code></td>
+                <td style="color: var(--accent-green); font-weight: bold;">|4⟩</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">|4⟩ = <code>0100</code></td>
+                <td><code>1000</code></td>
+                <td><code>1000</code></td>
+                <td><code>1000</code></td>
+                <td style="color: var(--accent-gold);"><code>0111</code></td>
+                <td style="color: var(--accent-green); font-weight: bold;">|7⟩</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">|7⟩ = <code>0111</code></td>
+                <td><code>1011</code></td>
+                <td><code>1101</code></td>
+                <td><code>1110</code></td>
+                <td style="color: var(--accent-gold);"><code>0001</code></td>
+                <td style="color: var(--accent-green); font-weight: bold;">|1⟩</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="info-card" style="padding: 10px; margin-top: 5px; border-top-color: var(--accent-purple);">
+            <h4 style="color: var(--accent-purple); margin: 0 0 5px 0; font-size: 1.1em;">Dirección del Ciclo y Endianness</h4>
+            <p style="margin: 0; font-size: 0.95em;">
+              La permutación obtenida es $1 \to 13 \to 4 \to 7 \to 1$. Esto corresponde a la multiplicación modular por <strong>$13 \equiv 7^{-1} \pmod{15}$</strong>. 
+              Dado que $U^\dagger$ tiene exactamente el mismo período ($r=4$) que $U$, el circuito cuántico estima el mismo período con idéntica eficacia.
+            </p>
+          </div>
+        </section>
+
+        <!-- 2.4b: De la fase a los factores (Nuevo) -->
+        <section style="font-size: 0.65em;">
+          <h2>De la Fase Cuántica a los Factores de $N$</h2>
+          <p style="margin-bottom: 10px;">La medición cuántica devuelve un entero $m \in [0, 2^t - 1]$. A continuación se detalla el proceso para obtener el período y los factores:</p>
+          
+          <div class="three-col" style="gap: 10px; margin-top: 10px;">
+            <!-- Paso 1 -->
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue);">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0;">1. Obtención de la Fase</h4>
+              <p style="margin-bottom: 5px;">Convertimos el entero $m$ medido a una fase continua $\theta$:</p>
+              <div class="math-block" style="padding: 5px; margin-bottom: 5px;">$$\theta = \frac{m}{2^t}$$</div>
+              <p style="font-size: 0.88em; margin: 0; color: var(--text-muted);">
+                Ejemplo ($t=3$ qubits, medición $m=6$):<br>
+                $\theta = 6/8 = 0.75$
+              </p>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-gold);">
+              <h4 style="color: var(--accent-gold); margin: 0 0 5px 0;">2. Fracciones Continuas</h4>
+              <p style="margin-bottom: 5px;">Buscamos la fracción $s/r$ que mejor aproxime a $\theta$ usando el algoritmo de fracciones continuas:</p>
+              <div class="math-block" style="padding: 5px; margin-bottom: 5px;">$$\theta \approx \frac{s}{r}$$</div>
+              <p style="font-size: 0.88em; margin: 0; color: var(--text-muted);">
+                Para $\theta = 0.75$, la fracción irreducible es $3/4$. El denominador nos da el candidato a período <strong>$r = 4$</strong>.
+              </p>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="color: var(--accent-green); margin: 0 0 5px 0;">3. Cálculo del MCD</h4>
+              <p style="margin-bottom: 5px;">Si $r$ es par y no trivial, calculamos los factores clásicamente con Euclides:</p>
+              <div class="math-block" style="padding: 5px; margin-bottom: 5px;">$$f_1, f_2 = \gcd(a^{r/2} \pm 1, N)$$</div>
+              <p style="font-size: 0.88em; margin: 0; color: var(--text-muted);">
+                $\gcd(7^2 - 1, 15) = \gcd(48, 15) = 3$<br>
+                $\gcd(7^2 + 1, 15) = \gcd(50, 15) = 5$
+              </p>
+            </div>
+          </div>
+
+          <div class="note" style="margin-top: 10px; padding: 8px; font-size: 0.9em; text-align: center;">
+            💡 <strong>Múltiplos de fase:</strong> La QPE no siempre devuelve $1/r$. Devuelve un múltiplo $s/r$ (donde $s$ representa el número de onda). Las fracciones continuas se encargan de simplificar $s/r$ para extraer el denominador fundamental $r$.
+          </div>
+        </section>
+
+        <!-- 2.5: Multiplicador modular en N=1500 (Draper/QFT) -->
+        <section style="font-size: 0.65em;">
+          <h2>Caso Mediano ($N \approx 1500$): Aritmética Modular General</h2>
+          <p>Para $N \approx 1500$ ($n = 11$ qubits, ya que $2^{10} = 1024 < 1500 \le 2048 = 2^{11}$), no podemos compilar permutaciones a mano (¡serían $1500$ estados!). Necesitamos implementar la <strong>aritmética cuántica general</strong> de sumas y multiplicaciones:</p>
+          
+          <div class="three-col" style="margin-top: 10px; gap: 8px;">
+            <div class="info-card" style="margin: 0; padding: 8px; border-top-color: var(--accent-blue-light);">
+              <h4 style="color: var(--accent-blue-light); margin: 0 0 3px 0; font-size: 0.95em;">1. Suma en Fase (QFT)</h4>
+              <p style="font-size: 0.9em; margin-bottom: 3px;">Usamos el <strong>Sumador de Draper</strong>:</p>
+              <ol style="font-size: 0.85em; padding-left: 15px; margin: 0;">
+                <li>Aplicar QFT al registro para pasar al espacio de frecuencias.</li>
+                <li>Aplicar rotaciones controladas de fase $R_k$ proporcionales a los bits del sumando.</li>
+                <li>Aplicar $\text{QFT}^\dagger$ para volver a la base computacional.</li>
+              </ol>
+            </div>
+            
+            <div class="info-card" style="margin: 0; padding: 8px; border-top-color: var(--accent-gold);">
+              <h4 style="color: var(--accent-gold); margin: 0 0 3px 0; font-size: 0.95em;">2. Sumador Modular</h4>
+              <p style="font-size: 0.9em; margin-bottom: 3px;">Para calcular $A + B \pmod N$:</p>
+              <ol style="font-size: 0.85em; padding-left: 15px; margin: 0;">
+                <li>Sumar: $A + B$.</li>
+                <li>Restar $N$: $(A + B) - N$.</li>
+                <li>Medir el bit de acarreo (signo) para ver si hubo desbordamiento.</li>
+                <li>Si es negativo, sumar de vuelta $N$ (restauración).</li>
+                <li>Requiere 1 qubit auxiliar para el signo.</li>
+              </ol>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 8px; border-top-color: var(--accent-purple);">
+              <h4 style="color: var(--accent-purple); margin: 0 0 3px 0; font-size: 0.95em;">3. Multiplicador Modular</h4>
+              <p style="font-size: 0.9em; margin-bottom: 3px;">La multiplicación se reduce a sumas sucesivas:</p>
+              <div class="math-block" style="padding: 4px; margin: 3px 0; font-size: 0.85em;">
+                $$A \cdot B = \sum_{i=0}^{n-1} A \cdot (B_i 2^i)$$
+              </div>
+              <p style="font-size: 0.85em; margin: 0;">Si el bit $B_i$ del multiplicador es 1, sumamos de forma controlada el valor $A \cdot 2^i \pmod N$ al registro acumulador. Requiere qubits auxiliares temporales.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2.6: Caso RSA Real (General/Fault-Tolerant) -->
+        <section style="font-size: 0.65em;">
+          <h2>Caso RSA Real ($N \approx 2^{2048}$): Desafíos y Arquitecturas</h2>
+          <p>Para factorizar números reales de seguridad criptográfica ($N$ con 2048 bits), la complejidad del circuito explota. Se requieren técnicas avanzadas de optimización y tolerancia a fallos:</p>
+
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue);">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0;">1. Exponenciación por Cuadrados</h4>
+              <p>Calcular $a^x \pmod N$ multiplicando directamente $2^j$ veces requiere un número de pasos exponencial. Se utiliza <strong>exponenciación binaria clásica</strong> adaptada a circuitos cuánticos:</p>
+              <div class="math-block" style="padding: 6px; margin: 5px 0; font-size: 0.9em;">
+                $$a^x = a^{\sum x_i 2^i} = \prod_{i=0}^{2n-1} \left(a^{2^i}\right)^{x_i} \pmod N$$
+              </div>
+              <p style="font-size: 0.9em;">El exponente cuántico $x$ controla secuencialmente multiplicaciones por constantes clásicas precalculadas $a^{2^i} \pmod N$. Solo se necesitan $2n$ multiplicadores modulares en serie.</p>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-purple);">
+              <h4 style="color: var(--accent-purple); margin: 0 0 5px 0;">2. Arquitecturas de Factorización Criptográfica</h4>
+              <p>Existen dos aproximaciones principales para diseñar estos operadores en la práctica:</p>
+              <ul style="font-size: 0.9em; padding-left: 15px; margin: 5px 0 0 0;">
+                <li style="margin-bottom: 4px;"><strong>Arquitectura de Beauregard (2002):</strong> Diseñada para minimizar qubits físicos. Usa QFT y requiere únicamente $2n + 1$ qubits totales (sin ancillas de almacenamiento). Inconveniente: la profundidad del circuito es grande ($O(n^3)$ compuertas).</li>
+                <li><strong>Arquitecturas Carry-Save (Shor / Beckman):</strong> Utilizan registros auxiliares de tamaño $O(n)$ para hacer las sumas en paralelo. Reduce la profundidad a $O(n^2)$ o $O(n \log n)$ compuertas, acelerando el algoritmo a costa de usar más qubits.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note" style="margin-top: 10px; font-size: 0.9em; text-align: center;">
+            ⚠️ <strong>Tolerancia a fallos:</strong> En computadores cuánticos reales, estas sumas deben compilarse a compuertas lógicas protegidas (como Clifford+T). Reducir el número de compuertas <strong>T (T-count)</strong> es la prioridad de la ingeniería cuántica actual.
+          </div>
+        </section>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 3: IMPLEMENTACIÓN EN QISKIT                          -->
+      <!-- ============================================================ -->
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 3: IMPLEMENTACIÓN EN QISKIT                          -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="section-divider">
+          <div class="section-num">03</div>
+          <h2>Fase 3: Implementación en Qiskit</h2>
+          <p style="color: var(--text-muted);">Comparativa de dos enfoques de programación en Qiskit 2.x</p>
+        </section>
+
+        <!-- PARTE A: SHOR CON QFT INVERSA MANUAL -->
+        <section class="section-divider">
+          <div class="section-num">03A</div>
+          <h2>Parte A: Shor con QFT Inversa Manual</h2>
+          <p style="color: var(--text-muted);">Construcción paso a paso y explícita del circuito modular</p>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>1. Definición de Registros y Superposición</h2>
+          <p>Para la construcción manual, declaramos explícitamente el registro de conteo (fase) y el de estado modular, preparando el estado inicial cuántico:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue-light);">
+              <h4 style="color: var(--accent-blue-light); margin: 0 0 5px 0;">Declaración de Registros</h4>
+              <pre style="margin: 0; font-size: 0.9em;"><code class="language-python">from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
+
+# Registro de conteo: 8 qubits para alta precisión
+count_reg = QuantumRegister(8, name='count')
+
+# Registro de estado: 4 qubits (para valores 0 a 15)
+target_reg = QuantumRegister(4, name='target')
+
+# Registro clásico de lectura
+classic_reg = ClassicalRegister(8, name='c')
+
+qc = QuantumCircuit(count_reg, target_reg, classic_reg)
+
+# Inicialización cuántica
+qc.h(count_reg)       # Superposición en registro de conteo
+qc.x(target_reg[0])    # Inicializar registro de estado en |1⟩</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="color: var(--accent-green); margin: 0 0 5px 0;">Detalles de la Inicialización</h4>
+              <ul style="font-size: 0.9em; padding-left: 15px; margin: 0;">
+                <li style="margin-bottom: 5px;"><strong>Qubits de Conteo ($t=8$):</strong> Generan $2^8 = 256$ posibles estados. Este número elevado de qubits garantiza suficiente resolución para leer fases complejas usando fracciones continuas.</li>
+                <li style="margin-bottom: 5px;"><strong>Qubits de Estado ($n=4$):</strong> Almacenan los valores intermedios de $7^x \pmod{15}$.</li>
+                <li><strong>Superposición:</strong> Las compuertas Hadamard aplicadas a <code>count_reg</code> preparan todas las potencias simultáneas del exponente en paralelo.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>2. Multiplicador Modular Controlado en Bucle</h2>
+          <p>Implementamos las operaciones controladas $CU^{2^j}$ iterando de forma secuencial sobre cada uno de los qubits del registro de lectura:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-purple);">
+              <h4 style="color: var(--accent-purple); margin: 0 0 5px 0;">Algoritmo de Exponenciación</h4>
+              <pre style="margin: 0; font-size: 0.72em;"><code class="language-python"># Base coprima a N=15
+a = 7
+
+def c_amod15(a, power):
+    """Retorna la compuerta controlada de multiplicar por a^power mod 15"""
+    U = QuantumCircuit(4)
+    # Aplicar la permutación modular repetida 'power' veces
+    for _ in range(power):
+        U.swap(2, 3)
+        U.swap(1, 2)
+        U.swap(0, 1)
+        for q in range(4):
+            U.x(q)
+    # Convertir a compuerta controlada de 1 qubit de control
+    return U.to_gate(label=f"c_U^{power}").control(1)
+
+# Aplicar las compuertas controladas en el circuito
+for q in range(8):
+    c_gate = c_amod15(a, 2**q)
+    # Acoplar usando el qubit de conteo actual y el registro objetivo
+    qc.append(c_gate, [count_reg[q]] + target_reg[:])</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-gold);">
+              <h4 style="color: var(--accent-gold); margin: 0 0 5px 0;">Operación del Bucle Modular</h4>
+              <ul style="font-size: 0.9em; padding-left: 15px; margin: 0;">
+                <li style="margin-bottom: 5px;"><strong>Exponenciación Cuántica:</strong> Cada qubit $q$ del registro de conteo controla de forma independiente la operación $|y\rangle \to |y \cdot a^{2^q} \pmod{15}\rangle$.</li>
+                <li style="margin-bottom: 5px;"><strong>Comportamiento en Paralelo:</strong> Al estar el registro de conteo en superposición, la salida del circuito produce un estado entrelazado que asocia el exponente $x$ con el valor modular $a^x \pmod N$.</li>
+                <li><strong>Macro append:</strong> En implementaciones a bajo nivel, cada multiplicación se descompone en sumadores controlados.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>3. Transformada Cuántica de Fourier Inversa y Lectura</h2>
+          <p>Finalmente, aplicamos la QFT inversa para transferir la periodicidad del estado cuántico a amplitudes medibles en la base computacional:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue);">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0;">QFT Inversa y Medición Manual</h4>
+              <pre style="margin: 0; font-size: 0.9em;"><code class="language-python">from qiskit.circuit.library import QFT
+
+# Crear bloque de QFT Inversa sobre los qubits de conteo
+# do_swaps=True para ordenar los qubits de forma directa
+qft_inv = QFT(num_qubits=8, 
+              approximation_degree=0, 
+              do_swaps=True, 
+              inverse=True)
+
+# Acoplar el bloque al circuito
+qc.append(qft_inv, count_reg)
+
+# Medición completa del registro de lectura
+qc.measure(count_reg, classic_reg)</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue-light);">
+              <h4 style="color: var(--accent-blue-light); margin: 0 0 5px 0;">Análisis Matemático del Bloque</h4>
+              <ul style="font-size: 0.9em; padding-left: 15px; margin: 0;">
+                <li style="margin-bottom: 5px;"><strong>Interferencia de Fase:</strong> La QFT inversa actúa de forma análoga a una rejilla de difracción, acumulando interferencias constructivas sobre los estados de fase $\theta \approx s/r$.</li>
+                <li style="margin-bottom: 5px;"><strong>Lectura del Período:</strong> La medición del registro clásico devuelve un número entero $m$. La fase se estima clásica y directamente como $\theta \approx m / 256$.</li>
+                <li><strong>Flexibilidad:</strong> Este método permite configurar manualmente el número de qubits de conteo para ajustar la resolución matemática según el tamaño del número $N$.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- PARTE B: SHOR CON FUNCION QPE DIRECTA -->
+        <section class="section-divider">
+          <div class="section-num">03B</div>
+          <h2>Parte B: Shor con Función QPE de Qiskit</h2>
+          <p style="color: var(--text-muted);">Abstracción de circuitos utilizando la clase PhaseEstimation de la biblioteca</p>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>1. Construcción del Operador $U_a$ (Disposición de Compuertas)</h2>
+          <p>Para $a=7$ y $N=15$, representamos el operador modular $U|y\rangle = |7y \pmod{15}\rangle$ en 4 qubits utilizando una disposición de compuertas SWAP y compuertas X:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue-light);">
+              <h4 style="color: var(--accent-blue-light); margin: 0 0 5px 0;">Código de la Compuerta $U$</h4>
+              <pre style="margin: 0; font-size: 0.9em;"><code class="language-python">from qiskit import QuantumCircuit
+
+# Operador U : |y⟩ → |7·y mod 15⟩ en 4 qubits
+U_circuit = QuantumCircuit(4, name="U=7mod15")
+
+# 1. SWAPs en cascada (shift cíclico de qubits)
+U_circuit.swap(2, 3)
+U_circuit.swap(1, 2)
+U_circuit.swap(0, 1)
+
+# 2. Inversión de bits con compuertas NOT
+for q in range(4):
+    U_circuit.x(q)
+
+# Convertir a compuerta (Gate) para QPE
+U_gate = U_circuit.to_gate(label="U(7mod15)")</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="color: var(--accent-green); margin: 0 0 5px 0;">Explicación de la Disposición</h4>
+              <ul style="font-size: 0.92em; padding-left: 15px; margin: 0;">
+                <li style="margin-bottom: 5px;"><strong>SWAPs en cascada:</strong> Realizan un shift circular binario del registro, cambiando las posiciones de peso: $q_2 \leftrightarrow q_3$, $q_1 \leftrightarrow q_2$, $q_0 \leftrightarrow q_1$.</li>
+                <li style="margin-bottom: 5px;"><strong>Compuertas X (NOTs):</strong> Invierten todos los bits individuales para mapear de manera exacta las transiciones clásicas de la base: $|1\rangle \to |7\rangle \to |4\rangle \to |13\rangle \to |1\rangle$.</li>
+                <li><strong>Empaquetado:</strong> La llamada a <code>to_gate()</code> nos permite reutilizar esta disposición como un bloque unitario controlado de un solo paso.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.65em;">
+          <h2>2. Uso Directo de la Función QPE (`PhaseEstimation`)</h2>
+          <p>Qiskit cuenta con una clase de biblioteca optimizada para construir la <strong>Estimación de Fase Cuántica</strong> directamente sobre cualquier operador unitario, abstrayendo Hadamard y QFT:</p>
+          
+          <div class="info-card" style="padding: 12px; margin-bottom: 10px; border-top-color: var(--accent-purple);">
+            <h4 style="color: var(--accent-purple); margin: 0 0 5px 0;">Función Directa de Estimación de Fase</h4>
+            <pre style="margin: 0;"><code class="language-python">from qiskit.circuit.library import PhaseEstimation
+
+# QPE requiere: 
+#   - num_evaluation_qubits (t): precisión de la fase
+#   - unitary: la compuerta unitaria a evaluar (U_gate)
+qpe_circuit = PhaseEstimation(
+    num_evaluation_qubits=3,  # t = 3 qubits de conteo (2³ = 8 fases)
+    unitary=U_gate            # U_gate actúa sobre 4 qubits de estado
+)</code></pre>
+          </div>
+          
+          <div class="note" style="font-size: 0.85em; margin-top: 5px;">
+            💡 <strong>Abstracción de Qiskit:</strong> La clase <code>PhaseEstimation</code> autogenera e inserta los tres bloques fundamentales: 1) La preparación de Hadamards, 2) Las compuertas de potencias controladas de la unitaria ($CU^{2^0}, CU^{2^1}, CU^{2^2}$), y 3) La Transformada de Fourier Inversa ($\text{QFT}^\dagger$) para la lectura.
+          </div>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>3. Ensamblado del Circuito Completo y Medición</h2>
+          <p>Para ensamblar el circuito, preparamos un registro de evaluación para la fase ($t=3$ qubits) y un registro de estado para el operador ($n=4$ qubits), inicializando este último en el estado $|1\rangle$:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-gold);">
+              <h4 style="color: var(--accent-gold); margin: 0 0 5px 0;">Construcción del Circuito Completo</h4>
+              <pre style="margin: 0; font-size: 0.9em;"><code class="language-python">from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+
+qr_eval = QuantumRegister(3, 'eval')    # Qubits de lectura/fase
+qr_state = QuantumRegister(4, 'state')  # Qubits de estado modular
+cr = ClassicalRegister(3, 'bits')       # Registro clásico
+
+qc = QuantumCircuit(qr_eval, qr_state, cr)
+
+# PASO CLAVE: Inicializar registro de estado en |1⟩ (|0001⟩)
+qc.x(qr_state[0])
+
+# Ensamblar QPE directa
+qc.append(qpe_circuit, qr_eval[:] + qr_state[:])
+
+# Medir únicamente los qubits de evaluación
+qc.measure(qr_eval, cr)</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue);">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0;">Detalles del Ensamblado</h4>
+              <ul style="font-size: 0.9em; padding-left: 15px; margin: 0;">
+                <li style="margin-bottom: 5px;"><strong>Inicialización en $|1\rangle$:</strong> Activamos el primer qubit del registro de estado (<code>qc.x(qr_state[0])</code>). Sin este paso, el registro estaría en $|0\rangle$ (que es invariante bajo multiplicaciones: $7 \times 0 \pmod{15} = 0$), produciendo fases triviales.</li>
+                <li style="margin-bottom: 5px;"><strong>Llamada append:</strong> Conectamos los qubits de evaluación y de estado en orden. QPE se aplica en paralelo sobre ambos registros.</li>
+                <li><strong>Medición selectiva:</strong> Medimos únicamente los $t=3$ qubits del registro de evaluación. El estado final del registro de estado se descarta tras el cálculo.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>4. Simulación y Lectura de Resultados</h2>
+          <p>Ejecutamos el circuito cuántico en el simulador local <code>AerSimulator</code> y leemos las mediciones binarias para derivar las fases estimadas:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue-light);">
+              <h4 style="color: var(--accent-blue-light); margin: 0 0 5px 0;">Ejecución en AerSimulator</h4>
+              <pre style="margin: 0; font-size: 0.9em;"><code class="language-python">from qiskit_aer import AerSimulator
+from qiskit import transpile
+
+# Inicializar simulador local
+simulator = AerSimulator()
+
+# Transpilar y ejecutar el circuito
+qc_trans = transpile(qc, simulator)
+counts = simulator.run(qc_trans, shots=1024).result().get_counts()
+
+print(counts)
+# Salida esperada: Distribución uniforme de 4 estados:
+# {'000': 256, '010': 256, '100': 256, '110': 256}</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-purple);">
+              <h4 style="color: var(--accent-purple); margin: 0 0 5px 0;">Interpretación de Mediciones</h4>
+              <p style="margin-bottom: 5px;">Las mediciones $m$ corresponden a la estimación cuántica de la fase multiplicada por $2^t$ (donde $2^t = 2^3 = 8$):</p>
+              <table style="width: 100%; font-size: 0.82em; margin-bottom: 5px;">
+                <thead>
+                  <tr>
+                    <th>Estado</th>
+                    <th>Entero ($m$)</th>
+                    <th>Fase $\theta = m / 2^t$</th>
+                    <th>Fracción $s/r$</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>|000⟩</code></td><td>0</td><td>$0/8 = 0.0$</td><td>$0/4$ (trivial)</td></tr>
+                  <tr><td style="color: var(--accent-green); font-weight: bold;"><code>|010⟩</code></td><td style="color: var(--accent-green); font-weight: bold;">2</td><td>$2/8 = 0.25$</td><td>$1/4 \implies \mathbf{r=4}$</td></tr>
+                  <tr><td><code>|100⟩</code></td><td>4</td><td>$4/8 = 0.5$</td><td>$2/4 = 1/2$ (impar $r$)</td></tr>
+                  <tr><td style="color: var(--accent-green); font-weight: bold;"><code>|110⟩</code></td><td style="color: var(--accent-green); font-weight: bold;">6</td><td>$6/8 = 0.75$</td><td>$3/4 \implies \mathbf{r=4}$</td></tr>
+                </tbody>
+              </table>
+              <span class="badge badge-purple" style="font-size: 0.85em;">El denominador r = 4 es el período cuántico.</span>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.62em;">
+          <h2>5. Extracción Clásica del Período y Factores</h2>
+          <p>Finalmente, tomamos las fases obtenidas cuánticamente y realizamos el post-procesamiento clásico para extraer el período usando fracciones continuas y recuperar los factores de 15:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-green);">
+              <h4 style="color: var(--accent-green); margin: 0 0 5px 0;">Algoritmo Clásico Completo</h4>
+              <pre style="margin: 0; font-size: 0.88em;"><code class="language-python">from fractions import Fraction
+from math import gcd
+
+# Supongamos que medimos |010⟩ -> m = 2
+m = 2
+t = 3  # Qubits de evaluación
+fase_medida = m / (2**t)  # 2 / 8 = 0.25
+
+# Fracciones continuas para aproximar el denominador (r <= 15)
+fraccion = Fraction(fase_medida).limit_denominator(15)
+r_candidato = fraccion.denominator  # r = 4
+s = fraccion.numerator              # s = 1
+
+# Extraer factores si r es par y no trivial
+if r_candidato % 2 == 0:
+    f1 = gcd(7**(r_candidato // 2) - 1, 15)  # gcd(48, 15) = 3
+    f2 = gcd(7**(r_candidato // 2) + 1, 15)  # gcd(50, 15) = 5
+    
+    print(f"Factores no triviales de 15: {f1} y {f2}")
+    # Salida: Factores no triviales de 15: 3 y 5</code></pre>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-gold);">
+              <h4 style="color: var(--accent-gold); margin: 0 0 5px 0;">Análisis del Post-procesamiento</h4>
+              <ul style="font-size: 0.9em; padding-left: 15px; margin: 0;">
+                <li style="margin-bottom: 5px;"><strong>Fase $\theta = 0.25$:</strong> Se aproxima exactamente a $\frac{1}{4}$. El denominador nos da el período real $r = 4$.</li>
+                <li style="margin-bottom: 5px;"><strong>Fase $\theta = 0.50$:</strong> Se aproxima a $\frac{1}{2}$. El período obtenido $r = 2$ es par, pero es incorrecto para la base 7 ya que $7^2 \equiv 4 \not\equiv 1 \pmod{15}$. El algoritmo descarta este intento y solicita otra medición.</li>
+                <li><strong>Fase $\theta = 0.75$:</strong> Se aproxima a $\frac{3}{4}$. El denominador nos da $r = 4$, devolviendo los factores correctos.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.65em;">
+          <h2>6. API de Qiskit: Enfoque Moderno vs Histórico</h2>
+          <p>La biblioteca Qiskit ha evolucionado simplificando sus interfaces y promoviendo el diseño explícito de circuitos sobre las cajas negras clásicas:</p>
+          
+          <div class="two-col" style="margin-top: 10px;">
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-purple);">
+              <h4 style="color: var(--accent-purple); margin: 0 0 5px 0;">Histórico (Qiskit &lt; 0.45) — Caja Negra</h4>
+              <p style="margin-bottom: 5px;">En versiones antiguas existía una clase de alto nivel que resolvía todo el algoritmo en una sola línea:</p>
+              <pre style="margin: 0; font-size: 0.95em;"><code class="language-python"># Código obsoleto (removido en Qiskit 1.0)
+from qiskit.algorithms import Shor
+
+shor = Shor()
+result = shor.factor(N=15, a=7)
+print(result.factors)  # [3, 5]</code></pre>
+              <p style="font-size: 0.9em; margin-top: 5px; color: var(--text-muted);">❌ <strong>Problema:</strong> Ocultaba los detalles cuánticos y no permitía entender la física del circuito.</p>
+            </div>
+
+            <div class="info-card" style="margin: 0; padding: 12px; border-top-color: var(--accent-blue);">
+              <h4 style="color: var(--accent-blue); margin: 0 0 5px 0;">Moderno (Qiskit 1.x / 2.x) — Explicitud</h4>
+              <p style="margin-bottom: 5px;">Hoy se utiliza la clase <code>PhaseEstimation</code> de la librería de circuitos estándar, fomentando la construcción del operador modular $U$:</p>
+              <pre style="margin: 0; font-size: 0.95em;"><code class="language-python">from qiskit.circuit.library import PhaseEstimation
+
+# QPE directo sobre el operador unitario U
+qpe = PhaseEstimation(
+    num_evaluation_qubits=3, 
+    unitary=U_gate
+)</code></pre>
+              <p style="font-size: 0.9em; margin-top: 5px; color: var(--text-muted);">✅ <strong>Ventaja:</strong> Permite diseñar y optimizar la aritmética modular cuántica (sumadores/multiplicadores modulares) paso a paso.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="title-slide">
+          <h1>Resumen del Algoritmo</h1>
+          <p class="subtitle" style="margin-top: 1em;">
+            Notebooks de soporte:<br>
+            📓 <code>04_quantum_phase_estimation.ipynb</code> (QPE)<br>
+            📓 <code>05_shor_algorithm.ipynb</code> (Shor con QPE)<br>
+            🐍 Los factores encontrados para N=15 son 3 y 5.
+          </p>
+          <div style="margin-top: 1.5em;">
+            <span class="badge badge-blue">Teoría</span>
+            <span class="badge badge-purple">MCD</span>
+            <span class="badge badge-gold">Qiskit</span>
+          </div>
+        </section>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- Reveal.js Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      center: true,
+      slideNumber: 'c/t',
+      width: 1280,
+      height: 720,
+      margin: 0.08,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      plugins: [RevealHighlight, RevealNotes, RevealMath.MathJax3]
+    });
+  </script>
+</body>
+
+</html>

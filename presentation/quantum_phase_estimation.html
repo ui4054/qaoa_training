@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De QFT a QPE: Taller Paso a Paso</title>
+  <meta name="description" content="Taller de pregrado: De QFT a la Decodificación de Fase Cuántica">
+
+  <!-- Reveal.js 5.x -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+  <!-- MathJax 3 -->
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Tema personalizado -->
+  <link rel="stylesheet" href="css/custom-theme.css">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 1: PORTADA Y AGENDA                                  -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="title-slide">
+          <div>
+            <span class="badge badge-blue">Teoría y Código</span>
+            <span class="badge badge-purple">Taller paso a paso</span>
+          </div>
+          <h1 style="font-size: 2.2em;">De QFT a la Decodificación Cuántica</h1>
+          <h3 style="color: var(--text-muted); font-weight: 400; font-size: 1.2em;">
+            Midiendo fases con qubits de apoyo y su equivalencia con la QFT
+          </h3>
+          <p class="subtitle" style="margin-top: 1.5em; font-size: 0.9em;">
+            Notebook 04 · Código en Qiskit 2.x · Implementación Práctica
+          </p>
+        </section>
+
+        <section>
+          <h2>Agenda del Taller</h2>
+          <div class="step"><span class="step-num">1</span>
+            <div class="step-content">
+              <h3>Midiendo la Fase con Qubits de Apoyo (15 min)</h3>
+              <p>Fase global, qubits de apoyo y codificación en paralelo para 1, 2 y 3 qubits.</p>
+            </div>
+          </div>
+          <div class="step"><span class="step-num">2</span>
+            <div class="step-content">
+              <h3>La Equivalencia con la QFT (15 min)</h3>
+              <p>Cómo la compuerta controlada escribe el estado de Fourier y por qué requerimos la QFT Inversa.</p>
+            </div>
+          </div>
+          <div class="step"><span class="step-num">3</span>
+            <div class="step-content">
+              <h3>Circuitos y Código (20 min)</h3>
+              <p>Implementación en Qiskit para 1, 2 y 3 qubits con sus respectivos diagramas.</p>
+            </div>
+          </div>
+          <div class="step"><span class="step-num">4</span>
+            <div class="step-content">
+              <h3>Generalización y Shor (10 min)</h3>
+              <p>Generalización matemática y su rol en la factorización.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 2: MEDIR FASE CON QUBITS DE APOYO                    -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="section-divider">
+          <div class="section-num">01</div>
+          <h2>Medir la Fase con Qubits de Apoyo</h2>
+          <p style="color: var(--text-muted);">El origen físico de la Estimación de Fase Cuántica</p>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>El Problema de la Fase Global</h2>
+          <p>Dado un operador unitario $U$ y un eigenestado $|u\rangle$ tal que $U |u\rangle = e^{2\pi i \theta} |u\rangle$, queremos conocer la fase $\theta$.</p>
+          <div class="note">
+            La fase $e^{2\pi i \theta}$ actúa como una fase global en el estado del sistema. Si medimos el sistema directamente, la fase desaparece: $|\langle u | u \rangle|^2 = 1$. Es físicamente indetectable.
+          </div>
+          <div class="info-card gold" style="margin-top: 15px;">
+            <h3>La Solución: El Qubit de Apoyo (Referencia)</h3>
+            <p>Necesitamos un sistema de referencia externo. Introducimos un **qubit de apoyo** (auxiliar) preparado en superposición $|+\rangle = \frac{|0\rangle+|1\rangle}{\sqrt{2}}$ y aplicamos una operación controlada-$U$:</p>
+            <div style="text-align: center; font-weight: bold; margin-top: 5px;">
+              $$|0\rangle |u\rangle \xrightarrow{H \otimes I} \frac{|0\rangle + |1\rangle}{\sqrt{2}} \otimes |u\rangle \xrightarrow{c\text{-}U} \frac{|0\rangle |u\rangle + |1\rangle U|u\rangle}{\sqrt{2}} = \left(\frac{|0\rangle + e^{2\pi i \theta}|1\rangle}{\sqrt{2}}\right) \otimes |u\rangle$$
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Midiendo con 1 Qubit de Apoyo</h2>
+          <p>Si la fase tiene resolución de 1 bit, se escribe en binario fraccionario como $\theta = 0.\theta_1 = \frac{\theta_1}{2}$ donde $\theta_1 \in \{0, 1\}$.</p>
+          <div class="math-block" style="font-size: 0.9em; margin: 10px 0;">
+            $$|\Psi\rangle_{\text{apoyo}} = \frac{|0\rangle + e^{2\pi i (0.\theta_1)}|1\rangle}{\sqrt{2}} = \frac{|0\rangle + e^{i\pi \theta_1}|1\rangle}{\sqrt{2}}$$
+          </div>
+          <ul>
+            <li><strong>Si $\theta_1 = 0 \implies \theta = 0 \implies |\Psi\rangle_{\text{apoyo}} = |+\rangle$.</strong> Aplicar Hadamard ($H$) lo lleva a $|0\rangle$.</li>
+            <li><strong>Si $\theta_1 = 1 \implies \theta = 0.5 \implies |\Psi\rangle_{\text{apoyo}} = |-\rangle$.</strong> Aplicar Hadamard ($H$) lo lleva a $|1\rangle$.</li>
+          </ul>
+          <p style="margin-top: 10px; text-align: center;">En 1 qubit, aplicar **Hadamard** equivale a la Transformada Inversa para decodificar la fase.</p>
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Midiendo con 2 Qubits de Apoyo</h2>
+          <p>Para mayor precisión, supongamos $\theta = 0.\theta_1 \theta_2 = \frac{\theta_1}{2} + \frac{\theta_2}{4}$. Necesitamos 2 qubits de apoyo ($c_0$ y $c_1$) en $|+\rangle$:</p>
+          <div class="step"><span class="step-num">1</span>
+            <div class="step-content">
+              <p>Qubit $c_1$ (peso $2^{-2}$): Aplicamos Controlled-$U^{2^1} = c\text{-}U^2$. La fase aplicada es $2\theta = 2(0.\theta_1 \theta_2) = \theta_1.\theta_2 \equiv 0.\theta_2 \pmod 1$. El estado queda: $\frac{|0\rangle + e^{2\pi i 0.\theta_2}|1\rangle}{\sqrt{2}}$.</p>
+            </div>
+          </div>
+          <div class="step"><span class="step-num">2</span>
+            <div class="step-content">
+              <p>Qubit $c_0$ (peso $2^{-1}$): Aplicamos Controlled-$U^{2^0} = c\text{-}U^1$. La fase aplicada es $1\theta = 0.\theta_1 \theta_2$. El estado queda: $\frac{|0\rangle + e^{2\pi i 0.\theta_1 \theta_2}|1\rangle}{\sqrt{2}}$.</p>
+            </div>
+          </div>
+          <p style="margin-top: 10px;">El estado conjunto de los qubits de apoyo es:</p>
+          <div class="math-block-gold" style="font-size: 0.9em; margin: 5px 0;">
+            $$|\Psi\rangle_{\text{apoyos}} = \frac{|0\rangle + e^{2\pi i 0.\theta_2}|1\rangle}{\sqrt{2}} \otimes \frac{|0\rangle + e^{2\pi i 0.\theta_1 \theta_2}|1\rangle}{\sqrt{2}}$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Midiendo con 3 Qubits de Apoyo</h2>
+          <p>Para una fase de 3 bits $\theta = 0.\theta_1 \theta_2 \theta_3$, usamos 3 qubits de apoyo y aplicamos potencias en cascada de $U$ ($U^4, U^2, U^1$):</p>
+          <ul>
+            <li>Qubit $c_2$ (peso $2^{-3}$): Aplicamos $c\text{-}U^4 \to 4\theta = 2\theta_1 + \theta_2 + \frac{\theta_3}{2} \equiv 0.\theta_3 \pmod 1$. Estado: $\frac{|0\rangle + e^{2\pi i 0.\theta_3}|1\rangle}{\sqrt{2}}$.</li>
+            <li>Qubit $c_1$ (peso $2^{-2}$): Aplicamos $c\text{-}U^2 \to 2\theta \equiv 0.\theta_2 \theta_3 \pmod 1$. Estado: $\frac{|0\rangle + e^{2\pi i 0.\theta_2 \theta_3}|1\rangle}{\sqrt{2}}$.</li>
+            <li>Qubit $c_0$ (peso $2^{-1}$): Aplicamos $c\text{-}U^1 \to 1\theta = 0.\theta_1 \theta_2 \theta_3$. Estado: $\frac{|0\rangle + e^{2\pi i 0.\theta_1 \theta_2 \theta_3}|1\rangle}{\sqrt{2}}$.</li>
+          </ul>
+          <p style="margin-top: 10px;">El estado conjunto del registro de apoyos es:</p>
+          <div class="math-block" style="font-size: 0.85em; margin: 5px 0;">
+            $$|\Psi\rangle_{\text{apoyos}} = \frac{|0\rangle + e^{2\pi i 0.\theta_3}|1\rangle}{\sqrt{2}} \otimes \frac{|0\rangle + e^{2\pi i 0.\theta_2 \theta_3}|1\rangle}{\sqrt{2}} \otimes \frac{|0\rangle + e^{2\pi i 0.\theta_1 \theta_2 \theta_3}|1\rangle}{\sqrt{2}}$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>La Equivalencia con la QFT</h2>
+          <p>Recordemos la definición matemática de la **Transformada de Fourier Cuántica (QFT)** para un estado base binario $|x_1 x_2 \dots x_n\rangle$:</p>
+          <div class="math-block-gold" style="font-size: 0.85em; margin: 10px 0;">
+            $$QFT |x_1 x_2 \dots x_n\rangle = \frac{|0\rangle + e^{2\pi i 0.x_n}|1\rangle}{\sqrt{2}} \otimes \dots \otimes \frac{|0\rangle + e^{2\pi i 0.x_1 x_2 \dots x_n}|1\rangle}{\sqrt{2}}$$
+          </div>
+          <div class="info-card purple">
+            <h3>La Revelación Clave:</h3>
+            <p>El estado que generamos en el registro de apoyos al aplicar compuertas controladas en cascada ($U^{2^j}$) es **exactamente** la QFT de la fase $|\theta_1 \theta_2 \dots \theta_n\rangle$.</p>
+            <p style="margin-top: 5px; font-weight: bold;">Por lo tanto, para decodificar las fases relativas y obtener el valor binario legible en el laboratorio, debemos aplicar obligatoriamente la Transformada de Fourier Cuántica Inversa ($QFT^\dagger$).</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 3: CIRCUITOS E IMPLEMENTACIONES                      -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="section-divider">
+          <div class="section-num">02</div>
+          <h2>Circuitos e Implementaciones</h2>
+          <p style="color: var(--text-muted);">Construcción paso a paso de los circuitos en Qiskit</p>
+        </section>
+
+        <section style="font-size: 0.72em;">
+          <h2>1 Qubit: Circuito y Código en Qiskit</h2>
+          <div class="two-col" style="gap: 15px; align-items: center;">
+            <div>
+              <img src="images/qpe_1qubit.png" alt="Circuito QPE 1 Qubit" style="border: 2px solid var(--border-color); border-radius: 8px; width: 100%; background-color: white; padding: 8px;">
+            </div>
+            <div>
+              <pre style="margin: 0;"><code class="language-python">from qiskit import QuantumCircuit
+import numpy as np
+
+# 1 qubit de control (0) + 1 qubit objetivo (1)
+qc = QuantumCircuit(2, 1)
+
+# Superposición en control
+qc.h(0)
+
+# Preparar eigenestado |1> en objetivo
+qc.x(1)
+
+# CP (Control-Phase) con theta = 0.5 (fase = pi)
+qc.cp(np.pi, 0, 1)
+
+# QFT Inversa de 1 qubit (Hadamard)
+qc.h(0)
+
+# Medida
+qc.measure(0, 0)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.7em;">
+          <h2>2 Qubits: Circuito y Código en Qiskit</h2>
+          <div class="two-col" style="gap: 15px; align-items: center;">
+            <div>
+              <img src="images/qpe_2qubit.png" alt="Circuito QPE 2 Qubits" style="border: 2px solid var(--border-color); border-radius: 8px; width: 100%; background-color: white; padding: 8px;">
+            </div>
+            <div>
+              <pre style="margin: 0;"><code class="language-python">from qiskit import QuantumCircuit
+from qiskit.circuit.library import QFTGate
+import numpy as np
+
+# 2 qubits control (0, 1) + 1 objetivo (2)
+qc = QuantumCircuit(3, 2)
+
+for q in range(2):
+    qc.h(q)
+qc.x(2) # Estado objetivo |1>
+
+# Cascada controlada (fase theta = 1/4)
+fase = 2 * np.pi / 4
+qc.cp(2 * fase, 1, 2) # c-U^2 (control 1)
+qc.cp(fase, 0, 2)     # c-U   (control 0)
+
+# QFT Inversa de 2 qubits (Decodificación)
+qc.append(QFTGate(2).inverse(), [0, 1])
+
+qc.measure([0, 1], [0, 1])</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section style="font-size: 0.68em;">
+          <h2>3 Qubits: Circuito y Código de Qiskit</h2>
+          <div class="two-col" style="gap: 15px; align-items: center;">
+            <div>
+              <img src="images/qpe_3qubit.png" alt="Circuito QPE 3 Qubits" style="border: 2px solid var(--border-color); border-radius: 8px; width: 100%; background-color: white; padding: 8px;">
+            </div>
+            <div>
+              <pre style="margin: 0;"><code class="language-python">from qiskit import QuantumCircuit
+from qiskit.circuit.library import QFTGate
+import numpy as np
+
+# 3 qubits control (0, 1, 2) + 1 objetivo (3)
+qc = QuantumCircuit(4, 3)
+
+for q in range(3):
+    qc.h(q)
+qc.x(3) # Objetivo en |1>
+
+# Cascada controlada (fase theta = 1/8)
+fase = 2 * np.pi / 8
+qc.cp(4 * fase, 2, 3) # c-U^4 (control 2)
+qc.cp(2 * fase, 1, 3) # c-U^2 (control 1)
+qc.cp(fase, 0, 3)     # c-U   (control 0)
+
+# QFT Inversa de 3 qubits (Decodificación)
+qc.append(QFTGate(3).inverse(), [0, 1, 2])
+
+qc.measure([0, 1, 2], [0, 1, 2])</code></pre>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 4: MATEMÁTICAS DE LA INTERFERENCIA                   -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="section-divider">
+          <div class="section-num">03</div>
+          <h2>Matemáticas de la Interferencia</h2>
+          <p style="color: var(--text-muted);">Demostración algebraica de por qué colapsa en el valor correcto</p>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>El rol de la QFT Inversa en 3 Qubits</h2>
+          <p>Para $N=8$ estados, la QFT Inversa se define formalmente como:</p>
+          <div class="math-block-gold">
+            $$QFT^\dagger |k\rangle = \frac{1}{\sqrt{8}} \sum_{j=0}^7 e^{-2\pi i j k / 8} |j\rangle$$
+          </div>
+          <p>Supongamos que la fase del sistema es exactamente $\theta = 3/8$ (binario $0.011_2$, es decir, estado $|3\rangle$). El estado que entra al decodificador es:</p>
+          <div class="math-block">
+            $$|\psi\rangle = \frac{1}{\sqrt{8}} \sum_{k=0}^7 e^{2\pi i (3/8) k} |k\rangle$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.76em;">
+          <h2>Interferencia Constructiva vs Destructiva</h2>
+          <p>Aplicando el operador de decodificación al estado codificado anterior:</p>
+          <div class="math-block-gold" style="font-size: 0.85em; padding: 10px 0;">
+            $$QFT^\dagger |\psi\rangle = \frac{1}{8} \sum_{j=0}^7 \left( \sum_{k=0}^7 e^{2\pi i \frac{(3 - j) k}{8}} \right) |j\rangle$$
+          </div>
+          <p>Evaluamos la suma geométrica interna $\sum_{k=0}^7 r^k$ con $r = e^{2\pi i (3-j)/8}$:</p>
+          <ul>
+            <li><strong>Si $j = 3$ (coincidencia)</strong>: $r = e^0 = 1 \implies \sum_{k=0}^7 1 = 8$. La amplitud del estado $|3\rangle$ es $\frac{8}{8} = 1$ (Interferencia Constructiva).</li>
+            <li><strong>Si $j \neq 3$ (desajuste)</strong>: $r \neq 1 \implies \frac{1 - r^8}{1 - r} = \frac{1 - e^{2\pi i (3-j)}}{1 - r} = \frac{1 - 1}{1 - r} = 0$ (Interferencia Destructiva total).</li>
+          </ul>
+          <p style="margin-top: 10px; text-align: center; font-weight: bold; color: var(--accent-purple);">
+            El estado colapsa únicamente en $|3\rangle = |011\rangle$ con probabilidad 1.
+          </p>
+        </section>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECCIÓN 5: GENERALIZACIÓN Y CONEXIÓN                         -->
+      <!-- ============================================================ -->
+      <section>
+        <section class="section-divider">
+          <div class="section-num">04</div>
+          <h2>Generalización y Shor</h2>
+          <p style="color: var(--text-muted);">Generalización matemática para n qubits y Shor</p>
+        </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Generalización de QFT para $n$ Qubits</h2>
+          <p>Para un registro de $n$ qubits, cualquier estado computacional $|x\rangle = |x_1 x_2 \dots x_n\rangle$ se mapea a la superposición factorizada de fases:</p>
+          <div class="math-block-gold" style="font-size: 0.85em; margin: 10px 0;">
+            $$QFT_{2^n} |x\rangle = \bigotimes_{j=1}^n \frac{|0\rangle + e^{2\pi i 0.x_j x_{j+1} \dots x_n} |1\rangle}{\sqrt{2}}$$
+          </div>
+          <div class="info-card">
+            <h3>Propiedades Clave de la Generalización:</h3>
+            <p><strong>Complejidad de Compuertas:</strong> El circuito de QFT requiere $\mathcal{O}(n^2)$ compuertas elementales (Hadamards y rotaciones de fase controladas $R_k$).</p>
+            <p><strong>Ventaja Cuántica:</strong> La transformada de Fourier discreta clásica requiere $\mathcal{O}(n 2^n)$ operaciones aritméticas. Esto representa una aceleración exponencial.</p>
+          </div>
+        </section>
+
+        <section style="font-size: 0.75em;">
+          <h2>QPE Generalizado y Shor</h2>
+          <p>El algoritmo de estimación de fase cuántica (QPE) utiliza esta estructura general para estimar la fase $\theta$ del operador modular de Shor $U_a |y\rangle = |a y \pmod N\rangle$:</p>
+          <div class="math-block" style="padding: 10px; margin: 10px 0;">
+            $$U_a |u_s\rangle = e^{2\pi i (s/r)} |u_s\rangle \implies \theta = \frac{s}{r}$$
+          </div>
+          <div class="info-card purple">
+            <strong>Flujo de Shor mediante QPE Generalizado:</strong>
+            <ol>
+              <li>Preparamos el registro de control de $t$ qubits en superposición uniforme usando Hadamards.</li>
+              <li>Aplicamos la cascada controlada de operadores modulares: $U^{2^j}_a$ para cada qubit de control $j$.</li>
+              <li>Aplicamos la $QFT^\dagger$ generalizada para decodificar las fases relativas.</li>
+              <li>Medimos el registro de control para obtener $x \approx 2^t (s/r)$ y deducir el periodo $r$ clásicamente.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="title-slide">
+          <h1>Resumen del Taller</h1>
+          <p class="subtitle" style="margin-top: 1em;">
+            📓 Prueba todos los códigos directamente en <code>notebooks/04_quantum_phase_estimation.ipynb</code><br>
+            🐍 Ejecuta <code>python skills_y_configs/generate_circuit_images.py</code> para actualizar los diagramas.
+          </p>
+          <div style="margin-top: 1.5em;">
+            <span class="badge badge-blue">1 Qubit</span>
+            <span class="badge badge-purple">2 Qubits</span>
+            <span class="badge badge-gold">3 Qubits</span>
+          </div>
+        </section>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- Reveal.js Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      center: true,
+      slideNumber: 'c/t',
+      width: 1280,
+      height: 720,
+      margin: 0.08,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      plugins: [RevealHighlight, RevealNotes, RevealMath.MathJax3]
+    });
+  </script>
+</body>
+
+</html>

@@ -24,3 +24,9 @@ desktop.ini
 
 # Logs
 *.log
+
+# Proyecto - Exclusiones
+*.rar
+qkp/
+skills_y_configs/
+notebooks/create_*.py

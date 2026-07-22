@@ -41,7 +41,7 @@
           <h1>QAOA &amp; Quantum Annealing</h1>
           <h3 style="color: var(--text-muted); font-weight: 400;">Aplicados al Problema de la Mochila</h3>
           <p class="subtitle" style="margin-top: 1em;">
-            Clase de Pregrado · 90 minutos<br>
+            Lic - Ing. Miguel Alfonso Martínez B<br>
             <small style="color: var(--text-muted);">Modelado matemático · PuLP · Qiskit 2.4 · D-Wave Ocean SDK</small>
           </p>
         </section>
@@ -110,7 +110,8 @@
         <section>
           <h2>El Problema de la Mochila (Knapsack)</h2>
           <p>Tienes una mochila con capacidad limitada. Cada ítem tiene un <strong>valor</strong> y un
-            <strong>peso</strong>. ¿Cuáles seleccionas para <em>maximizar el valor</em> sin exceder la capacidad?</p>
+            <strong>peso</strong>. ¿Cuáles seleccionas para <em>maximizar el valor</em> sin exceder la capacidad?
+          </p>
           <div class="math-block">
             $$\max \sum_{i=1}^{n} v_i \, x_i \qquad \text{sujeto a} \qquad \sum_{i=1}^{n} w_i \, x_i \leq W$$
           </div>
@@ -288,15 +289,16 @@
 
         <section>
           <h2>Paso 1: Convertir a Minimización</h2>
-          <p>Los computadores cuánticos buscan el <strong>estado de mínima energía</strong> (estado base). Por ello, convertimos la maximización de la ganancia $Z$ en la minimización del costo $H_{\text{objetivo}} = -Z$:</p>
+          <p>Los computadores cuánticos buscan el <strong>estado de mínima energía</strong> (estado base). Por ello,
+            convertimos la maximización de la ganancia $Z$ en la minimización del costo $H_{\text{objetivo}} = -Z$:</p>
           <div class="math-block" style="font-size: 0.9em;">
             $$\max Z \quad\Longleftrightarrow\quad \min -Z$$
           </div>
           <p>Desarrollamos algebraicamente paso a paso para nuestra instancia:</p>
           <div class="math-block-gold" style="font-size: 0.82em;">
             $$\begin{aligned}
-              H_{\text{objetivo}} &= -(5x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5) \\
-              &= -5x_1 - 10x_2 - 15x_3 - 4x_4 - 12x_5
+            H_{\text{objetivo}} &= -(5x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5) \\
+            &= -5x_1 - 10x_2 - 15x_3 - 4x_4 - 12x_5
             \end{aligned}$$
           </div>
           <p style="font-size: 0.85em; text-align: center; color: var(--text-muted);">
@@ -308,7 +310,8 @@
           <h2>Paso 2: Penalización de Restricciones</h2>
           <p>En optimización cuántica, no podemos usar multiplicadores de Lagrange lineales continuos directamente (pues
             requerirían optimizar la variable dual $\lambda_{\text{Lagrange}}$ de forma interactiva). Usamos el
-            <strong>método de penalización cuadrática</strong>:</p>
+            <strong>método de penalización cuadrática</strong>:
+          </p>
           <div class="math-block" style="font-size:0.85em;">
             $$\min \;\; H(\mathbf{x}) = \underbrace{-\sum_{i} v_i x_i}_{\text{objetivo}} \;+\; \lambda
             \underbrace{\left(\sum_{i} w_i x_i - W\right)^2}_{\text{penalización cuadrática}}$$
@@ -455,14 +458,17 @@
 
         <section style="font-size: 0.85em;">
           <h2>Paso 7.1: Agrupación de Términos Lineales</h2>
-          <p style="margin-bottom: 5px;">Sustituyendo $X^2$ en la ecuación de $A^2$ y agrupando los coeficientes de cada $y_j$:</p>
+          <p style="margin-bottom: 5px;">Sustituyendo $X^2$ en la ecuación de $A^2$ y agrupando los coeficientes de cada
+            $y_j$:</p>
           <div class="math-block" style="font-size:0.75em; padding: 6px; margin: 4px 0;">
             $$\begin{aligned}
-              A^2 &= \underbrace{\sum_j c_j^2 y_j}_{\text{de } X^2} + 2\sum_{j \lt k} c_j c_k y_j y_k - \underbrace{2W\sum_j c_j y_j}_{\text{de } -2WX} + W^2 \\
-              &= \sum_j \underbrace{c_j(c_j - 2W)}_{\text{por comprensión}} y_j + 2\sum_{j \lt k} c_j c_k y_j y_k + W^2
+            A^2 &= \underbrace{\sum_j c_j^2 y_j}_{\text{de } X^2} + 2\sum_{j \lt k} c_j c_k y_j y_k -
+            \underbrace{2W\sum_j c_j y_j}_{\text{de } -2WX} + W^2 \\
+            &= \sum_j \underbrace{c_j(c_j - 2W)}_{\text{por comprensión}} y_j + 2\sum_{j \lt k} c_j c_k y_j y_k + W^2
             \end{aligned}$$
           </div>
-          <p style="margin: 5px 0 3px 0;">Desarrollando algebraicamente con $W = 15 \implies c_j(c_j - 30)$ para nuestra instancia:</p>
+          <p style="margin: 5px 0 3px 0;">Desarrollando algebraicamente con $W = 15 \implies c_j(c_j - 30)$ para nuestra
+            instancia:</p>
           <div class="two-col" style="font-size: 0.72em; gap: 15px;">
             <div class="info-card" style="padding: 10px; margin: 0;">
               <h4 style="margin: 0 0 5px 0; font-size: 1em;">Laptop ($x_1$): $c_1 = 3$</h4>
@@ -769,16 +775,19 @@
 
         <section style="font-size: 0.85em;">
           <h2>Desarrollo del Hamiltoniano: Sustitución</h2>
-          <p style="margin-bottom: 5px;">Sustituimos la variable binaria por el operador de spin $\hat{y}_j = \frac{I - Z_j}{2}$ en el costo QUBO $C(\mathbf{y})$:</p>
+          <p style="margin-bottom: 5px;">Sustituimos la variable binaria por el operador de spin $\hat{y}_j = \frac{I -
+            Z_j}{2}$ en el costo QUBO $C(\mathbf{y})$:</p>
           <div class="math-block" style="font-size:0.75em; padding: 8px;">
-            $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j \lt k} Q_{jk} \left(\frac{I - Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
+            $$H_C = \sum_{j} Q_{jj} \left(\frac{I - Z_j}{2}\right) + \sum_{j \lt k} Q_{jk} \left(\frac{I -
+            Z_j}{2}\right)\left(\frac{I - Z_k}{2}\right) + C_{\text{offset}} I$$
           </div>
           <p style="margin: 5px 0;">Distribuyendo la multiplicación término a término a mano:</p>
           <div class="math-block-gold" style="font-size:0.72em; padding: 8px;">
             $$\begin{aligned}
-              \text{Término Lineal:} \quad & Q_{jj} y_j \;\longrightarrow\; \frac{Q_{jj}}{2} I - \frac{Q_{jj}}{2} Z_j \\
-              \text{Término Cuadrático:} \quad & Q_{jk} y_j y_k \;\longrightarrow\; \frac{Q_{jk}}{4} \left( I - Z_j - Z_k + Z_j Z_k \right) \\
-              &= \frac{Q_{jk}}{4} I - \frac{Q_{jk}}{4} Z_j - \frac{Q_{jk}}{4} Z_k + \frac{Q_{jk}}{4} Z_j Z_k
+            \text{Término Lineal:} \quad & Q_{jj} y_j \;\longrightarrow\; \frac{Q_{jj}}{2} I - \frac{Q_{jj}}{2} Z_j \\
+            \text{Término Cuadrático:} \quad & Q_{jk} y_j y_k \;\longrightarrow\; \frac{Q_{jk}}{4} \left( I - Z_j - Z_k
+            + Z_j Z_k \right) \\
+            &= \frac{Q_{jk}}{4} I - \frac{Q_{jk}}{4} Z_j - \frac{Q_{jk}}{4} Z_k + \frac{Q_{jk}}{4} Z_j Z_k
             \end{aligned}$$
           </div>
         </section>
@@ -787,25 +796,31 @@
           <h2>Desarrollo del Hamiltoniano: Agrupación</h2>
           <p style="margin-bottom: 5px;">Sumamos todos los términos lineales, cuadráticos y de identidad:</p>
           <div class="math-block" style="font-size:0.72em; padding: 6px;">
-            $$H_C = \sum_j \left( \frac{Q_{jj}}{2} I - \frac{Q_{jj}}{2} Z_j \right) + \sum_{j \lt k} \left( \frac{Q_{jk}}{4} I - \frac{Q_{jk}}{4} Z_j - \frac{Q_{jk}}{4} Z_k + \frac{Q_{jk}}{4} Z_j Z_k \right) + C_{\text{offset}} I$$
+            $$H_C = \sum_j \left( \frac{Q_{jj}}{2} I - \frac{Q_{jj}}{2} Z_j \right) + \sum_{j \lt k} \left(
+            \frac{Q_{jk}}{4} I - \frac{Q_{jk}}{4} Z_j - \frac{Q_{jk}}{4} Z_k + \frac{Q_{jk}}{4} Z_j Z_k \right) +
+            C_{\text{offset}} I$$
           </div>
-          <p style="margin: 3px 0;">Reuniendo los coeficientes que acompañan a cada operador de Pauli $Z_j$, $Z_j Z_k$ e Identidad $I$:</p>
+          <p style="margin: 3px 0;">Reuniendo los coeficientes que acompañan a cada operador de Pauli $Z_j$, $Z_j Z_k$ e
+            Identidad $I$:</p>
           <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
             <ul style="margin: 0; padding-left: 20px;">
-              <li><strong>Campos locales $Z_j$:</strong> Se junta su diagonal $-\frac{Q_{jj}}{2}$ y todas sus interacciones $-\frac{Q_{jk}}{4}$ (para todo $k \neq j$):
+              <li><strong>Campos locales $Z_j$:</strong> Se junta su diagonal $-\frac{Q_{jj}}{2}$ y todas sus
+                interacciones $-\frac{Q_{jk}}{4}$ (para todo $k \neq j$):
                 $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4} \sum_{k \neq j} Q_{jk}$$
               </li>
               <li><strong>Acoplamientos cuadráticos $Z_j Z_k$:</strong> Provienen únicamente de los términos cruzados:
                 $$J_{jk} = \frac{Q_{jk}}{4}$$
               </li>
-              <li><strong>Constante de offset $I$:</strong> $C'_0 = C_{\text{offset}} + \sum_j \frac{Q_{jj}}{2} + \sum_{j \lt k} \frac{Q_{jk}}{4}$</li>
+              <li><strong>Constante de offset $I$:</strong> $C'_0 = C_{\text{offset}} + \sum_j \frac{Q_{jj}}{2} +
+                \sum_{j \lt k} \frac{Q_{jk}}{4}$</li>
             </ul>
           </div>
         </section>
 
         <section style="font-size: 0.85em;">
           <h2>Coeficientes del Hamiltoniano Ising</h2>
-          <p>Las relaciones de mapeo estándar entre la matriz QUBO $Q$ y los coeficientes del Hamiltoniano $H_C$ son:</p>
+          <p>Las relaciones de mapeo estándar entre la matriz QUBO $Q$ y los coeficientes del Hamiltoniano $H_C$ son:
+          </p>
           <div class="math-block-gold" style="font-size:0.82em;">
             $$h_j = -\frac{Q_{jj}}{2} - \frac{1}{4}\sum_{k \neq j} Q_{jk} \qquad J_{jk} = \frac{Q_{jk}}{4}$$
           </div>
@@ -817,33 +832,38 @@
 
         <section style="font-size: 0.82em;">
           <h2>Sustitución Directa del Caso Concreto</h2>
-          <p>Para entender el Hamiltoniano sin pasar por la matriz QUBO, podemos sustituir $\hat{y}_j = \frac{I - Z_j}{2}$ directamente en el costo clásico de nuestra instancia:</p>
+          <p>Para entender el Hamiltoniano sin pasar por la matriz QUBO, podemos sustituir $\hat{y}_j = \frac{I -
+            Z_j}{2}$ directamente en el costo clásico de nuestra instancia:</p>
           <div class="math-block" style="font-size:0.68em; padding: 5px;">
-            $$H_{\text{objetivo}} = -5\left(\frac{I - Z_1}{2}\right) - 10\left(\frac{I - Z_2}{2}\right) - 15\left(\frac{I - Z_3}{2}\right) - 4\left(\frac{I - Z_4}{2}\right) - 12\left(\frac{I - Z_5}{2}\right)$$
-            $$H_{\text{restricción}} = 16 \left( 3\left(\frac{I - Z_1}{2}\right) + 5\left(\frac{I - Z_2}{2}\right) + \cdots + 8\left(\frac{I - Z_{s_3}}{2}\right) - 15I \right)^2$$
+            $$H_{\text{objetivo}} = -5\left(\frac{I - Z_1}{2}\right) - 10\left(\frac{I - Z_2}{2}\right) -
+            15\left(\frac{I - Z_3}{2}\right) - 4\left(\frac{I - Z_4}{2}\right) - 12\left(\frac{I - Z_5}{2}\right)$$
+            $$H_{\text{restricción}} = 16 \left( 3\left(\frac{I - Z_1}{2}\right) + 5\left(\frac{I - Z_2}{2}\right) +
+            \cdots + 8\left(\frac{I - Z_{s_3}}{2}\right) - 15I \right)^2$$
           </div>
           <p>Agrupando y distribuyendo los términos lineales y cuadráticos a mano:</p>
           <div class="math-block-gold" style="font-size:0.72em; padding: 5px;">
-            $$H_C = \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j \text{ (campos locales)}} Z_j + \sum_{j \lt k} \underbrace{8 c_j c_k}_{J_{jk} \text{ (acoplamientos)}} Z_j Z_k + C'_0 I$$
+            $$H_C = \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j \text{ (campos locales)}} Z_j +
+            \sum_{j \lt k} \underbrace{8 c_j c_k}_{J_{jk} \text{ (acoplamientos)}} Z_j Z_k + C'_0 I$$
           </div>
         </section>
 
         <section style="font-size: 0.8em;">
           <h2>Álgebra del Caso Concreto (Paso a Paso)</h2>
-          <p style="margin-bottom: 2px;">Evaluamos el binomio de restricción $\lambda(X - W)^2$ con $\lambda = 16, W = 15$ y $\sum c_j = 38$:</p>
+          <p style="margin-bottom: 2px;">Evaluamos el binomio de restricción $\lambda(X - W)^2$ con $\lambda = 16, W =
+            15$ y $\sum c_j = 38$:</p>
           <div class="math-block" style="font-size:0.68em; padding: 4px; margin: 3px 0;">
             $$\begin{aligned}
-              X - W &= \sum_j c_j \left(\frac{I - Z_j}{2}\right) - 15I = \left(\frac{38}{2} - 15\right)I - \sum_j \frac{c_j}{2}Z_j = 4I - \sum_j \frac{c_j}{2}Z_j \\
-              (X - W)^2 &= \left(4I - \sum_j \frac{c_j}{2}Z_j\right)^2 = 16I - 4\sum_j c_j Z_j + \frac{1}{4}\left(\sum_j c_j^2 I + 2\sum_{j < k} c_j c_k Z_j Z_k\right)
-            \end{aligned}$$
-          </div>
-          <p style="margin: 3px 0 1px 0;">Multiplicamos por $\lambda = 16$ y sumamos el objetivo $H_{\text{objetivo}} = \sum \frac{v_j}{2}Z_j - 23I$:</p>
-          <div class="math-block-gold" style="font-size:0.7em; padding: 4px; margin: 3px 0;">
-            $$\begin{aligned}
-              H_C &= H_{\text{objetivo}} + 16(X-W)^2 \\
-              &= \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j} Z_j + \sum_{j < k} \underbrace{8 c_j c_k}_{J_{jk}} Z_j Z_k + C'_0 I
-            \end{aligned}$$
-          </div>
+            X - W &= \sum_j c_j \left(\frac{I - Z_j}{2}\right) - 15I = \left(\frac{38}{2} - 15\right)I - \sum_j
+            \frac{c_j}{2}Z_j = 4I - \sum_j \frac{c_j}{2}Z_j \\
+            (X - W)^2 &= \left(4I - \sum_j \frac{c_j}{2}Z_j\right)^2 = 16I - 4\sum_j c_j Z_j + \frac{1}{4}\left(\sum_j
+            c_j^2 I + 2\sum_{j < k} c_j c_k Z_j Z_k\right) \end{aligned}$$ </div>
+              <p style="margin: 3px 0 1px 0;">Multiplicamos por $\lambda = 16$ y sumamos el objetivo
+                $H_{\text{objetivo}} = \sum \frac{v_j}{2}Z_j - 23I$:</p>
+              <div class="math-block-gold" style="font-size:0.7em; padding: 4px; margin: 3px 0;">
+                $$\begin{aligned}
+                H_C &= H_{\text{objetivo}} + 16(X-W)^2 \\
+                &= \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j} Z_j + \sum_{j < k}
+                  \underbrace{8 c_j c_k}_{J_{jk}} Z_j Z_k + C'_0 I \end{aligned}$$ </div>
         </section>
 
         <section style="font-size: 0.85em;">
@@ -869,7 +889,8 @@
 
         <section style="font-size: 0.85em;">
           <h2>El Hamiltoniano de la Mochila</h2>
-          <p style="margin-bottom: 5px;">El Hamiltoniano final $H_C$ que se programa en Qiskit o D-Wave para nuestra instancia:</p>
+          <p style="margin-bottom: 5px;">El Hamiltoniano final $H_C$ que se programa en Qiskit o D-Wave para nuestra
+            instancia:</p>
           <table style="font-size: 0.65em; margin-bottom: 5px;">
             <thead>
               <tr>
@@ -881,19 +902,74 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>1</td><td>Laptop ($x_1$)</td><td>5</td><td>3</td><td>$\mathbf{-189.5}$</td></tr>
-              <tr><td>2</td><td>Cámara ($x_2$)</td><td>10</td><td>5</td><td>$\mathbf{-315.0}$</td></tr>
-              <tr><td>3</td><td>Proyector ($x_3$)</td><td>15</td><td>7</td><td>$\mathbf{-440.5}$</td></tr>
-              <tr><td>4</td><td>Tablet ($x_4$)</td><td>4</td><td>2</td><td>$\mathbf{-126.0}$</td></tr>
-              <tr><td>5</td><td>Dron ($x_5$)</td><td>12</td><td>6</td><td>$\mathbf{-378.0}$</td></tr>
-              <tr><td>6</td><td>Slack 0 ($s_0$)</td><td>0</td><td>1</td><td>$\mathbf{-64.0}$</td></tr>
-              <tr><td>7</td><td>Slack 1 ($s_1$)</td><td>0</td><td>2</td><td>$\mathbf{-128.0}$</td></tr>
-              <tr><td>8</td><td>Slack 2 ($s_2$)</td><td>0</td><td>4</td><td>$\mathbf{-256.0}$</td></tr>
-              <tr><td>9</td><td>Slack 3 ($s_3$)</td><td>0</td><td>8</td><td>$\mathbf{-512.0}$</td></tr>
+              <tr>
+                <td>1</td>
+                <td>Laptop ($x_1$)</td>
+                <td>5</td>
+                <td>3</td>
+                <td>$\mathbf{-189.5}$</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Cámara ($x_2$)</td>
+                <td>10</td>
+                <td>5</td>
+                <td>$\mathbf{-315.0}$</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Proyector ($x_3$)</td>
+                <td>15</td>
+                <td>7</td>
+                <td>$\mathbf{-440.5}$</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Tablet ($x_4$)</td>
+                <td>4</td>
+                <td>2</td>
+                <td>$\mathbf{-126.0}$</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Dron ($x_5$)</td>
+                <td>12</td>
+                <td>6</td>
+                <td>$\mathbf{-378.0}$</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Slack 0 ($s_0$)</td>
+                <td>0</td>
+                <td>1</td>
+                <td>$\mathbf{-64.0}$</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Slack 1 ($s_1$)</td>
+                <td>0</td>
+                <td>2</td>
+                <td>$\mathbf{-128.0}$</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Slack 2 ($s_2$)</td>
+                <td>0</td>
+                <td>4</td>
+                <td>$\mathbf{-256.0}$</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Slack 3 ($s_3$)</td>
+                <td>0</td>
+                <td>8</td>
+                <td>$\mathbf{-512.0}$</td>
+              </tr>
             </tbody>
           </table>
           <p style="font-size:0.75em; text-align:center; color:var(--accent-gold); margin-top:5px; margin-bottom:0;">
-            Acoplamientos: $J_{jk} = 8 \cdot c_j \cdot c_k$ &nbsp;(ej. $J_{12} = 120$, $J_{35} = 336$, $J_{89} = 256$, etc.)
+            Acoplamientos: $J_{jk} = 8 \cdot c_j \cdot c_k$ &nbsp;(ej. $J_{12} = 120$, $J_{35} = 336$, $J_{89} = 256$,
+            etc.)
           </p>
         </section>
 
@@ -997,31 +1073,42 @@
 
         <section style="font-size: 0.76em;">
           <h2>Circuito QAOA Concreto de Nuestra Mochila</h2>
-          <p style="margin-bottom: 5px; font-size: 0.95em;">Estructura cuántica para una capa ($p=1$) con los 9 qubits del sistema:</p>
-          <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 15px; align-items: stretch; margin-top: 5px;">
+          <p style="margin-bottom: 5px; font-size: 0.95em;">Estructura cuántica para una capa ($p=1$) con los 9 qubits
+            del sistema:</p>
+          <div
+            style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 15px; align-items: stretch; margin-top: 5px;">
             <!-- Explicación de las Compuertas -->
             <div style="display: flex; flex-direction: column; gap: 12px;">
               <div class="info-card" style="padding: 12px 15px; margin: 0; font-size: 0.88em;">
                 <strong style="color: var(--accent-blue);">1. Superposición ($|+\rangle^{\otimes 9}$):</strong>
-                <p style="margin: 2px 0;">Se aplica una compuerta <strong>Hadamard ($H$)</strong> a cada uno de los 9 qubits, creando un estado inicial equiprobable de las $2^9 = 512$ combinaciones posibles.</p>
+                <p style="margin: 2px 0;">Se aplica una compuerta <strong>Hadamard ($H$)</strong> a cada uno de los 9
+                  qubits, creando un estado inicial equiprobable de las $2^9 = 512$ combinaciones posibles.</p>
               </div>
               <div class="info-card gold" style="padding: 12px 15px; margin: 0; font-size: 0.88em;">
                 <strong style="color: var(--accent-gold);">2. Operador de Costo ($U_C(\gamma)$):</strong>
                 <ul style="margin: 0; padding-left: 15px;">
-                  <li>Rotaciones individuales: $R_z(2\gamma h_j)$ con los campos locales $h_j$ calculados (ej: $R_z(-379\gamma)$ en el qubit 1).</li>
-                  <li>Entrelazamiento: Compuertas CNOT y rotaciones $R_z(2\gamma J_{jk})$ para cada acoplamiento (ej: $J_{12} = 120$).</li>
+                  <li>Rotaciones individuales: $R_z(2\gamma h_j)$ con los campos locales $h_j$ calculados (ej:
+                    $R_z(-379\gamma)$ en el qubit 1).</li>
+                  <li>Entrelazamiento: Compuertas CNOT y rotaciones $R_z(2\gamma J_{jk})$ para cada acoplamiento (ej:
+                    $J_{12} = 120$).</li>
                 </ul>
               </div>
               <div class="info-card purple" style="padding: 12px 15px; margin: 0; font-size: 0.88em;">
                 <strong style="color: var(--accent-purple);">3. Operador Mezclador ($U_M(\beta)$):</strong>
-                <p style="margin: 2px 0;">Se aplica una compuerta de rotación en el eje X: <strong>$R_x(2\beta)$</strong> a cada uno de los 9 qubits para permitir la interferencia cuántica.</p>
+                <p style="margin: 2px 0;">Se aplica una compuerta de rotación en el eje X:
+                  <strong>$R_x(2\beta)$</strong> a cada uno de los 9 qubits para permitir la interferencia cuántica.
+                </p>
               </div>
             </div>
             <!-- Diagrama del Circuito -->
-            <div class="info-card" style="padding: 12px; margin-top: -60px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid var(--accent-blue); background: rgba(30, 41, 59, 0.4);">
-              <img src="./qaoa_circuit_mochila.png" style="width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);" />
-              <p style="font-size: 0.72em; margin-top: 8px; color: var(--text-muted); text-align: center; line-height: 1.15;">
-                <strong>Circuito QAOA completo:</strong> Preparación en paralelo, fase de costo con interacciones $J_{jk}$ y mezclador transverso.
+            <div class="info-card"
+              style="padding: 12px; margin-top: -60px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid var(--accent-blue); background: rgba(30, 41, 59, 0.4);">
+              <img src="./qaoa_circuit_mochila.png"
+                style="width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);" />
+              <p
+                style="font-size: 0.72em; margin-top: 8px; color: var(--text-muted); text-align: center; line-height: 1.15;">
+                <strong>Circuito QAOA completo:</strong> Preparación en paralelo, fase de costo con interacciones
+                $J_{jk}$ y mezclador transverso.
               </p>
             </div>
           </div>
@@ -1075,17 +1162,24 @@
             <div class="info-card" style="padding: 10px;">
               <h4 style="color:var(--accent-blue); margin-top:0; margin-bottom:5px;">El Tiempo y el Cronómetro</h4>
               <ul style="margin: 0; padding-left: 15px;">
-                <li><strong>$t$ (Tiempo instantáneo):</strong> El tiempo real transcurrido desde que inició el pulso físico de annealing. Va aumentando continuamente.</li>
-                <li><strong>$T$ (Tiempo total / Recocido):</strong> Duración total del experimento cuántico. En procesadores D-Wave actuales, $T \approx 20$ microsegundos ($\mu s$).</li>
-                <li><strong>$s = \frac{t}{T}$ (Tiempo normalizado):</strong> Fracción del camino recorrida. Varía continuamente de $s=0$ (inicio) a $s=1$ (final del pulso).</li>
+                <li><strong>$t$ (Tiempo instantáneo):</strong> El tiempo real transcurrido desde que inició el pulso
+                  físico de annealing. Va aumentando continuamente.</li>
+                <li><strong>$T$ (Tiempo total / Recocido):</strong> Duración total del experimento cuántico. En
+                  procesadores D-Wave actuales, $T \approx 20$ microsegundos ($\mu s$).</li>
+                <li><strong>$s = \frac{t}{T}$ (Tiempo normalizado):</strong> Fracción del camino recorrida. Varía
+                  continuamente de $s=0$ (inicio) a $s=1$ (final del pulso).</li>
               </ul>
             </div>
             <div class="info-card gold" style="padding: 10px;">
               <h4 style="color:var(--accent-gold); margin-top:0; margin-bottom:5px;">Las Tres Etapas del Proceso</h4>
               <ul style="margin: 0; padding-left: 15px;">
-                <li><strong>Inicio ($t = 0$):</strong> El término $\left(1 - \frac{0}{T}\right) = 1$ activa totalmente $H_{\text{init}}$ (campo magnético). Todos los qubits inician en superposición aleatoria.</li>
-                <li><strong>Transición ($0 < t < T$):</strong> A mitad del proceso (ej. $t = 10\,\mu s$), coexisten ambos Hamiltonianos. La energía cuántica disminuye gradualmente mientras el problema empieza a imponerse.</li>
-                <li><strong>Final ($t = T$):</strong> Al completarse el tiempo, la fracción $\frac{T}{T} = 1$ activa totalmente $H_{\text{final}} = H_C$. Los qubits colapsan en el estado óptimo.</li>
+                <li><strong>Inicio ($t = 0$):</strong> El término $\left(1 - \frac{0}{T}\right) = 1$ activa totalmente
+                  $H_{\text{init}}$ (campo magnético). Todos los qubits inician en superposición aleatoria.</li>
+                <li><strong>Transición ($0 < t < T$):</strong> A mitad del proceso (ej. $t = 10\,\mu s$), coexisten
+                      ambos Hamiltonianos. La energía cuántica disminuye gradualmente mientras el problema empieza a
+                      imponerse.</li>
+                <li><strong>Final ($t = T$):</strong> Al completarse el tiempo, la fracción $\frac{T}{T} = 1$ activa
+                  totalmente $H_{\text{final}} = H_C$. Los qubits colapsan en el estado óptimo.</li>
               </ul>
             </div>
           </div>
@@ -1093,64 +1187,87 @@
 
         <section style="font-size: 0.82em;">
           <h2>Annealing en Nuestra Mochila (9 Qubits)</h2>
-          <p style="margin-bottom: 4px;">Para resolver nuestra mochila con 5 ítems y 4 slack variables, programamos esta evolución de 9 qubits:</p>
+          <p style="margin-bottom: 4px;">Para resolver nuestra mochila con 5 ítems y 4 slack variables, programamos esta
+            evolución de 9 qubits:</p>
           <div class="math-block" style="font-size:0.7em; padding: 5px; margin: 3px 0;">
-            $$H(t) = \underbrace{-A(t) \sum_{j=1}^{9} X_j}_{\text{Campo Transversal } (t \to T \implies 0)} + \underbrace{B(t) \left( \sum_{j=1}^{9} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k \right)}_{\text{Hamiltoniano del Problema } H_C \; (t \to T \implies \text{Máximo})}$$
-          </div>
-          <p style="margin: 3px 0; font-size: 0.95em;">Desglose de las componentes físicas de la QPU D-Wave:</p>
-          <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
-            <ul style="margin: 0; padding-left: 20px; font-size: 0.9em;">
-              <li><strong>$A(t)$ y $B(t)$ (Funciones de Envolvente):</strong> Son las curvas de energía provistas por el hardware físico. Al inicio ($t=0$), $A(0)$ es máximo y $B(0)=0$. Al final ($t=T$), $A(T)=0$ y $B(T)$ llega a su máximo valor de energía.</li>
-              <li><strong>$\sum X_j$ (Operador Mezclador):</strong> Actúa sobre cada uno de los 9 qubits del circuito. Obliga a que cada qubit comience en una superposición perfecta entre $|0\rangle$ y $|1\rangle$.</li>
-              <li><strong>Término $H_C$ (Ising de Mochila):</strong> Utiliza los sesgos locales $h_j$ y acoplamientos $J_{jk}$ exactos que calculamos. Los qubits exploran las configuraciones válidas mediante túnel cuántico.</li>
-            </ul>
-          </div>
+            $$H(t) = \underbrace{-A(t) \sum_{j=1}^{9} X_j}_{\text{Campo Transversal } (t \to T \implies 0)} +
+            \underbrace{B(t) \left( \sum_{j=1}^{9} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k \right)}_{\text{Hamiltoniano
+              del Problema } H_C \; (t \to T \implies \text{Máximo})}$$ </div>
+              <p style="margin: 3px 0; font-size: 0.95em;">Desglose de las componentes físicas de la QPU D-Wave:</p>
+              <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
+                <ul style="margin: 0; padding-left: 20px; font-size: 0.9em;">
+                  <li><strong>$A(t)$ y $B(t)$ (Funciones de Envolvente):</strong> Son las curvas de energía provistas
+                    por el hardware físico. Al inicio ($t=0$), $A(0)$ es máximo y $B(0)=0$. Al final ($t=T$), $A(T)=0$ y
+                    $B(T)$ llega a su máximo valor de energía.</li>
+                  <li><strong>$\sum X_j$ (Operador Mezclador):</strong> Actúa sobre cada uno de los 9 qubits del
+                    circuito. Obliga a que cada qubit comience en una superposición perfecta entre $|0\rangle$ y
+                    $|1\rangle$.</li>
+                  <li><strong>Término $H_C$ (Ising de Mochila):</strong> Utiliza los sesgos locales $h_j$ y
+                    acoplamientos $J_{jk}$ exactos que calculamos. Los qubits exploran las configuraciones válidas
+                    mediante túnel cuántico.</li>
+                </ul>
+              </div>
         </section>
 
         <section style="font-size: 0.78em;">
           <h2>¿Qué representan $h$ y $J$ en el Mundo Real?</h2>
-          <p style="margin-bottom: 4px; font-size: 0.95em;">Las computadoras cuánticas y fotónicas no entienden de "mochilas" ni de "pesos". Solo entienden de física:</p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 15px; align-items: stretch; margin-top: 5px;">
+          <p style="margin-bottom: 4px; font-size: 0.95em;">Las computadoras cuánticas y fotónicas no entienden de
+            "mochilas" ni de "pesos". Solo entienden de física:</p>
+          <div
+            style="display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 15px; align-items: stretch; margin-top: 5px;">
             <!-- Columna 1: h -->
             <div class="info-card" style="padding: 8px; font-size: 0.82em; margin: 0;">
-              <h3 style="color: var(--accent-blue); font-size:1.15em; margin-top:0; margin-bottom:4px;">El Vector de Sesgos ($h_j$)</h3>
-              <p style="margin: 2px 0 5px 0;"><strong>Campo magnético local ($h_j$):</strong> Fuerza aplicada individualmente a cada qubit.</p>
+              <h3 style="color: var(--accent-blue); font-size:1.15em; margin-top:0; margin-bottom:4px;">El Vector de
+                Sesgos ($h_j$)</h3>
+              <p style="margin: 2px 0 5px 0;"><strong>Campo magnético local ($h_j$):</strong> Fuerza aplicada
+                individualmente a cada qubit.</p>
               <ul style="margin: 0; padding-left: 15px;">
-                <li>Si $h_j$ es muy negativo (ej. $-189.5$), induce al qubit a alinearse en la dirección de "Item Seleccionado" ($Z_j = -1$ o $|1\rangle$).</li>
+                <li>Si $h_j$ es muy negativo (ej. $-189.5$), induce al qubit a alinearse en la dirección de "Item
+                  Seleccionado" ($Z_j = -1$ o $|1\rangle$).</li>
                 <li>Proviene de balancear el valor del ítem y su penalización por peso.</li>
               </ul>
             </div>
             <!-- Columna 2: J -->
             <div class="info-card gold" style="padding: 8px; font-size: 0.82em; margin: 0;">
-              <h3 style="color: var(--accent-gold); font-size:1.15em; margin-top:0; margin-bottom:4px;">Los Acoplamientos ($J_{jk}$)</h3>
-              <p style="margin: 2px 0 5px 0;"><strong>Interacción mutua ($J_{jk}$):</strong> Tensión o fuerza de enlace que conecta al qubit $j$ con el qubit $k$.</p>
+              <h3 style="color: var(--accent-gold); font-size:1.15em; margin-top:0; margin-bottom:4px;">Los
+                Acoplamientos ($J_{jk}$)</h3>
+              <p style="margin: 2px 0 5px 0;"><strong>Interacción mutua ($J_{jk}$):</strong> Tensión o fuerza de enlace
+                que conecta al qubit $j$ con el qubit $k$.</p>
               <ul style="margin: 0; padding-left: 15px;">
-                <li>Si $J_{jk} > 0$ (como $J_{12} = 120$), penaliza energéticamente si ambos qubits están encendidos, representando la restricción de sobrepeso.</li>
+                <li>Si $J_{jk} > 0$ (como $J_{12} = 120$), penaliza energéticamente si ambos qubits están encendidos,
+                  representando la restricción de sobrepeso.</li>
                 <li>Se programa físicamente en acopladores cuánticos.</li>
               </ul>
             </div>
             <!-- Columna 3: Esquema Visual -->
-            <div class="info-card purple" style="padding: 6px; margin: 0; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-              <img src="./ising_hamiltonian_schematic.png" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 6px; border: 1px solid var(--accent-purple);" />
+            <div class="info-card purple"
+              style="padding: 6px; margin: 0; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <img src="./ising_hamiltonian_schematic.png"
+                style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 6px; border: 1px solid var(--accent-purple);" />
               <p style="font-size: 0.72em; margin-top: 4px; color: var(--text-muted); line-height: 1.15;">
-                <strong>Esquema del Hamiltoniano Ising:</strong> Sesgos locales $h_j$ (flechas individuales) e interacciones $J_{jk}$ (enlaces energéticos).
+                <strong>Esquema del Hamiltoniano Ising:</strong> Sesgos locales $h_j$ (flechas individuales) e
+                interacciones $J_{jk}$ (enlaces energéticos).
               </p>
             </div>
           </div>
-          <p style="margin-top: 5px; font-size: 0.75em; text-align: center; color: var(--accent-purple); margin-bottom: 0;">
-            Programar la QPU consiste en sintonizar estas fuerzas físicas ($h$ y $J$). Al encender el Annealing, el procesador busca de forma natural el equilibrio de menor energía del sistema.
+          <p
+            style="margin-top: 5px; font-size: 0.75em; text-align: center; color: var(--accent-purple); margin-bottom: 0;">
+            Programar la QPU consiste en sintonizar estas fuerzas físicas ($h$ y $J$). Al encender el Annealing, el
+            procesador busca de forma natural el equilibrio de menor energía del sistema.
           </p>
         </section>
 
         <section style="font-size: 0.8em;">
           <h2>Construcción de $h$ y $J$ (Paso a Paso)</h2>
-          <p style="margin-bottom: 5px;">Los coeficientes del Hamiltoniano se construyen a partir del valor $v_j$ y peso $c_j$ de cada variable usando:</p>
+          <p style="margin-bottom: 5px;">Los coeficientes del Hamiltoniano se construyen a partir del valor $v_j$ y peso
+            $c_j$ de cada variable usando:</p>
           <div class="math-block-gold" style="font-size:0.75em; padding: 6px; margin: 5px 0;">
             $$h_j = \frac{v_j}{2} - 64 c_j \qquad J_{jk} = 8 c_j c_k$$
           </div>
           <div class="two-col" style="font-size: 0.68em; gap: 15px; margin-top: 10px;">
             <div class="info-card" style="padding: 10px;">
-              <h4 style="color: var(--accent-blue); margin-top: 0; margin-bottom: 5px;">Cálculo del Vector de Sesgos $h$:</h4>
+              <h4 style="color: var(--accent-blue); margin-top: 0; margin-bottom: 5px;">Cálculo del Vector de Sesgos
+                $h$:</h4>
               <ul style="margin: 0; padding-left: 15px;">
                 <li>$h_1 = \frac{5}{2} - 64(3) = \mathbf{-189.5}$ (Laptop)</li>
                 <li>$h_2 = \frac{10}{2} - 64(5) = \mathbf{-315.0}$ (Cámara)</li>
@@ -1179,29 +1296,33 @@
 
         <section style="font-size: 0.8em;">
           <h2>Matrices $h$ y $J$ para Hardware Real</h2>
-          <p style="margin-bottom: 5px;">Las computadoras Ising (fotónicas y analógicas) requieren el vector de sesgos $h$ y la matriz de acoplamiento simétrica $J$ ($9\times9$):</p>
+          <p style="margin-bottom: 5px;">Las computadoras Ising (fotónicas y analógicas) requieren el vector de sesgos
+            $h$ y la matriz de acoplamiento simétrica $J$ ($9\times9$):</p>
           <div class="two-col" style="font-size: 0.58em; gap: 10px; align-items: center;">
             <div>
               <h3 style="text-align: center; color: var(--accent-blue); font-size: 1.2em;">Vector de Sesgos $h$</h3>
-              $$h = \begin{pmatrix} -189.5 \\ -315.0 \\ -440.5 \\ -126.0 \\ -378.0 \\ -64.0 \\ -128.0 \\ -256.0 \\ -512.0 \end{pmatrix}$$
+              $$h = \begin{pmatrix} -189.5 \\ -315.0 \\ -440.5 \\ -126.0 \\ -378.0 \\ -64.0 \\ -128.0 \\ -256.0 \\
+              -512.0 \end{pmatrix}$$
             </div>
             <div>
-              <h3 style="text-align: center; color: var(--accent-gold); font-size: 1.2em;">Matriz de Acoplamiento $J$ ($J_{jk} = 8c_j c_k$)</h3>
+              <h3 style="text-align: center; color: var(--accent-gold); font-size: 1.2em;">Matriz de Acoplamiento $J$
+                ($J_{jk} = 8c_j c_k$)</h3>
               $$J = \begin{pmatrix}
-                0 & 120 & 168 & 48 & 144 & 24 & 48 & 96 & 192 \\
-                120 & 0 & 280 & 80 & 240 & 40 & 80 & 160 & 320 \\
-                168 & 280 & 0 & 112 & 336 & 56 & 112 & 224 & 448 \\
-                48 & 80 & 112 & 0 & 96 & 16 & 32 & 64 & 128 \\
-                144 & 240 & 336 & 96 & 0 & 48 & 96 & 192 & 384 \\
-                24 & 40 & 56 & 16 & 48 & 0 & 16 & 32 & 64 \\
-                48 & 80 & 112 & 32 & 96 & 16 & 0 & 64 & 128 \\
-                96 & 160 & 224 & 64 & 192 & 32 & 64 & 0 & 256 \\
-                192 & 320 & 448 & 128 & 384 & 64 & 128 & 256 & 0
+              0 & 120 & 168 & 48 & 144 & 24 & 48 & 96 & 192 \\
+              120 & 0 & 280 & 80 & 240 & 40 & 80 & 160 & 320 \\
+              168 & 280 & 0 & 112 & 336 & 56 & 112 & 224 & 448 \\
+              48 & 80 & 112 & 0 & 96 & 16 & 32 & 64 & 128 \\
+              144 & 240 & 336 & 96 & 0 & 48 & 96 & 192 & 384 \\
+              24 & 40 & 56 & 16 & 48 & 0 & 16 & 32 & 64 \\
+              48 & 80 & 112 & 32 & 96 & 16 & 0 & 64 & 128 \\
+              96 & 160 & 224 & 64 & 192 & 32 & 64 & 0 & 256 \\
+              192 & 320 & 448 & 128 & 384 & 64 & 128 & 256 & 0
               \end{pmatrix}$$
             </div>
           </div>
           <p style="margin-top: 5px; font-size: 0.75em; text-align: center; color: var(--text-muted);">
-            Esta matriz $J$ y vector $h$ se envían directamente vía API (ej. en formato JSON) al procesador cuántico/fotónico.
+            Esta matriz $J$ y vector $h$ se envían directamente vía API (ej. en formato JSON) al procesador
+            cuántico/fotónico.
           </p>
         </section>
 
@@ -1283,19 +1404,27 @@ modelo.solve(pulp.PULP_CBC_CMD(msg=0))</code></pre>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <div class="info-card" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-blue);">pulp.LpProblem(name, sense)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Inicializa el modelo. <code>sense</code> indica el objetivo matemático, usando <code>pulp.LpMaximize</code> o <code>pulp.LpMinimize</code>.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Inicializa el modelo. <code>sense</code> indica el objetivo
+                  matemático, usando <code>pulp.LpMaximize</code> o <code>pulp.LpMinimize</code>.</p>
               </div>
               <div class="info-card" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-blue);">pulp.LpVariable(name, cat)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Declara las incógnitas. <code>cat='Binary'</code> restringe los valores a enteros (0,1), un paso clave en optimización combinatoria pura.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Declara las incógnitas. <code>cat='Binary'</code> restringe
+                  los valores a enteros (0,1), un paso clave en optimización combinatoria pura.</p>
               </div>
               <div class="info-card" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-blue);">pulp.lpSum(vector)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Realiza sumatorias de forma eficiente. Se asigna al <code>modelo +=</code> para inyectar tanto la función de costo (sin signo) como las restricciones lógicas (con desigualdad).</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Realiza sumatorias de forma eficiente. Se asigna al
+                  <code>modelo +=</code> para inyectar tanto la función de costo (sin signo) como las restricciones
+                  lógicas (con desigualdad).
+                </p>
               </div>
               <div class="info-card" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-blue);">modelo.solve(solver)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Dispara el cálculo algorítmico exacto. <code>PULP_CBC_CMD</code> usa el backend CBC (Branch & Cut). <code>msg=0</code> oculta los logs de la terminal de ejecución.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Dispara el cálculo algorítmico exacto.
+                  <code>PULP_CBC_CMD</code> usa el backend CBC (Branch & Cut). <code>msg=0</code> oculta los logs de la
+                  terminal de ejecución.
+                </p>
               </div>
             </div>
           </div>
@@ -1304,7 +1433,8 @@ modelo.solve(pulp.PULP_CBC_CMD(msg=0))</code></pre>
         <!-- Práctica 2: QAOA -->
         <section style="font-size: 0.7em;">
           <h2><span class="badge badge-gold">Notebook 02</span> QAOA (Qiskit 2.4)</h2>
-          <p style="margin-bottom: 10px;">Funciones de IBM para compilar el Knapsack QUBO y ejecutar simulaciones de compuertas:</p>
+          <p style="margin-bottom: 10px;">Funciones de IBM para compilar el Knapsack QUBO y ejecutar simulaciones de
+            compuertas:</p>
           <div class="two-col" style="gap: 15px; align-items: start;">
             <div>
               <pre style="margin:0;"><code class="language-python">from qiskit_optimization.applications import Knapsack
@@ -1330,15 +1460,22 @@ result = MinimumEigenOptimizer(qaoa).solve(qp)</code></pre>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <div class="info-card gold" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-gold);">Knapsack(...) y to_quadratic_program()</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Objeto predefinido de Qiskit-Optimization. Genera matemáticamente las penalizaciones cuadráticas para que los alumnos no calculen a mano el salto algebraico hacia la matriz de Ising.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Objeto predefinido de Qiskit-Optimization. Genera
+                  matemáticamente las penalizaciones cuadráticas para que los alumnos no calculen a mano el salto
+                  algebraico hacia la matriz de Ising.</p>
               </div>
               <div class="info-card gold" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-gold);">QAOA(sampler, optimizer, reps)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Constructor del circuito cuántico variacional. <code>reps</code> = $p$ (capas hamiltonianas). <code>sampler</code> emula el vector de estado para lecturas perfectas, y <code>optimizer</code> define el algoritmo clásico (COBYLA) encargado de refinar iterativamente $\beta$ y $\gamma$.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Constructor del circuito cuántico variacional.
+                  <code>reps</code> = $p$ (capas hamiltonianas). <code>sampler</code> emula el vector de estado para
+                  lecturas perfectas, y <code>optimizer</code> define el algoritmo clásico (COBYLA) encargado de refinar
+                  iterativamente $\beta$ y $\gamma$.
+                </p>
               </div>
               <div class="info-card gold" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-gold);">MinimumEigenOptimizer(algorithm).solve()</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Capa de orquestación que inyecta la matemática polinomial generada (`qp`) sobre las matrices operacionales de `qaoa`, iterando hasta la convergencia final.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Capa de orquestación que inyecta la matemática polinomial
+                  generada (`qp`) sobre las matrices operacionales de `qaoa`, iterando hasta la convergencia final.</p>
               </div>
             </div>
           </div>
@@ -1347,7 +1484,8 @@ result = MinimumEigenOptimizer(qaoa).solve(qp)</code></pre>
         <!-- Práctica 3: D-Wave -->
         <section style="font-size: 0.7em;">
           <h2><span class="badge badge-purple">Notebook 03</span> Annealing (D-Wave)</h2>
-          <p style="margin-bottom: 10px;">La sintaxis fundamental de Ocean SDK para grafos ponderados de campo magnético físico:</p>
+          <p style="margin-bottom: 10px;">La sintaxis fundamental de Ocean SDK para grafos ponderados de campo magnético
+            físico:</p>
           <div class="two-col" style="gap: 15px; align-items: start;">
             <div>
               <pre style="margin:0;"><code class="language-python">import dimod
@@ -1370,19 +1508,27 @@ sampleset = sampler.sample(bqm, num_reads=1000)</code></pre>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <div class="info-card purple" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-purple);">dimod.BinaryQuadraticModel(vartype)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">El objeto principal del compilador matricial. <code>vartype='BINARY'</code> especifica $x \in \{0,1\}$ (QUBO puro). Con <code>'SPIN'</code> asumiría $z \in \{-1,1\}$ (Hamiltoniano natural Ising).</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">El objeto principal del compilador matricial.
+                  <code>vartype='BINARY'</code> especifica $x \in \{0,1\}$ (QUBO puro). Con <code>'SPIN'</code> asumiría
+                  $z \in \{-1,1\}$ (Hamiltoniano natural Ising).
+                </p>
               </div>
               <div class="info-card purple" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-purple);">add_variable(name, bias)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Instancia un qubit en el grafo. <code>bias</code> es el peso lineal local (sesgo magnético) que castiga o premia energéticamente la activación aislada del estado.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Instancia un qubit en el grafo. <code>bias</code> es el peso
+                  lineal local (sesgo magnético) que castiga o premia energéticamente la activación aislada del estado.
+                </p>
               </div>
               <div class="info-card purple" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-purple);">add_interaction(u, v, bias)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Crea la conexión tensorial entre dos qubits (cableado entrelazado). Determina la compensación de costo si ambos qubits interactúan simultáneamente.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Crea la conexión tensorial entre dos qubits (cableado
+                  entrelazado). Determina la compensación de costo si ambos qubits interactúan simultáneamente.</p>
               </div>
               <div class="info-card purple" style="padding: 10px; margin: 0;">
                 <strong style="color: var(--accent-purple);">sampler.sample(bqm, num_reads)</strong>
-                <p style="margin: 2px 0; font-size: 0.9em;">Lanza la relajación adiabática sobre el Hamiltoniano modelado. <code>num_reads</code> exige mil trayectorias de temple térmico para encontrar una distribución de probabilidad en pozos globales.</p>
+                <p style="margin: 2px 0; font-size: 0.9em;">Lanza la relajación adiabática sobre el Hamiltoniano
+                  modelado. <code>num_reads</code> exige mil trayectorias de temple térmico para encontrar una
+                  distribución de probabilidad en pozos globales.</p>
               </div>
             </div>
           </div>
