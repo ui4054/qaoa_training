@@ -33,6 +33,7 @@
   --accent-cyan: #0284c7;      /* Cian: Algoritmos y Circuitos */
   --accent-green: #059669;     /* Esmeralda: Botón de descarga de notebooks */
   --accent-amber: #d97706;     /* Ámbar: Algoritmo de Shor & Criptografía */
+  --accent-colab: #ea580c;     /* Naranja Colab */
   
   /* Gradientes de Marca */
   --gradient-hero: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08) 0%, rgba(124, 58, 237, 0.04) 50%, transparent 80%);
@@ -483,7 +484,7 @@ header {
 }
 
 /* --------------------------------------------------------------------------
-   8. TARJETAS DE NOTEBOOKS (LAYOUT VERTICAL Y BOTONES DOBLES)
+   8. TARJETAS DE NOTEBOOKS (BOTONES DE ACCIÓN MÚLTIPLE)
    -------------------------------------------------------------------------- */
 .grid-notebooks {
   display: grid;
@@ -594,6 +595,30 @@ header {
   background: rgba(37, 99, 235, 0.12);
   border-color: var(--accent-blue);
   transform: translateY(-1px);
+}
+
+.btn-colab {
+  width: 100%;
+  background: #fff7ed;
+  border: 1px solid #ffedd5;
+  color: var(--accent-colab);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-colab:hover {
+  background: #ffedd5;
+  border-color: var(--accent-colab);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
 }
 
 /* --------------------------------------------------------------------------
@@ -912,6 +937,7 @@ header {
 .modal-btn-group {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 /* --------------------------------------------------------------------------

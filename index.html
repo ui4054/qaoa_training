@@ -4,16 +4,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Título y Metadatos de SEO -->
-  <title>Computación Cuántica Aplicada — Hub Didáctico &amp; Presentaciones</title>
-  <meta name="description" content="Portal educativo interactivo sobre optimización combinatoria (QAOA, Quantum Annealing), Quantum Phase Estimation y Algoritmo de Shor. Presentaciones Reveal.js y notebooks Jupyter.">
+  <title>Computación Cuántica Aplicada &amp; Presentaciones</title>
+  <meta name="description"
+    content="Portal educativo interactivo sobre optimización combinatoria (QAOA, Quantum Annealing), Quantum Phase Estimation y Algoritmo de Shor. Presentaciones Reveal.js y notebooks Jupyter.">
   <meta name="author" content="KentryOps &amp; ui4054">
 
   <!-- Fuentes Externas (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
 
   <!-- Iconografía FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -21,7 +24,9 @@
   <!-- Hoja de Estilos Modular Externa (Separación de Responsabilidades CSS) -->
   <link rel="stylesheet" href="css/styles.css">
 
-  <!-- Lógica de Interacción JavaScript Externa (Carga Diferida) -->
+  <!-- Base de datos embebida de cuadernos para funcionamiento 100% offline (file://) -->
+  <script src="js/notebooks_data.js"></script>
+  <!-- Lógica de Interacción JavaScript Externa -->
   <script src="js/main.js" defer></script>
 </head>
 
@@ -38,7 +43,7 @@
         </div>
         <div class="logo-text">QAOA <span>Training</span></div>
       </a>
-      
+
       <!-- Menú de Navegación -->
       <nav>
         <ul class="nav-links">
@@ -47,12 +52,14 @@
           <li><a href="#instalacion"><i class="fa-solid fa-terminal"></i> Instalación</a></li>
           <li><a href="#contacto"><i class="fa-solid fa-qrcode"></i> Contacto &amp; QR</a></li>
           <li>
-            <a href="https://ui4054.github.io/me/" target="_blank" class="btn-cv-nav" title="Ver mi Curriculum Vitae Online">
+            <a href="https://ui4054.github.io/me/" target="_blank" class="btn-cv-nav"
+              title="Ver mi Curriculum Vitae Online">
               <i class="fa-solid fa-user-tie"></i> Mi CV
             </a>
           </li>
           <li>
-            <a href="https://github.com/ui4054/qaoa_training" target="_blank" class="btn-git" title="Repositorio oficial en GitHub">
+            <a href="https://github.com/ui4054/qaoa_training" target="_blank" class="btn-git"
+              title="Repositorio oficial en GitHub">
               <i class="fa-brands fa-github"></i> Repositorio
             </a>
           </li>
@@ -69,14 +76,15 @@
     <!-- SECCIÓN HERO DE BIENVENIDA -->
     <section class="hero">
       <div class="hero-badge">
-        <i class="fa-solid fa-graduation-cap"></i> Material Didáctico Universitario
+        <i class="fa-solid fa-graduation-cap"></i> Quantum Hub Winter School - 2026
       </div>
       <h1 class="hero-title">
         Computación Cuántica Aplicada &amp;<br>
         <span class="gradient-text">Optimización Combinatoria</span>
       </h1>
       <p class="hero-subtitle">
-        Aprende desde el Problema de la Mochila (ILP → QUBO → QAOA → D-Wave) hasta la Estimación de Fase Cuántica (QPE) y el Algoritmo de Shor.
+        Aprende desde el Problema de la Mochila (ILP → QUBO → QAOA → D-Wave) hasta la Estimación de Fase Cuántica (QPE)
+        y el Algoritmo de Shor.
       </p>
 
       <!-- Resumen de Métricas del Curso -->
@@ -115,7 +123,8 @@
     <section class="filter-section" aria-label="Buscador y filtros">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" class="search-input" placeholder="Buscar por tema (ej. QAOA, Shor, Qiskit, D-Wave, PuLP)...">
+        <input type="text" id="searchInput" class="search-input"
+          placeholder="Buscar por tema (ej. QAOA, Shor, Qiskit, D-Wave, PuLP)...">
       </div>
       <div class="filter-tags">
         <button class="tag-btn active" data-filter="all">Todos</button>
@@ -129,7 +138,7 @@
     <section id="presentaciones">
       <div class="section-header">
         <h2 class="section-title">
-          <i class="fa-solid fa-display"></i> Presentaciones Interactivas (Reveal.js)
+          <i class="fa-solid fa-display"></i> Presentaciones Interactivas
         </h2>
       </div>
 
@@ -144,7 +153,8 @@
             </div>
             <h3 class="card-title">Problema de la Mochila: ILP → QUBO → QAOA → D-Wave</h3>
             <p class="card-desc">
-              Formulación clásica ILP con PuLP, transformación a QUBO/Ising, algoritmo QAOA variacional en Qiskit y Quantum Annealing con D-Wave Ocean SDK.
+              Formulación clásica ILP con PuLP, transformación a QUBO/Ising, algoritmo QAOA variacional en Qiskit y
+              Quantum Annealing con D-Wave Ocean SDK.
             </p>
             <div class="tags-list">
               <span class="badge-tag">QAOA</span>
@@ -165,12 +175,15 @@
         <article class="card-pres" data-tags="qpe qft fase precision qiskit">
           <div>
             <div class="card-header">
-              <span class="mod-badge" style="color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); border-color: rgba(124, 58, 237, 0.2);">Módulo 2</span>
+              <span class="mod-badge"
+                style="color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); border-color: rgba(124, 58, 237, 0.2);">Módulo
+                2</span>
               <i class="fa-solid fa-wave-square" style="color: var(--accent-purple); font-size: 1.2rem;"></i>
             </div>
             <h3 class="card-title">Quantum Phase Estimation (QPE)</h3>
             <p class="card-desc">
-              Fundamentos teóricos de QFT e inversión de fase. Construcción paso a paso de circuitos QPE de 1, 2 y 3 qubits de precisión en Qiskit.
+              Fundamentos teóricos de QFT e inversión de fase. Construcción paso a paso de circuitos QPE de 1, 2 y 3
+              qubits de precisión en Qiskit.
             </p>
             <div class="tags-list">
               <span class="badge-tag">QFT</span>
@@ -180,7 +193,8 @@
             </div>
           </div>
           <div class="card-actions">
-            <a href="presentation/quantum_phase_estimation.html" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);">
+            <a href="presentation/quantum_phase_estimation.html" target="_blank" class="btn-primary"
+              style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);">
               <i class="fa-solid fa-play"></i> Ver Presentación
             </a>
           </div>
@@ -190,12 +204,15 @@
         <article class="card-pres" data-tags="shor rsa criptografia periodos factorizacion">
           <div>
             <div class="card-header">
-              <span class="mod-badge" style="color: var(--accent-amber); background: rgba(217, 119, 6, 0.08); border-color: rgba(217, 119, 6, 0.2);">Módulo 3</span>
+              <span class="mod-badge"
+                style="color: var(--accent-amber); background: rgba(217, 119, 6, 0.08); border-color: rgba(217, 119, 6, 0.2);">Módulo
+                3</span>
               <i class="fa-solid fa-key" style="color: var(--accent-amber); font-size: 1.2rem;"></i>
             </div>
             <h3 class="card-title">Algoritmo de Shor &amp; Factorización Cuántica</h3>
             <p class="card-desc">
-              Reducción de la factorización de enteros a la búsqueda de período modular. QPE como motor central de Shor e impacto en RSA.
+              Reducción de la factorización de enteros a la búsqueda de período modular. QPE como motor central de Shor
+              e impacto en RSA.
             </p>
             <div class="tags-list">
               <span class="badge-tag">Shor</span>
@@ -205,7 +222,8 @@
             </div>
           </div>
           <div class="card-actions">
-            <a href="presentation/shor_presentation.html" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);">
+            <a href="presentation/shor_presentation.html" target="_blank" class="btn-primary"
+              style="background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);">
               <i class="fa-solid fa-play"></i> Ver Presentación
             </a>
           </div>
@@ -218,25 +236,28 @@
     <section id="notebooks">
       <div class="section-header">
         <h2 class="section-title">
-          <i class="fa-solid fa-book-open"></i> Cuadernos Jupyter (.ipynb)
+          <i class="fa-solid fa-book-open"></i> Cuadernos Jupyter
         </h2>
       </div>
 
       <div class="grid-notebooks" id="notebooksGrid">
-
         <!-- Notebook 1 -->
         <article class="card-nb" data-tags="qaoa mochila ilp pulp clasico">
           <div>
             <div class="nb-header">
               <span class="nb-num">01 / NOTEBOOK</span>
             </div>
-            <h3 class="nb-name">01_solver_clasico.ipynb</h3>
             <p class="nb-desc">Solver clásico del Problema de la Mochila usando PuLP + CBC.</p>
           </div>
           <div class="nb-action-box">
-            <button class="btn-view-code" onclick="openNotebookModal('notebooks/01_solver_clasico.ipynb', '01_solver_clasico.ipynb')">
+            <button class="btn-view-code"
+              onclick="openNotebookModal('notebooks/01_solver_clasico.ipynb', '01_solver_clasico.ipynb')">
               <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
             </button>
+            <a href="https://colab.research.google.com/github/ui4054/qaoa_training/blob/master/notebooks/01_solver_clasico.ipynb"
+              target="_blank" class="btn-colab" title="Abrir y ejecutar en Google Colab">
+              <i class="fa-solid fa-rocket"></i> Abrir en Google Colab
+            </a>
             <a href="notebooks/01_solver_clasico.ipynb" download class="btn-dl" title="Descargar cuaderno 01">
               <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
@@ -249,13 +270,17 @@
             <div class="nb-header">
               <span class="nb-num">02 / NOTEBOOK</span>
             </div>
-            <h3 class="nb-name">02_qaoa_qiskit.ipynb</h3>
             <p class="nb-desc">QAOA variacional con Qiskit 2.4 &amp; Qiskit Optimization.</p>
           </div>
           <div class="nb-action-box">
-            <button class="btn-view-code" onclick="openNotebookModal('notebooks/02_qaoa_qiskit.ipynb', '02_qaoa_qiskit.ipynb')">
+            <button class="btn-view-code"
+              onclick="openNotebookModal('notebooks/02_qaoa_qiskit.ipynb', '02_qaoa_qiskit.ipynb')">
               <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
             </button>
+            <a href="https://colab.research.google.com/github/ui4054/qaoa_training/blob/master/notebooks/02_qaoa_qiskit.ipynb"
+              target="_blank" class="btn-colab" title="Abrir y ejecutar en Google Colab">
+              <i class="fa-solid fa-rocket"></i> Abrir en Google Colab
+            </a>
             <a href="notebooks/02_qaoa_qiskit.ipynb" download class="btn-dl" title="Descargar cuaderno 02">
               <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
@@ -268,13 +293,17 @@
             <div class="nb-header">
               <span class="nb-num">03 / NOTEBOOK</span>
             </div>
-            <h3 class="nb-name">03_quantum_annealing_dwave.ipynb</h3>
             <p class="nb-desc">Quantum Annealing y Simulated Annealing con D-Wave Ocean SDK.</p>
           </div>
           <div class="nb-action-box">
-            <button class="btn-view-code" onclick="openNotebookModal('notebooks/03_quantum_annealing_dwave.ipynb', '03_quantum_annealing_dwave.ipynb')">
+            <button class="btn-view-code"
+              onclick="openNotebookModal('notebooks/03_quantum_annealing_dwave.ipynb', '03_quantum_annealing_dwave.ipynb')">
               <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
             </button>
+            <a href="https://colab.research.google.com/github/ui4054/qaoa_training/blob/master/notebooks/03_quantum_annealing_dwave.ipynb"
+              target="_blank" class="btn-colab" title="Abrir y ejecutar en Google Colab">
+              <i class="fa-solid fa-rocket"></i> Abrir en Google Colab
+            </a>
             <a href="notebooks/03_quantum_annealing_dwave.ipynb" download class="btn-dl" title="Descargar cuaderno 03">
               <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
@@ -287,13 +316,17 @@
             <div class="nb-header">
               <span class="nb-num">04 / NOTEBOOK</span>
             </div>
-            <h3 class="nb-name">04_quantum_phase_estimation.ipynb</h3>
             <p class="nb-desc">Implementación paso a paso de QPE con Qiskit (1 a 3 qubits).</p>
           </div>
           <div class="nb-action-box">
-            <button class="btn-view-code" onclick="openNotebookModal('notebooks/04_quantum_phase_estimation.ipynb', '04_quantum_phase_estimation.ipynb')">
+            <button class="btn-view-code"
+              onclick="openNotebookModal('notebooks/04_quantum_phase_estimation.ipynb', '04_quantum_phase_estimation.ipynb')">
               <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
             </button>
+            <a href="https://colab.research.google.com/github/ui4054/qaoa_training/blob/master/notebooks/04_quantum_phase_estimation.ipynb"
+              target="_blank" class="btn-colab" title="Abrir y ejecutar en Google Colab">
+              <i class="fa-solid fa-rocket"></i> Abrir en Google Colab
+            </a>
             <a href="notebooks/04_quantum_phase_estimation.ipynb" download class="btn-dl" title="Descargar cuaderno 04">
               <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
@@ -306,13 +339,17 @@
             <div class="nb-header">
               <span class="nb-num">05 / NOTEBOOK</span>
             </div>
-            <h3 class="nb-name">05_shor_algorithm.ipynb</h3>
             <p class="nb-desc">Algoritmo de Shor didáctico para N=15 con subrutina QPE.</p>
           </div>
           <div class="nb-action-box">
-            <button class="btn-view-code" onclick="openNotebookModal('notebooks/05_shor_algorithm.ipynb', '05_shor_algorithm.ipynb')">
+            <button class="btn-view-code"
+              onclick="openNotebookModal('notebooks/05_shor_algorithm.ipynb', '05_shor_algorithm.ipynb')">
               <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
             </button>
+            <a href="https://colab.research.google.com/github/ui4054/qaoa_training/blob/master/notebooks/05_shor_algorithm.ipynb"
+              target="_blank" class="btn-colab" title="Abrir y ejecutar en Google Colab">
+              <i class="fa-solid fa-rocket"></i> Abrir en Google Colab
+            </a>
             <a href="notebooks/05_shor_algorithm.ipynb" download class="btn-dl" title="Descargar cuaderno 05">
               <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
@@ -325,13 +362,17 @@
             <div class="nb-header">
               <span class="nb-num">06 / NOTEBOOK</span>
             </div>
-            <h3 class="nb-name">06_mini_qaoa.ipynb</h3>
             <p class="nb-desc">Mini-QAOA didáctico de 2 qubits calculado a mano e ilustrado.</p>
           </div>
           <div class="nb-action-box">
-            <button class="btn-view-code" onclick="openNotebookModal('notebooks/06_mini_qaoa.ipynb', '06_mini_qaoa.ipynb')">
+            <button class="btn-view-code"
+              onclick="openNotebookModal('notebooks/06_mini_qaoa.ipynb', '06_mini_qaoa.ipynb')">
               <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
             </button>
+            <a href="https://colab.research.google.com/github/ui4054/qaoa_training/blob/master/notebooks/06_mini_qaoa.ipynb"
+              target="_blank" class="btn-colab" title="Abrir y ejecutar en Google Colab">
+              <i class="fa-solid fa-rocket"></i> Abrir en Google Colab
+            </a>
             <a href="notebooks/06_mini_qaoa.ipynb" download class="btn-dl" title="Descargar cuaderno 06">
               <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
@@ -345,7 +386,7 @@
     <section id="instalacion">
       <div class="section-header">
         <h2 class="section-title">
-          <i class="fa-solid fa-terminal"></i> Instalación y Ejecución Local (`git clone`)
+          <i class="fa-solid fa-terminal"></i> Instalación y Ejecución Local
         </h2>
       </div>
 
@@ -364,7 +405,8 @@
             <span class="cmd-text">git clone https://github.com/ui4054/qaoa_training.git</span><br>
             <span class="cmd-text">cd qaoa_training</span>
           </div>
-          <button class="btn-copy" onclick="copyText('git clone https://github.com/ui4054/qaoa_training.git &amp;&amp; cd qaoa_training', this)">
+          <button class="btn-copy"
+            onclick="copyText('git clone https://github.com/ui4054/qaoa_training.git &amp;&amp; cd qaoa_training', this)">
             <i class="fa-regular fa-copy"></i> Copiar
           </button>
         </div>
@@ -376,7 +418,8 @@
             <span class="cmd-text">conda env create -f environment.yml</span><br>
             <span class="cmd-text">conda activate qaoa_knapsack</span>
           </div>
-          <button class="btn-copy" onclick="copyText('conda env create -f environment.yml &amp;&amp; conda activate qaoa_knapsack', this)">
+          <button class="btn-copy"
+            onclick="copyText('conda env create -f environment.yml &amp;&amp; conda activate qaoa_knapsack', this)">
             <i class="fa-regular fa-copy"></i> Copiar
           </button>
         </div>
@@ -399,7 +442,8 @@
     <section id="contacto" class="contact-section">
       <div class="contact-header">
         <h2 class="contact-title">
-          <i class="fa-solid fa-qrcode" style="color: var(--accent-blue);"></i> Contacto, Consultoría &amp; Perfil Profesional
+          <i class="fa-solid fa-qrcode" style="color: var(--accent-blue);"></i> Contacto, Consultoría &amp; Perfil
+          Profesional
         </h2>
         <p class="contact-subtitle">
           Escanea los códigos QR o utiliza los enlaces directos para conectar o consultar información.
@@ -410,7 +454,9 @@
 
         <!-- QR LinkedIn -->
         <article class="qr-card">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://www.linkedin.com/in/ui4054/" alt="QR LinkedIn" class="qr-img" loading="lazy">
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://www.linkedin.com/in/ui4054/"
+            alt="QR LinkedIn" class="qr-img" loading="lazy">
           <div class="qr-label">LinkedIn</div>
           <div class="qr-sub">Perfil Profesional (/in/ui4054)</div>
           <a href="https://www.linkedin.com/in/ui4054/" target="_blank" class="btn-qr-link btn-linkedin">
@@ -420,7 +466,8 @@
 
         <!-- QR KentryOps -->
         <article class="qr-card">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://www.kentryops.com" alt="QR KentryOps" class="qr-img" loading="lazy">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://www.kentryops.com"
+            alt="QR KentryOps" class="qr-img" loading="lazy">
           <div class="qr-label">KentryOps</div>
           <div class="qr-sub">Tech &amp; Quantum Consulting</div>
           <a href="https://www.kentryops.com" target="_blank" class="btn-qr-link btn-kentry">
@@ -430,7 +477,8 @@
 
         <!-- QR CV -->
         <article class="qr-card">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://ui4054.github.io/me/" alt="QR CV" class="qr-img" loading="lazy">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://ui4054.github.io/me/"
+            alt="QR CV" class="qr-img" loading="lazy">
           <div class="qr-label">Curriculum Vitae</div>
           <div class="qr-sub">Portafolio &amp; Experiencia</div>
           <a href="https://ui4054.github.io/me/" target="_blank" class="btn-qr-link btn-cv">
@@ -450,7 +498,7 @@
     <div class="modal-window">
       <div class="modal-header">
         <h3 id="modalTitle" class="modal-title">
-          <i class="fa-solid fa-code"></i> Vista Previa del Cuaderno
+          Vista previa
         </h3>
         <button id="closeModalBtn" class="btn-close-modal" aria-label="Cerrar modal">&times;</button>
       </div>
@@ -459,9 +507,13 @@
       </div>
       <div class="modal-footer">
         <div class="modal-btn-group">
-          <button id="copyPythonBtn" class="btn-copy" style="padding: 10px 18px; font-size: 0.9rem; background: var(--accent-blue); color: #fff; border: none;">
+          <button id="copyPythonBtn" class="btn-copy"
+            style="padding: 10px 18px; font-size: 0.9rem; background: var(--accent-blue); color: #fff; border: none;">
             <i class="fa-regular fa-copy"></i> Copiar Código Python
           </button>
+          <a id="modalColabBtn" href="#" target="_blank" class="btn-colab" style="width: auto; padding: 10px 18px;">
+            <i class="fa-solid fa-rocket"></i> Abrir en Colab
+          </a>
         </div>
         <a id="modalDownloadBtn" href="#" download class="btn-dl" style="width: auto; padding: 10px 18px;">
           <i class="fa-solid fa-download"></i> Descargar .ipynb
@@ -476,13 +528,10 @@
   <footer>
     <div class="container">
       <p>🎓 <strong>Computación Cuántica Aplicada</strong> — Material educativo de libre distribución.</p>
-      <p style="margin-top: 8px; font-size: 0.95rem;">
-        <a href="https://ui4054.github.io/me/" target="_blank" style="font-weight: 700; color: var(--accent-blue);">
-          <i class="fa-solid fa-address-card"></i> Visita mi CV (Curriculum Vitae): https://ui4054.github.io/me/
-        </a>
-      </p>
       <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-subtle);">
-        Repositorio alojado en <a href="https://github.com/ui4054/qaoa_training" target="_blank">GitHub</a> | Consultoría por <a href="https://www.kentryops.com" target="_blank">KentryOps</a> | Conecta en <a href="https://www.linkedin.com/in/ui4054/" target="_blank">LinkedIn</a>
+        Repositorio alojado en <a href="https://github.com/ui4054/qaoa_training" target="_blank">GitHub</a> |
+        Consultoría por <a href="https://www.kentryops.com" target="_blank">KentryOps</a> | Conecta en <a
+          href="https://www.linkedin.com/in/ui4054/" target="_blank">LinkedIn</a>
       </p>
     </div>
   </footer>
