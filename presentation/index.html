@@ -39,11 +39,43 @@
             <span class="badge badge-gold">Optimización</span>
           </div>
           <h1>QAOA &amp; Quantum Annealing</h1>
-          <h3 style="color: var(--text-muted); font-weight: 400;">Aplicados al Problema de la Mochila</h3>
-          <p class="subtitle" style="margin-top: 1em;">
-            Lic - Ing. Miguel Alfonso Martínez B<br>
-            <small style="color: var(--text-muted);">Modelado matemático · PuLP · Qiskit 2.4 · D-Wave Ocean SDK</small>
-          </p>
+          <p style="font-size: 0.5em; color: var(--text-muted); margin-top: -0.3em; letter-spacing: 0.02em; font-weight: 400;">Quantum Approximate Optimization Algorithm</p>
+          <h3 style="color: var(--text-muted); font-weight: 400; font-size: 0.75em; margin-bottom: 0.8em;">Aplicados al Problema de la Mochila</h3>
+
+          <div style="margin-top: 1em; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 15px 20px;">
+            <div style="flex: 1;">
+              <p style="font-size: 0.65em; font-weight: 600; color: #fff; margin: 0 0 4px 0;">
+                Lic - Ing. Miguel Alfonso Martínez B.
+              </p>
+              <p style="font-size: 0.45em; color: var(--accent-gold); font-weight: 500; margin: 0 0 6px 0;">
+                KentryOps · Tech &amp; Quantum Consulting
+              </p>
+              <p style="font-size: 0.4em; color: var(--text-muted); margin: 0; line-height: 1.4;">
+                Modelado matemático · PuLP · Qiskit 2.4 · D-Wave Ocean SDK
+              </p>
+            </div>
+
+            <!-- QR Codes Cards -->
+            <div style="display: flex; gap: 15px;">
+              <!-- Card LinkedIn -->
+              <a href="https://www.linkedin.com/in/ui4054/" target="_blank" style="text-decoration: none;">
+                <div style="background: rgba(0, 119, 181, 0.1); border: 1px solid var(--accent-blue); border-radius: 10px; padding: 8px 10px; text-align: center; width: 105px; transition: transform 0.2s;">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.linkedin.com/in/ui4054/" alt="QR LinkedIn" style="width: 80px; height: 80px; border-radius: 6px; margin: 0 auto 5px auto; display: block; border: 2px solid #fff;">
+                  <span style="font-size: 0.38em; color: var(--accent-blue); font-weight: bold; display: block; line-height: 1.2;">LinkedIn</span>
+                  <span style="font-size: 0.3em; color: var(--text-muted); display: block;">/in/ui4054</span>
+                </div>
+              </a>
+
+              <!-- Card KentryOps -->
+              <a href="https://www.kentryops.com" target="_blank" style="text-decoration: none;">
+                <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--accent-gold); border-radius: 10px; padding: 8px 10px; text-align: center; width: 105px; transition: transform 0.2s;">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.kentryops.com" alt="QR KentryOps" style="width: 80px; height: 80px; border-radius: 6px; margin: 0 auto 5px auto; display: block; border: 2px solid #fff;">
+                  <span style="font-size: 0.38em; color: var(--accent-gold); font-weight: bold; display: block; line-height: 1.2;">KentryOps</span>
+                  <span style="font-size: 0.3em; color: var(--text-muted); display: block;">kentryops.com</span>
+                </div>
+              </a>
+            </div>
+          </div>
         </section>
 
         <section>
@@ -51,13 +83,13 @@
           <div class="step"><span class="step-num">1</span>
             <div class="step-content">
               <h3>Teoría y Modelado (35 min)</h3>
-              <p>ILP → QUBO → Ising → QAOA → Quantum Annealing</p>
+              <p>ILP <small>(Prog. Lineal Entera)</small> → QUBO → Ising → QAOA → Quantum Annealing</p>
             </div>
           </div>
           <div class="step"><span class="step-num">2</span>
             <div class="step-content">
               <h3>Solver Clásico (15 min)</h3>
-              <p>PuLP + CBC — solución exacta</p>
+              <p>PuLP + CBC <small>(Branch &amp; Cut)</small> — solución exacta</p>
             </div>
           </div>
           <div class="step"><span class="step-num">3</span>
@@ -100,7 +132,7 @@
           <ul>
             <li><strong>Finito:</strong> las variables son discretas (enteras o binarias)</li>
             <li><strong>Enorme:</strong> con $n$ ítems binarios hay $2^n$ combinaciones</li>
-            <li><strong>NP-hard:</strong> no se conoce algoritmo eficiente para el caso general</li>
+            <li><strong>NP-hard</strong> <small>(Non-deterministic Polynomial-time hard)</small><strong>:</strong> no se conoce algoritmo eficiente para el caso general</li>
           </ul>
           <div class="note">
             Con solo 5 ítems: $2^5 = 32$ combinaciones. Con 100 ítems: $2^{100} \approx 10^{30}$ 🤯
@@ -169,6 +201,7 @@
 
         <section>
           <h2>Formulación ILP Completa</h2>
+          <p style="font-size: 0.75em; color: var(--text-muted); margin-top: -0.3em; margin-bottom: 0.5em;">ILP = <em>Integer Linear Programming</em> (Programación Lineal Entera)</p>
           <p>El problema matemático en formato algebraico tradicional:</p>
           <div class="math-block">
             $$\max \;\; Z = 5x_1 + 10x_2 + 15x_3 + 4x_4 + 12x_5$$
@@ -266,7 +299,7 @@
           <h2>¿Por qué necesitamos QUBO?</h2>
           <div class="two-col">
             <div class="info-card">
-              <h3>ILP (clásico)</h3>
+              <h3>ILP — Prog. Lineal Entera (clásico)</h3>
               <ul>
                 <li>Función objetivo + restricciones separadas</li>
                 <li>Los solvers clásicos manejan restricciones directamente</li>
@@ -831,40 +864,87 @@
         </section>
 
         <section style="font-size: 0.82em;">
-          <h2>Sustitución Directa del Caso Concreto</h2>
-          <p>Para entender el Hamiltoniano sin pasar por la matriz QUBO, podemos sustituir $\hat{y}_j = \frac{I -
-            Z_j}{2}$ directamente en el costo clásico de nuestra instancia:</p>
+          <h2>Sustitución Directa: Término Objetivo</h2>
+          <p style="margin-bottom: 5px;">Sustituimos $\hat{y}_j = \frac{I - Z_j}{2}$ en cada variable del costo clásico de nuestra instancia:</p>
           <div class="math-block" style="font-size:0.68em; padding: 5px;">
             $$H_{\text{objetivo}} = -5\left(\frac{I - Z_1}{2}\right) - 10\left(\frac{I - Z_2}{2}\right) -
             15\left(\frac{I - Z_3}{2}\right) - 4\left(\frac{I - Z_4}{2}\right) - 12\left(\frac{I - Z_5}{2}\right)$$
-            $$H_{\text{restricción}} = 16 \left( 3\left(\frac{I - Z_1}{2}\right) + 5\left(\frac{I - Z_2}{2}\right) +
-            \cdots + 8\left(\frac{I - Z_{s_3}}{2}\right) - 15I \right)^2$$
           </div>
-          <p>Agrupando y distribuyendo los términos lineales y cuadráticos a mano:</p>
-          <div class="math-block-gold" style="font-size:0.72em; padding: 5px;">
-            $$H_C = \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j \text{ (campos locales)}} Z_j +
-            \sum_{j \lt k} \underbrace{8 c_j c_k}_{J_{jk} \text{ (acoplamientos)}} Z_j Z_k + C'_0 I$$
+          <p style="margin: 5px 0;">Distribuimos cada factor. Por ejemplo, para el Proyector ($v_3 = 15$):</p>
+          <div class="math-block-gold" style="font-size:0.75em; padding: 5px;">
+            $$-15 \cdot \frac{I - Z_3}{2} = -\frac{15}{2}\,I + \frac{15}{2}\,Z_3$$
+          </div>
+          <p style="margin: 5px 0;">Sumando los 5 ítems (con $\sum v_j = 5{+}10{+}15{+}4{+}12 = 46$; slacks tienen $v_j = 0$):</p>
+          <div class="math-block" style="font-size:0.72em; padding: 5px;">
+            $$H_{\text{objetivo}} = \underbrace{-\frac{46}{2}}_{-23}\,I + \frac{5}{2}\,Z_1 + 5\,Z_2 + \frac{15}{2}\,Z_3 + 2\,Z_4 + 6\,Z_5 = -23I + \sum_{j=1}^{9} \frac{v_j}{2}\,Z_j$$
+          </div>
+          <div class="note" style="font-size:0.85em;">
+            Los qubits de slack ($s_0 \ldots s_3$) no aportan al objetivo porque $v_j = 0$ para ellos.
           </div>
         </section>
 
         <section style="font-size: 0.8em;">
-          <h2>Álgebra del Caso Concreto (Paso a Paso)</h2>
-          <p style="margin-bottom: 2px;">Evaluamos el binomio de restricción $\lambda(X - W)^2$ con $\lambda = 16, W =
-            15$ y $\sum c_j = 38$:</p>
+          <h2>Preparación del Término de Restricción</h2>
+          <p style="margin-bottom: 5px;">Definimos $X = \sum_j c_j\,\hat{y}_j$ y sustituimos los operadores de spin:</p>
           <div class="math-block" style="font-size:0.68em; padding: 4px; margin: 3px 0;">
-            $$\begin{aligned}
-            X - W &= \sum_j c_j \left(\frac{I - Z_j}{2}\right) - 15I = \left(\frac{38}{2} - 15\right)I - \sum_j
-            \frac{c_j}{2}Z_j = 4I - \sum_j \frac{c_j}{2}Z_j \\
-            (X - W)^2 &= \left(4I - \sum_j \frac{c_j}{2}Z_j\right)^2 = 16I - 4\sum_j c_j Z_j + \frac{1}{4}\left(\sum_j
-            c_j^2 I + 2\sum_{j < k} c_j c_k Z_j Z_k\right) \end{aligned}$$ </div>
-              <p style="margin: 3px 0 1px 0;">Multiplicamos por $\lambda = 16$ y sumamos el objetivo
-                $H_{\text{objetivo}} = \sum \frac{v_j}{2}Z_j - 23I$:</p>
-              <div class="math-block-gold" style="font-size:0.7em; padding: 4px; margin: 3px 0;">
-                $$\begin{aligned}
-                H_C &= H_{\text{objetivo}} + 16(X-W)^2 \\
-                &= \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64 c_j\right)}_{h_j} Z_j + \sum_{j < k}
-                  \underbrace{8 c_j c_k}_{J_{jk}} Z_j Z_k + C'_0 I \end{aligned}$$ </div>
+            $$X = \sum_{j=1}^{9} c_j \left(\frac{I - Z_j}{2}\right) = \frac{\overbrace{3{+}5{+}7{+}2{+}6{+}1{+}2{+}4{+}8}^{\sum c_j = 38}}{2}\,I - \sum_j \frac{c_j}{2}\,Z_j = 19I - \sum_j \frac{c_j}{2}\,Z_j$$
+          </div>
+          <p style="margin: 3px 0;">Restando la capacidad $W = 15$:</p>
+          <div class="math-block-gold" style="font-size:0.75em; padding: 4px; margin: 3px 0;">
+            $$X - W = (19 - 15)\,I - \sum_j \frac{c_j}{2}\,Z_j = \boxed{4I - \sum_j \frac{c_j}{2}\,Z_j}$$
+          </div>
+          <div class="two-col" style="gap: 15px; margin-top: 10px;">
+            <div class="info-card" style="padding: 10px; margin: 0;">
+              <h4 style="margin: 0 0 5px 0;">En QUBO usamos: $y_j^2 = y_j$</h4>
+              <p style="margin: 0; font-size: 0.9em;">Propiedad de variables binarias.<br>$0^2=0$, $1^2=1$ → idempotente.</p>
+            </div>
+            <div class="info-card gold" style="padding: 10px; margin: 0;">
+              <h4 style="margin: 0 0 5px 0;">En Ising usamos: $Z_j^2 = I$</h4>
+              <p style="margin: 0; font-size: 0.9em;">Propiedad del operador de Pauli.<br>$Z_j Z_j = I$ → involutorio. <strong>Clave para el siguiente paso.</strong></p>
+            </div>
+          </div>
         </section>
+
+        <section style="font-size: 0.78em;">
+          <h2>Expansión de $(X - W)^2$ Paso a Paso</h2>
+          <p style="margin-bottom: 3px;">Aplicamos $(a - b)^2 = a^2 - 2ab + b^2$ con $a = 4I$ y $b = \sum_j \frac{c_j}{2}\,Z_j$:</p>
+          <div class="math-block" style="font-size:0.65em; padding: 4px; margin: 3px 0;">
+            $$(X - W)^2 = \underbrace{(4I)^2}_{a^2} \;\;-\;\; \underbrace{2 \cdot 4I \cdot \sum_j \frac{c_j}{2}\,Z_j}_{2ab} \;\;+\;\; \underbrace{\left(\sum_j \frac{c_j}{2}\,Z_j\right)^{\!2}}_{b^2}$$
+          </div>
+          <p style="margin: 3px 0;">Simplificamos cada término:</p>
+          <div class="info-card" style="padding: 8px 15px; margin: 5px 0; font-size: 0.88em;">
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>$a^2 = 16\,I$</li>
+              <li>$2ab = 4\sum_j c_j\,Z_j$ <small>(distribuyendo los factores escalares)</small></li>
+              <li>$b^2 = \sum_j \frac{c_j^2}{4}\underbrace{Z_j^2}_{=\,I} + 2\!\sum_{j < k} \frac{c_j c_k}{4}\,Z_j Z_k = \frac{1}{4}\sum_j c_j^2\,I + \frac{1}{2}\sum_{j < k} c_j c_k\,Z_j Z_k$</li>
+            </ul>
+          </div>
+          <div class="math-block-gold" style="font-size:0.65em; padding: 4px; margin: 3px 0;">
+            $$(X - W)^2 = \underbrace{\left(16 + \tfrac{\sum c_j^2}{4}\right)}_{\text{constante}}\,I \;\;-\;\; 4\sum_j c_j\,Z_j \;\;+\;\; \frac{1}{2}\sum_{j < k} c_j c_k\,Z_j Z_k$$
+          </div>
+        </section>
+
+        <section style="font-size: 0.8em;">
+          <h2>Multiplicación por $\lambda$ y Resultado Final</h2>
+          <p style="margin-bottom: 3px;">Multiplicamos $(X-W)^2$ por $\lambda = 16$ y rastreamos el origen de cada coeficiente:</p>
+          <div class="info-card" style="padding: 8px 15px; margin: 5px 0; font-size: 0.88em;">
+            <ul style="margin: 0; padding-left: 20px;">
+              <li><strong>Coeficiente de $Z_j$:</strong> $\;\lambda \times (-4c_j) = 16 \times (-4c_j) = \mathbf{-64\,c_j}$</li>
+              <li><strong>Coeficiente de $Z_j Z_k$:</strong> $\;\lambda \times \frac{c_j c_k}{2} = 16 \times \frac{c_j c_k}{2} = \mathbf{8\,c_j c_k}$</li>
+            </ul>
+          </div>
+          <p style="margin: 3px 0;">Sumando $H_{\text{objetivo}} = -23I + \sum \frac{v_j}{2}\,Z_j$ y agrupando los coeficientes de $Z_j$:</p>
+          <div class="math-block-gold" style="font-size:0.7em; padding: 4px; margin: 3px 0;">
+            $$\begin{aligned}
+            H_C &= H_{\text{objetivo}} + \lambda(X-W)^2 \\
+            &= \sum_{j=1}^{9} \underbrace{\left(\frac{v_j}{2} - 64\,c_j\right)}_{h_j} Z_j + \sum_{j < k}
+              \underbrace{8\,c_j c_k}_{J_{jk}} Z_j Z_k + C'_0\,I \end{aligned}$$
+          </div>
+          <div class="note" style="font-size:0.85em;">
+            <strong>Origen de cada coeficiente:</strong> $\frac{v_j}{2}$ viene de distribuir el objetivo, $-64c_j$ de la penalización ($\lambda \times$ término lineal del cuadrado), y $8c_jc_k$ de los cruces cuadráticos $\times \lambda$.
+          </div>
+        </section>
+
 
         <section style="font-size: 0.85em;">
           <h2>Verificación del Qubit 1 ($x_1$) y Qubit 2 ($x_2$)</h2>
@@ -1060,7 +1140,7 @@
             </div>
           </div>
           <div class="step"><span class="step-num">4</span>
-            <div class="step-content"><strong>Optimizar:</strong> COBYLA ajusta $\gamma, \beta$ para minimizar $\langle
+            <div class="step-content"><strong>Optimizar:</strong> COBYLA <small>(Constrained Optimization BY Linear Approximation)</small> ajusta $\gamma, \beta$ para minimizar $\langle
               H_C \rangle$</div>
           </div>
           <div class="step"><span class="step-num">5</span>
@@ -1193,7 +1273,7 @@
             $$H(t) = \underbrace{-A(t) \sum_{j=1}^{9} X_j}_{\text{Campo Transversal } (t \to T \implies 0)} +
             \underbrace{B(t) \left( \sum_{j=1}^{9} h_j Z_j + \sum_{j < k} J_{jk} Z_j Z_k \right)}_{\text{Hamiltoniano
               del Problema } H_C \; (t \to T \implies \text{Máximo})}$$ </div>
-              <p style="margin: 3px 0; font-size: 0.95em;">Desglose de las componentes físicas de la QPU D-Wave:</p>
+              <p style="margin: 3px 0; font-size: 0.95em;">Desglose de las componentes físicas de la QPU <small>(Quantum Processing Unit)</small> D-Wave:</p>
               <div class="info-card" style="padding: 8px 15px; margin: 5px 0;">
                 <ul style="margin: 0; padding-left: 20px; font-size: 0.9em;">
                   <li><strong>$A(t)$ y $B(t)$ (Funciones de Envolvente):</strong> Son las curvas de energía provistas
@@ -1507,7 +1587,7 @@ sampleset = sampler.sample(bqm, num_reads=1000)</code></pre>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <div class="info-card purple" style="padding: 10px; margin: 0;">
-                <strong style="color: var(--accent-purple);">dimod.BinaryQuadraticModel(vartype)</strong>
+                <strong style="color: var(--accent-purple);">dimod.BinaryQuadraticModel(vartype)</strong> <small style="color:var(--text-muted);">— BQM (Modelo Cuadrático Binario)</small>
                 <p style="margin: 2px 0; font-size: 0.9em;">El objeto principal del compilador matricial.
                   <code>vartype='BINARY'</code> especifica $x \in \{0,1\}$ (QUBO puro). Con <code>'SPIN'</code> asumiría
                   $z \in \{-1,1\}$ (Hamiltoniano natural Ising).
@@ -1572,7 +1652,7 @@ sampleset = sampler.sample(bqm, num_reads=1000)</code></pre>
                 <td>Formulación</td>
                 <td>ILP directo</td>
                 <td>QUBO → Ising</td>
-                <td>QUBO → BQM</td>
+                <td>QUBO → BQM <small>(Binary Quadratic Model)</small></td>
               </tr>
               <tr>
                 <td>Qubits</td>
@@ -1621,7 +1701,7 @@ sampleset = sampler.sample(bqm, num_reads=1000)</code></pre>
         <section class="title-slide">
           <h1>¿Preguntas?</h1>
           <p class="subtitle" style="margin-top: 0.5em;">
-            📁 Repositorio: <code>github.com/TU_USUARIO/qaoa_training</code><br>
+            📁 Repositorio: <code>github.com/ui4054/qaoa_training</code><br>
             📓 Notebooks en <code>notebooks/</code><br>
             🐍 <code>conda env create -f environment.yml</code>
           </p>

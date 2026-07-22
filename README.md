@@ -1,7 +1,6 @@
 # 🎓 Computación Cuántica Aplicada — Material Didáctico
 
-Material didáctico para clases de pregrado sobre **algoritmos cuánticos aplicados a optimización combinatoria e introducción a la criptografía cuántica**.  
-Cubre desde el Problema de la Mochila (solver clásico, QAOA, Quantum Annealing) hasta Quantum Phase Estimation y el Algoritmo de Shor.
+Material didáctico para clases de pregrado sobre **algoritmos cuánticos aplicados a optimización combinatoria e introducción a la criptografía cuántica**. Cubre desde el Problema de la Mochila (solver clásico, QAOA, Quantum Annealing) hasta Quantum Phase Estimation y el Algoritmo de Shor.
 
 ---
 
@@ -48,7 +47,8 @@ qaoa_training/
 │   ├── 02_qaoa_qiskit.ipynb                 # QAOA con Qiskit 2.4
 │   ├── 03_quantum_annealing_dwave.ipynb     # Quantum Annealing con D-Wave Ocean
 │   ├── 04_quantum_phase_estimation.ipynb    # Quantum Phase Estimation (QPE)
-│   └── 05_shor_algorithm.ipynb              # Algoritmo de Shor
+│   ├── 05_shor_algorithm.ipynb              # Algoritmo de Shor
+│   └── 06_mini_qaoa.ipynb                   # QAOA mínimo didáctico (2 qubits)
 │
 └── presentation/
     ├── index.html                           # Presentación principal (Mochila)
@@ -63,7 +63,7 @@ qaoa_training/
 
 ## 📋 Contenido Temático
 
-###  1 — Problema de la Mochila (~90 min)
+### 1 — Problema de la Mochila & QAOA Mínimo (~90 min)
 
 | Bloque | Duración | Tema |
 |--------|----------|------|
@@ -71,6 +71,7 @@ qaoa_training/
 | Práctica 1 | 15 min | Solver clásico con PuLP |
 | Práctica 2 | 20 min | QAOA con Qiskit 2.4 (simulación local) |
 | Práctica 3 | 15 min | Quantum Annealing con D-Wave (simulación local) |
+| Práctica 4 | 15 min | Mini-QAOA didáctico de 2 qubits a mano (`06_mini_qaoa.ipynb`) |
 | Cierre | 5 min | Comparativa y preguntas |
 
 
