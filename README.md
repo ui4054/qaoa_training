@@ -41,6 +41,12 @@ qaoa_training/
 ├── README.md
 ├── .gitignore
 │
+├── css/
+│   └── styles.css                           # Estilos CSS3 modulares y comentados
+│
+├── js/
+│   └── main.js                              # Lógica de interacción JavaScript comentada
+│
 ├── data/
 │   └── knapsack_instance.json               # Instancia del problema (5 ítems)
 │

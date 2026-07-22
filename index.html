@@ -4,685 +4,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Computación Cuántica Aplicada — Hub Didáctico & Presentaciones</title>
+  
+  <!-- Título y Metadatos de SEO -->
+  <title>Computación Cuántica Aplicada — Hub Didáctico &amp; Presentaciones</title>
   <meta name="description" content="Portal educativo interactivo sobre optimización combinatoria (QAOA, Quantum Annealing), Quantum Phase Estimation y Algoritmo de Shor. Presentaciones Reveal.js y notebooks Jupyter.">
+  <meta name="author" content="KentryOps &amp; ui4054">
 
-  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <!-- Fuentes Externas (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- FontAwesome Icons -->
+  <!-- Iconografía FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <style>
-    :root {
-      --bg-dark: #090d16;
-      --bg-card: rgba(18, 26, 43, 0.75);
-      --bg-card-hover: rgba(28, 40, 65, 0.85);
-      --border-color: rgba(56, 189, 248, 0.15);
-      --border-highlight: rgba(56, 189, 248, 0.4);
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --accent-cyan: #38bdf8;
-      --accent-purple: #a855f7;
-      --accent-gold: #fbbf24;
-      --accent-green: #34d399;
-      --accent-pink: #f472b6;
-      --gradient-primary: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
-      --gradient-hero: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15) 0%, rgba(168, 85, 247, 0.08) 40%, transparent 70%);
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.15);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-dark);
-      background-image: var(--gradient-hero);
-      color: var(--text-main);
-      line-height: 1.6;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Container */
-    .container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    /* Header & Navigation */
-    header {
-      border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
-      background: rgba(9, 13, 22, 0.8);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-wrapper {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 70px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: var(--text-main);
-      font-weight: 700;
-      font-size: 1.25rem;
-    }
-
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--gradient-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.2rem;
-      box-shadow: var(--shadow-glow);
-    }
-
-    .logo-text span {
-      color: var(--accent-cyan);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent-cyan);
-    }
-
-    .btn-git {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      color: var(--text-main) !important;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-git:hover {
-      background: rgba(56, 189, 248, 0.1);
-      border-color: var(--accent-cyan);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 4rem 0 3rem;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 50px;
-      background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      color: var(--accent-cyan);
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-title {
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 1.25rem;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-title .gradient-text {
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-subtitle {
-      max-width: 780px;
-      margin: 0 auto 2.5rem;
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      flex-wrap: wrap;
-      margin-top: 2rem;
-      padding: 1.25rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      backdrop-filter: blur(8px);
-    }
-
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .stat-icon {
-      color: var(--accent-cyan);
-      font-size: 1.2rem;
-    }
-
-    .stat-val {
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .stat-lbl {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* Search & Filter Bar */
-    .filter-section {
-      margin: 2.5rem 0 1.5rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .search-box {
-      position: relative;
-      flex: 1;
-      min-width: 280px;
-    }
-
-    .search-box i {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 12px 16px 12px 46px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      color: var(--text-main);
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    .search-input:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    }
-
-    .filter-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .tag-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tag-btn:hover, .tag-btn.active {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-    }
-
-    /* Section Titles */
-    .section-header {
-      margin: 3.5rem 0 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-title i {
-      color: var(--accent-cyan);
-    }
-
-    /* Grid for Presentations */
-    .grid-presentations {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card-pres {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1.75rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-pres::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--gradient-primary);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .card-pres:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-highlight);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .card-pres:hover::before {
-      opacity: 1;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .mod-badge {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 4px 10px;
-      border-radius: 4px;
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--accent-cyan);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .card-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      color: var(--text-main);
-    }
-
-    .card-desc {
-      color: var(--text-muted);
-      font-size: 0.925rem;
-      margin-bottom: 1.25rem;
-      flex-grow: 1;
-    }
-
-    .tags-list {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .badge-tag {
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      flex: 1;
-      min-width: 160px;
-      background: var(--gradient-primary);
-      color: #fff;
-      text-decoration: none;
-      padding: 10px 18px;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
-    }
-
-    .btn-primary:hover {
-      opacity: 0.95;
-      transform: scale(1.02);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      text-decoration: none;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(56, 189, 248, 0.1);
-      border-color: var(--accent-cyan);
-    }
-
-    /* Grid for Notebooks */
-    .grid-notebooks {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .card-nb {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      transition: all 0.2s ease;
-    }
-
-    .card-nb:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-highlight);
-      transform: translateX(4px);
-    }
-
-    .nb-info {
-      flex: 1;
-    }
-
-    .nb-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      margin-bottom: 2px;
-    }
-
-    .nb-name {
-      font-weight: 600;
-      font-size: 1.05rem;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-
-    .nb-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .nb-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-dl {
-      background: rgba(52, 211, 153, 0.1);
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      color: var(--accent-green);
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-dl:hover {
-      background: rgba(52, 211, 153, 0.2);
-      transform: scale(1.05);
-    }
-
-    /* Terminal Setup Section */
-    .setup-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      margin-top: 1rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .term-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 1rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .term-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .dot-red { background: #ff5f56; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #27c93f; }
-
-    .term-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-left: 8px;
-    }
-
-    .cmd-block {
-      background: rgba(5, 8, 15, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius-sm);
-      padding: 1rem 1.25rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
-      color: #e2e8f0;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cmd-text {
-      color: var(--accent-cyan);
-    }
-
-    .cmd-comment {
-      color: #64748b;
-      font-size: 0.8rem;
-    }
-
-    .btn-copy {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.2s ease;
-    }
-
-    .btn-copy:hover {
-      background: rgba(56, 189, 248, 0.2);
-      color: var(--accent-cyan);
-    }
-
-    /* Footer */
-    footer {
-      margin-top: 5rem;
-      border-top: 1px solid var(--border-color);
-      padding: 2.5rem 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    footer a {
-      color: var(--accent-cyan);
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.1rem;
-      }
-
-      .stats-bar {
-        gap: 1rem;
-      }
-
-      .nav-links {
-        display: none;
-      }
-    }
-  </style>
+  <!-- Hoja de Estilos Modular Externa (Separación de Responsabilidades CSS) -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Lógica de Interacción JavaScript Externa (Carga Diferida) -->
+  <script src="js/main.js" defer></script>
 </head>
 
 <body>
 
-  <!-- Navigation -->
+  <!-- ==================================================================== -->
+  <!-- 1. ENCABEZADO Y NAVEGACIÓN PRINCIPAL (HEADER)                        -->
+  <!-- ==================================================================== -->
   <header>
     <div class="container nav-wrapper">
-      <a href="#" class="logo">
+      <a href="#" class="logo" aria-label="Inicio QAOA Training">
         <div class="logo-icon">
           <i class="fa-solid fa-atom"></i>
         </div>
         <div class="logo-text">QAOA <span>Training</span></div>
       </a>
-      <ul class="nav-links">
-        <li><a href="#presentaciones"><i class="fa-solid fa-desktop"></i> Presentaciones</a></li>
-        <li><a href="#notebooks"><i class="fa-solid fa-book-open"></i> Notebooks</a></li>
-        <li><a href="#instalacion"><i class="fa-solid fa-terminal"></i> Instalación</a></li>
-        <li>
-          <a href="https://github.com/ui4054/qaoa_training" target="_blank" class="btn-git">
-            <i class="fa-brands fa-github"></i> Repositorio
-          </a>
-        </li>
-      </ul>
+      
+      <!-- Menú de Navegación -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#presentaciones"><i class="fa-solid fa-desktop"></i> Presentaciones</a></li>
+          <li><a href="#notebooks"><i class="fa-solid fa-book-open"></i> Notebooks</a></li>
+          <li><a href="#instalacion"><i class="fa-solid fa-terminal"></i> Instalación</a></li>
+          <li><a href="#contacto"><i class="fa-solid fa-qrcode"></i> Contacto &amp; QR</a></li>
+          <li>
+            <a href="https://ui4054.github.io/me/" target="_blank" class="btn-cv-nav" title="Ver mi Curriculum Vitae Online">
+              <i class="fa-solid fa-user-tie"></i> Mi CV
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/ui4054/qaoa_training" target="_blank" class="btn-git" title="Repositorio oficial en GitHub">
+              <i class="fa-brands fa-github"></i> Repositorio
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </header>
 
+  <!-- ==================================================================== -->
+  <!-- 2. CONTENIDO PRINCIPAL (MAIN)                                       -->
+  <!-- ==================================================================== -->
   <main class="container">
 
-    <!-- Hero Section -->
+    <!-- SECCIÓN HERO DE BIENVENIDA -->
     <section class="hero">
       <div class="hero-badge">
         <i class="fa-solid fa-graduation-cap"></i> Material Didáctico Universitario
       </div>
       <h1 class="hero-title">
-        Computación Cuántica Aplicada &<br>
+        Computación Cuántica Aplicada &amp;<br>
         <span class="gradient-text">Optimización Combinatoria</span>
       </h1>
       <p class="hero-subtitle">
         Aprende desde el Problema de la Mochila (ILP → QUBO → QAOA → D-Wave) hasta la Estimación de Fase Cuántica (QPE) y el Algoritmo de Shor.
       </p>
 
-      <!-- Quick Stats -->
+      <!-- Resumen de Métricas del Curso -->
       <div class="stats-bar">
         <div class="stat-item">
-          <i class="fa-solid fa-chalkboard-user stat-icon"></i>
+          <div class="stat-icon">
+            <i class="fa-solid fa-chalkboard-user"></i>
+          </div>
           <div>
             <div class="stat-val">3 Módulos</div>
             <div class="stat-lbl">Presentaciones HTML</div>
           </div>
         </div>
         <div class="stat-item">
-          <i class="fa-solid fa-code-commit stat-icon"></i>
+          <div class="stat-icon" style="color: var(--accent-purple); background: rgba(124, 58, 237, 0.1);">
+            <i class="fa-solid fa-file-code"></i>
+          </div>
           <div>
             <div class="stat-val">6 Notebooks</div>
-            <div class="stat-lbl">Descarga Directa</div>
+            <div class="stat-lbl">Descarga Directa &amp; Copia</div>
           </div>
         </div>
         <div class="stat-item">
-          <i class="fa-solid fa-microchip stat-icon"></i>
+          <div class="stat-icon" style="color: var(--accent-green); background: rgba(5, 150, 105, 0.1);">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
           <div>
             <div class="stat-val">Qiskit 2.4 + D-Wave</div>
             <div class="stat-lbl">Simulación Local</div>
@@ -691,21 +111,21 @@
       </div>
     </section>
 
-    <!-- Filter & Search Section -->
-    <section class="filter-section">
+    <!-- SECCIÓN DE BÚSQUEDA Y FILTRADO DINÁMICO -->
+    <section class="filter-section" aria-label="Buscador y filtros">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="searchInput" class="search-input" placeholder="Buscar por tema (ej. QAOA, Shor, Qiskit, D-Wave, PuLP)...">
       </div>
       <div class="filter-tags">
         <button class="tag-btn active" data-filter="all">Todos</button>
-        <button class="tag-btn" data-filter="qaoa">QAOA & Mochila</button>
+        <button class="tag-btn" data-filter="qaoa">QAOA &amp; Mochila</button>
         <button class="tag-btn" data-filter="qpe">QPE</button>
         <button class="tag-btn" data-filter="shor">Shor</button>
       </div>
     </section>
 
-    <!-- Section 1: Presentaciones HTML -->
+    <!-- SECCIÓN 1: PRESENTACIONES INTERACTIVAS REVEAL.JS -->
     <section id="presentaciones">
       <div class="section-header">
         <h2 class="section-title">
@@ -715,12 +135,12 @@
 
       <div class="grid-presentations" id="presentationsGrid">
 
-        <!-- Card 1: QAOA -->
+        <!-- Tarjeta 1: QAOA -->
         <article class="card-pres" data-tags="qaoa mochila ilp qubo dwave qiskit">
           <div>
             <div class="card-header">
               <span class="mod-badge">Módulo 1</span>
-              <i class="fa-solid fa-cube" style="color: var(--accent-cyan);"></i>
+              <i class="fa-solid fa-cube" style="color: var(--accent-blue); font-size: 1.2rem;"></i>
             </div>
             <h3 class="card-title">Problema de la Mochila: ILP → QUBO → QAOA → D-Wave</h3>
             <p class="card-desc">
@@ -741,12 +161,12 @@
           </div>
         </article>
 
-        <!-- Card 2: QPE -->
+        <!-- Tarjeta 2: QPE -->
         <article class="card-pres" data-tags="qpe qft fase precision qiskit">
           <div>
             <div class="card-header">
-              <span class="mod-badge">Módulo 2</span>
-              <i class="fa-solid fa-wave-square" style="color: var(--accent-purple);"></i>
+              <span class="mod-badge" style="color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); border-color: rgba(124, 58, 237, 0.2);">Módulo 2</span>
+              <i class="fa-solid fa-wave-square" style="color: var(--accent-purple); font-size: 1.2rem;"></i>
             </div>
             <h3 class="card-title">Quantum Phase Estimation (QPE)</h3>
             <p class="card-desc">
@@ -760,20 +180,20 @@
             </div>
           </div>
           <div class="card-actions">
-            <a href="presentation/quantum_phase_estimation.html" target="_blank" class="btn-primary">
+            <a href="presentation/quantum_phase_estimation.html" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);">
               <i class="fa-solid fa-play"></i> Ver Presentación
             </a>
           </div>
         </article>
 
-        <!-- Card 3: Shor -->
+        <!-- Tarjeta 3: Shor -->
         <article class="card-pres" data-tags="shor rsa criptografia periodos factorizacion">
           <div>
             <div class="card-header">
-              <span class="mod-badge">Módulo 3</span>
-              <i class="fa-solid fa-key" style="color: var(--accent-gold);"></i>
+              <span class="mod-badge" style="color: var(--accent-amber); background: rgba(217, 119, 6, 0.08); border-color: rgba(217, 119, 6, 0.2);">Módulo 3</span>
+              <i class="fa-solid fa-key" style="color: var(--accent-amber); font-size: 1.2rem;"></i>
             </div>
-            <h3 class="card-title">Algoritmo de Shor & Factorización Cuántica</h3>
+            <h3 class="card-title">Algoritmo de Shor &amp; Factorización Cuántica</h3>
             <p class="card-desc">
               Reducción de la factorización de enteros a la búsqueda de período modular. QPE como motor central de Shor e impacto en RSA.
             </p>
@@ -785,7 +205,7 @@
             </div>
           </div>
           <div class="card-actions">
-            <a href="presentation/shor_presentation.html" target="_blank" class="btn-primary">
+            <a href="presentation/shor_presentation.html" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);">
               <i class="fa-solid fa-play"></i> Ver Presentación
             </a>
           </div>
@@ -794,7 +214,7 @@
       </div>
     </section>
 
-    <!-- Section 2: Notebooks Download -->
+    <!-- SECCIÓN 2: DESCARGA INDIVIDUAL Y VISTA PREVIA DE NOTEBOOKS -->
     <section id="notebooks">
       <div class="section-header">
         <h2 class="section-title">
@@ -804,94 +224,124 @@
 
       <div class="grid-notebooks" id="notebooksGrid">
 
-        <!-- NB 1 -->
-        <div class="card-nb" data-tags="qaoa mochila ilp pulp clasico">
-          <div class="nb-info">
-            <div class="nb-num">01 / NOTEBOOK</div>
-            <div class="nb-name">01_solver_clasico.ipynb</div>
-            <div class="nb-desc">Solver clásico del Problema de la Mochila usando PuLP + CBC.</div>
+        <!-- Notebook 1 -->
+        <article class="card-nb" data-tags="qaoa mochila ilp pulp clasico">
+          <div>
+            <div class="nb-header">
+              <span class="nb-num">01 / NOTEBOOK</span>
+            </div>
+            <h3 class="nb-name">01_solver_clasico.ipynb</h3>
+            <p class="nb-desc">Solver clásico del Problema de la Mochila usando PuLP + CBC.</p>
           </div>
-          <div class="nb-actions">
-            <a href="notebooks/01_solver_clasico.ipynb" download class="btn-dl" title="Descargar cuaderno">
-              <i class="fa-solid fa-download"></i> Descargar
+          <div class="nb-action-box">
+            <button class="btn-view-code" onclick="openNotebookModal('notebooks/01_solver_clasico.ipynb', '01_solver_clasico.ipynb')">
+              <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
+            </button>
+            <a href="notebooks/01_solver_clasico.ipynb" download class="btn-dl" title="Descargar cuaderno 01">
+              <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
           </div>
-        </div>
+        </article>
 
-        <!-- NB 2 -->
-        <div class="card-nb" data-tags="qaoa qiskit mochila qubo">
-          <div class="nb-info">
-            <div class="nb-num">02 / NOTEBOOK</div>
-            <div class="nb-name">02_qaoa_qiskit.ipynb</div>
-            <div class="nb-desc">QAOA variacional con Qiskit 2.4 & Qiskit Optimization.</div>
+        <!-- Notebook 2 -->
+        <article class="card-nb" data-tags="qaoa qiskit mochila qubo">
+          <div>
+            <div class="nb-header">
+              <span class="nb-num">02 / NOTEBOOK</span>
+            </div>
+            <h3 class="nb-name">02_qaoa_qiskit.ipynb</h3>
+            <p class="nb-desc">QAOA variacional con Qiskit 2.4 &amp; Qiskit Optimization.</p>
           </div>
-          <div class="nb-actions">
-            <a href="notebooks/02_qaoa_qiskit.ipynb" download class="btn-dl" title="Descargar cuaderno">
-              <i class="fa-solid fa-download"></i> Descargar
+          <div class="nb-action-box">
+            <button class="btn-view-code" onclick="openNotebookModal('notebooks/02_qaoa_qiskit.ipynb', '02_qaoa_qiskit.ipynb')">
+              <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
+            </button>
+            <a href="notebooks/02_qaoa_qiskit.ipynb" download class="btn-dl" title="Descargar cuaderno 02">
+              <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
           </div>
-        </div>
+        </article>
 
-        <!-- NB 3 -->
-        <div class="card-nb" data-tags="dwave annealing mochila ocean">
-          <div class="nb-info">
-            <div class="nb-num">03 / NOTEBOOK</div>
-            <div class="nb-name">03_quantum_annealing_dwave.ipynb</div>
-            <div class="nb-desc">Quantum Annealing y Simulated Annealing con D-Wave Ocean SDK.</div>
+        <!-- Notebook 3 -->
+        <article class="card-nb" data-tags="dwave annealing mochila ocean">
+          <div>
+            <div class="nb-header">
+              <span class="nb-num">03 / NOTEBOOK</span>
+            </div>
+            <h3 class="nb-name">03_quantum_annealing_dwave.ipynb</h3>
+            <p class="nb-desc">Quantum Annealing y Simulated Annealing con D-Wave Ocean SDK.</p>
           </div>
-          <div class="nb-actions">
-            <a href="notebooks/03_quantum_annealing_dwave.ipynb" download class="btn-dl" title="Descargar cuaderno">
-              <i class="fa-solid fa-download"></i> Descargar
+          <div class="nb-action-box">
+            <button class="btn-view-code" onclick="openNotebookModal('notebooks/03_quantum_annealing_dwave.ipynb', '03_quantum_annealing_dwave.ipynb')">
+              <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
+            </button>
+            <a href="notebooks/03_quantum_annealing_dwave.ipynb" download class="btn-dl" title="Descargar cuaderno 03">
+              <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
           </div>
-        </div>
+        </article>
 
-        <!-- NB 4 -->
-        <div class="card-nb" data-tags="qpe qft qiskit fase">
-          <div class="nb-info">
-            <div class="nb-num">04 / NOTEBOOK</div>
-            <div class="nb-name">04_quantum_phase_estimation.ipynb</div>
-            <div class="nb-desc">Implementación paso a paso de QPE con Qiskit (1 a 3 qubits).</div>
+        <!-- Notebook 4 -->
+        <article class="card-nb" data-tags="qpe qft qiskit fase">
+          <div>
+            <div class="nb-header">
+              <span class="nb-num">04 / NOTEBOOK</span>
+            </div>
+            <h3 class="nb-name">04_quantum_phase_estimation.ipynb</h3>
+            <p class="nb-desc">Implementación paso a paso de QPE con Qiskit (1 a 3 qubits).</p>
           </div>
-          <div class="nb-actions">
-            <a href="notebooks/04_quantum_phase_estimation.ipynb" download class="btn-dl" title="Descargar cuaderno">
-              <i class="fa-solid fa-download"></i> Descargar
+          <div class="nb-action-box">
+            <button class="btn-view-code" onclick="openNotebookModal('notebooks/04_quantum_phase_estimation.ipynb', '04_quantum_phase_estimation.ipynb')">
+              <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
+            </button>
+            <a href="notebooks/04_quantum_phase_estimation.ipynb" download class="btn-dl" title="Descargar cuaderno 04">
+              <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
           </div>
-        </div>
+        </article>
 
-        <!-- NB 5 -->
-        <div class="card-nb" data-tags="shor factorizacion qpe qiskit">
-          <div class="nb-info">
-            <div class="nb-num">05 / NOTEBOOK</div>
-            <div class="nb-name">05_shor_algorithm.ipynb</div>
-            <div class="nb-desc">Algoritmo de Shor didáctico para N=15 con subrutina QPE.</div>
+        <!-- Notebook 5 -->
+        <article class="card-nb" data-tags="shor factorizacion qpe qiskit">
+          <div>
+            <div class="nb-header">
+              <span class="nb-num">05 / NOTEBOOK</span>
+            </div>
+            <h3 class="nb-name">05_shor_algorithm.ipynb</h3>
+            <p class="nb-desc">Algoritmo de Shor didáctico para N=15 con subrutina QPE.</p>
           </div>
-          <div class="nb-actions">
-            <a href="notebooks/05_shor_algorithm.ipynb" download class="btn-dl" title="Descargar cuaderno">
-              <i class="fa-solid fa-download"></i> Descargar
+          <div class="nb-action-box">
+            <button class="btn-view-code" onclick="openNotebookModal('notebooks/05_shor_algorithm.ipynb', '05_shor_algorithm.ipynb')">
+              <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
+            </button>
+            <a href="notebooks/05_shor_algorithm.ipynb" download class="btn-dl" title="Descargar cuaderno 05">
+              <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
           </div>
-        </div>
+        </article>
 
-        <!-- NB 6 -->
-        <div class="card-nb" data-tags="mini qaoa didactico manual">
-          <div class="nb-info">
-            <div class="nb-num">06 / NOTEBOOK</div>
-            <div class="nb-name">06_mini_qaoa.ipynb</div>
-            <div class="nb-desc">Mini-QAOA didáctico de 2 qubits calculado a mano e ilustrado.</div>
+        <!-- Notebook 6 -->
+        <article class="card-nb" data-tags="mini qaoa didactico manual">
+          <div>
+            <div class="nb-header">
+              <span class="nb-num">06 / NOTEBOOK</span>
+            </div>
+            <h3 class="nb-name">06_mini_qaoa.ipynb</h3>
+            <p class="nb-desc">Mini-QAOA didáctico de 2 qubits calculado a mano e ilustrado.</p>
           </div>
-          <div class="nb-actions">
-            <a href="notebooks/06_mini_qaoa.ipynb" download class="btn-dl" title="Descargar cuaderno">
-              <i class="fa-solid fa-download"></i> Descargar
+          <div class="nb-action-box">
+            <button class="btn-view-code" onclick="openNotebookModal('notebooks/06_mini_qaoa.ipynb', '06_mini_qaoa.ipynb')">
+              <i class="fa-solid fa-eye"></i> Ver / Copiar Código en Pantalla
+            </button>
+            <a href="notebooks/06_mini_qaoa.ipynb" download class="btn-dl" title="Descargar cuaderno 06">
+              <i class="fa-solid fa-download"></i> Descargar .ipynb
             </a>
           </div>
-        </div>
+        </article>
 
       </div>
     </section>
 
-    <!-- Section 3: Git Clone & Local Setup -->
+    <!-- SECCIÓN 3: INSTALACIÓN Y EJECUCIÓN LOCAL -->
     <section id="instalacion">
       <div class="section-header">
         <h2 class="section-title">
@@ -907,31 +357,31 @@
           <span class="term-title">bash — Guía rápida de configuración en local</span>
         </div>
 
-        <!-- Step 1 -->
+        <!-- Paso 1 -->
         <div class="cmd-block">
           <div>
             <span class="cmd-comment"># 1. Clonar el repositorio</span><br>
             <span class="cmd-text">git clone https://github.com/ui4054/qaoa_training.git</span><br>
             <span class="cmd-text">cd qaoa_training</span>
           </div>
-          <button class="btn-copy" onclick="copyText('git clone https://github.com/ui4054/qaoa_training.git && cd qaoa_training', this)">
+          <button class="btn-copy" onclick="copyText('git clone https://github.com/ui4054/qaoa_training.git &amp;&amp; cd qaoa_training', this)">
             <i class="fa-regular fa-copy"></i> Copiar
           </button>
         </div>
 
-        <!-- Step 2 -->
+        <!-- Paso 2 -->
         <div class="cmd-block">
           <div>
             <span class="cmd-comment"># 2. Crear y activar ambiente conda unificado</span><br>
             <span class="cmd-text">conda env create -f environment.yml</span><br>
             <span class="cmd-text">conda activate qaoa_knapsack</span>
           </div>
-          <button class="btn-copy" onclick="copyText('conda env create -f environment.yml && conda activate qaoa_knapsack', this)">
+          <button class="btn-copy" onclick="copyText('conda env create -f environment.yml &amp;&amp; conda activate qaoa_knapsack', this)">
             <i class="fa-regular fa-copy"></i> Copiar
           </button>
         </div>
 
-        <!-- Step 3 -->
+        <!-- Paso 3 -->
         <div class="cmd-block">
           <div>
             <span class="cmd-comment"># 3. Lanzar Jupyter Lab en el directorio de notebooks</span><br>
@@ -945,86 +395,98 @@
       </div>
     </section>
 
+    <!-- SECCIÓN 4: CONTACTO & CÓDIGOS QR -->
+    <section id="contacto" class="contact-section">
+      <div class="contact-header">
+        <h2 class="contact-title">
+          <i class="fa-solid fa-qrcode" style="color: var(--accent-blue);"></i> Contacto, Consultoría &amp; Perfil Profesional
+        </h2>
+        <p class="contact-subtitle">
+          Escanea los códigos QR o utiliza los enlaces directos para conectar o consultar información.
+        </p>
+      </div>
+
+      <div class="qr-grid">
+
+        <!-- QR LinkedIn -->
+        <article class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://www.linkedin.com/in/ui4054/" alt="QR LinkedIn" class="qr-img" loading="lazy">
+          <div class="qr-label">LinkedIn</div>
+          <div class="qr-sub">Perfil Profesional (/in/ui4054)</div>
+          <a href="https://www.linkedin.com/in/ui4054/" target="_blank" class="btn-qr-link btn-linkedin">
+            <i class="fa-brands fa-linkedin"></i> Ver LinkedIn
+          </a>
+        </article>
+
+        <!-- QR KentryOps -->
+        <article class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://www.kentryops.com" alt="QR KentryOps" class="qr-img" loading="lazy">
+          <div class="qr-label">KentryOps</div>
+          <div class="qr-sub">Tech &amp; Quantum Consulting</div>
+          <a href="https://www.kentryops.com" target="_blank" class="btn-qr-link btn-kentry">
+            <i class="fa-solid fa-globe"></i> Ir a KentryOps
+          </a>
+        </article>
+
+        <!-- QR CV -->
+        <article class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://ui4054.github.io/me/" alt="QR CV" class="qr-img" loading="lazy">
+          <div class="qr-label">Curriculum Vitae</div>
+          <div class="qr-sub">Portafolio &amp; Experiencia</div>
+          <a href="https://ui4054.github.io/me/" target="_blank" class="btn-qr-link btn-cv">
+            <i class="fa-solid fa-user-tie"></i> Ver mi CV Online
+          </a>
+        </article>
+
+      </div>
+    </section>
+
   </main>
 
-  <!-- Footer -->
+  <!-- ==================================================================== -->
+  <!-- 3. MODAL INTERACTIVO DE VISTA PREVIA Y COPIA DE CÓDIGO               -->
+  <!-- ==================================================================== -->
+  <div id="codeModal" class="modal-overlay" aria-hidden="true" role="dialog">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="modal-title">
+          <i class="fa-solid fa-code"></i> Vista Previa del Cuaderno
+        </h3>
+        <button id="closeModalBtn" class="btn-close-modal" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre id="modalCodeView" class="code-container">Cargando contenido...</pre>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-btn-group">
+          <button id="copyPythonBtn" class="btn-copy" style="padding: 10px 18px; font-size: 0.9rem; background: var(--accent-blue); color: #fff; border: none;">
+            <i class="fa-regular fa-copy"></i> Copiar Código Python
+          </button>
+        </div>
+        <a id="modalDownloadBtn" href="#" download class="btn-dl" style="width: auto; padding: 10px 18px;">
+          <i class="fa-solid fa-download"></i> Descargar .ipynb
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- 4. PIE DE PÁGINA (FOOTER)                                           -->
+  <!-- ==================================================================== -->
   <footer>
     <div class="container">
       <p>🎓 <strong>Computación Cuántica Aplicada</strong> — Material educativo de libre distribución.</p>
-      <p style="margin-top: 6px; font-size: 0.85rem;">
-        Repositorio alojado en <a href="https://github.com/ui4054/qaoa_training" target="_blank">GitHub</a> | Diseñado para Qiskit 2.4 y D-Wave Ocean SDK
+      <p style="margin-top: 8px; font-size: 0.95rem;">
+        <a href="https://ui4054.github.io/me/" target="_blank" style="font-weight: 700; color: var(--accent-blue);">
+          <i class="fa-solid fa-address-card"></i> Visita mi CV (Curriculum Vitae): https://ui4054.github.io/me/
+        </a>
+      </p>
+      <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-subtle);">
+        Repositorio alojado en <a href="https://github.com/ui4054/qaoa_training" target="_blank">GitHub</a> | Consultoría por <a href="https://www.kentryops.com" target="_blank">KentryOps</a> | Conecta en <a href="https://www.linkedin.com/in/ui4054/" target="_blank">LinkedIn</a>
       </p>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script>
-    // Copy helper
-    function copyText(text, btnElement) {
-      navigator.clipboard.writeText(text).then(() => {
-        const originalHTML = btnElement.innerHTML;
-        btnElement.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
-        btnElement.style.color = '#34d399';
-        btnElement.style.borderColor = '#34d399';
-        setTimeout(() => {
-          btnElement.innerHTML = originalHTML;
-          btnElement.style.color = '';
-          btnElement.style.borderColor = '';
-        }, 2000);
-      });
-    }
-
-    // Search and filter logic
-    const searchInput = document.getElementById('searchInput');
-    const tagButtons = document.querySelectorAll('.tag-btn');
-    const presCards = document.querySelectorAll('.card-pres');
-    const nbCards = document.querySelectorAll('.card-nb');
-
-    let currentFilter = 'all';
-
-    function filterItems() {
-      const query = searchInput.value.toLowerCase().trim();
-
-      // Filter Presentations
-      presCards.forEach(card => {
-        const tags = card.getAttribute('data-tags') || '';
-        const text = card.textContent.toLowerCase();
-        const matchesTag = (currentFilter === 'all') || tags.includes(currentFilter);
-        const matchesQuery = !query || text.includes(query) || tags.includes(query);
-
-        if (matchesTag && matchesQuery) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Filter Notebooks
-      nbCards.forEach(card => {
-        const tags = card.getAttribute('data-tags') || '';
-        const text = card.textContent.toLowerCase();
-        const matchesTag = (currentFilter === 'all') || tags.includes(currentFilter);
-        const matchesQuery = !query || text.includes(query) || tags.includes(query);
-
-        if (matchesTag && matchesQuery) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
-    searchInput.addEventListener('input', filterItems);
-
-    tagButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tagButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.getAttribute('data-filter');
-        filterItems();
-      });
-    });
-  </script>
 </body>
 
 </html>
