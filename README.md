@@ -20,7 +20,7 @@ conda activate qaoa_knapsack
 
 ### 3. Abrir las presentaciones
 Abrir cualquiera de los archivos HTML en `presentation/` con un navegador moderno:
-- `presentation/index.html` — Mochila: ILP → QUBO → QAOA → Annealing
+- `presentation/qaoa.html` — Mochila: ILP → QUBO → QAOA → Annealing
 - `presentation/quantum_phase_estimation.html` — Quantum Phase Estimation
 - `presentation/shor_presentation.html` — Algoritmo de Shor
 
